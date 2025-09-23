@@ -36,7 +36,7 @@ export default function Window({
   return (
     <div
       ref={windowRef}
-      className={`fixed bg-white border border-gray-400 shadow-lg rounded-t-lg flex flex-col ${
+      className={`fixed bg-white border border-gray-400 shadow-lg rounded-t-lg rounded-b-lg flex flex-col ${
         isMinimized ? 'hidden' : ''
       } ${isMaximized ? 'rounded-none' : ''}`}
       style={{

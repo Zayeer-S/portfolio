@@ -1,5 +1,3 @@
-// src/components/desktop/StartMenu.tsx
-
 import { StartMenuProps, WindowId } from '@/types';
 
 export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuProps) {

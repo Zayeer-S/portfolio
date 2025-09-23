@@ -9,7 +9,6 @@ import TypewriterIntro from '@/components/desktop/TypewriterIntro';
 
 import ProjectsWindow from '@/components/windows/ProjectsWindow';
 import TechnologiesWindow from '@/components/windows/TechnologiesWindow';
-import AboutWindow from '@/components/windows/AboutWindow';
 import ContactWindow from '@/components/windows/ContactWindow';
 
 export default function Home() {
@@ -91,21 +90,6 @@ export default function Home() {
         onFocus={() => focusWindow('technologies')}
       >
         <TechnologiesWindow />
-      </Window>
-
-      <Window
-        id="about"
-        title="About Me.txt - Notepad"
-        isOpen={windows.about.isOpen}
-        isMinimized={windows.about.isMinimized}
-        isMaximized={windows.about.isMaximized}
-        onClose={() => closeWindow('about')}
-        onMinimize={() => minimizeWindow('about')}
-        onMaximize={() => maximizeWindow('about')}
-        zIndex={getWindowZIndex('about')}
-        onFocus={() => focusWindow('about')}
-      >
-        <AboutWindow />
       </Window>
 
       <Window

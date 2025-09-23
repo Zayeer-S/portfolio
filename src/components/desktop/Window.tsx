@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { WindowProps } from '@/types';
+import { useWindowResize } from '@/hooks/useWindowResize';
+import ResizeHandles from './ResizeHandles';
 
 export default function Window({ 
   id, 
@@ -16,78 +18,45 @@ export default function Window({
   zIndex, 
   onFocus 
 }: WindowProps) {
-  const [position, setPosition] = useState({ x: 100, y: 100 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const windowRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    // Don't start dragging if clicking on window control buttons
-    if (target.tagName === 'BUTTON') {
-      return;
-    }
-    if (e.target === e.currentTarget || target.classList.contains('title-bar')) {
-      setIsDragging(true);
-      setDragStart({
-        x: e.clientX - position.x,
-        y: e.clientY - position.y,
-      });
-      onFocus();
-    }
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging) {
-        setPosition({
-          x: e.clientX - dragStart.x,
-          y: e.clientY - dragStart.y,
-        });
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
-
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging, dragStart]);
+  
+  const {
+    handleMouseDown,
+    handleResizeMouseDown,
+    getWindowStyle
+  } = useWindowResize({
+    initialPosition: { x: 100, y: 100 },
+    initialSize: { width: 384, height: 320 },
+    isMaximized,
+    onFocus
+  });
 
   if (!isOpen) return null;
 
   return (
     <div
       ref={windowRef}
-      className={`fixed bg-white border border-gray-400 shadow-lg rounded-t-lg ${
+      className={`fixed bg-white border border-gray-400 shadow-lg rounded-t-lg flex flex-col ${
         isMinimized ? 'hidden' : ''
-      } ${isMaximized ? 'inset-0 rounded-none' : 'w-96 h-80'}`}
+      } ${isMaximized ? 'rounded-none' : ''}`}
       style={{
-        left: isMaximized ? 0 : position.x,
-        top: isMaximized ? 0 : position.y,
+        ...getWindowStyle(),
         zIndex: zIndex,
         pointerEvents: 'auto',
+        minWidth: '200px',
+        minHeight: '150px',
       }}
       onMouseDown={onFocus}
     >
-      {/* Title Bar */}
       <div
         className="title-bar h-8 bg-gradient-to-b from-blue-500 to-blue-600 text-white px-2 flex items-center justify-between cursor-move rounded-t-lg"
         onMouseDown={handleMouseDown}
       >
         <div className="flex items-center pointer-events-none">
-          <div className="w-4 h-4 mr-2">
-            <div className="w-full h-full bg-blue-300 rounded-sm"></div>
+          <div className="w-4 h-4 mr-2 pointer-events-none">
+            <div className="w-full h-full bg-blue-300 rounded-sm pointer-events-none"></div>
           </div>
-          <span className="text-sm font-normal">{title}</span>
+          <span className="text-sm font-normal pointer-events-none">{title}</span>
         </div>
         <div className="flex">
           <button
@@ -95,16 +64,16 @@ export default function Window({
               e.stopPropagation();
               onMinimize();
             }}
-            className="w-6 h-5 bg-gradient-to-b from-gray-200 to-gray-300 border border-gray-400 text-xs hover:from-gray-300 hover:to-gray-400 mr-1"
+            className="w-6 h-5 bg-gradient-to-b from-gray-200 to-gray-300 border border-gray-400 text-xs hover:from-gray-100 hover:to-gray-200 mr-1"
           >
-            _
+            –
           </button>
           <button
             onClick={(e) => {
               e.stopPropagation();
               onMaximize();
             }}
-            className="w-6 h-5 bg-gradient-to-b from-gray-200 to-gray-300 border border-gray-400 text-xs hover:from-gray-300 hover:to-gray-400 mr-1"
+            className="w-6 h-5 bg-gradient-to-b from-gray-200 to-gray-300 border border-gray-400 text-xs hover:from-gray-100 hover:to-gray-200 mr-1"
           >
             □
           </button>
@@ -121,9 +90,14 @@ export default function Window({
       </div>
       
       {/* Window Content */}
-      <div className="p-4 h-full overflow-auto" style={{ height: 'calc(100% - 32px)' }}>
+      <div className="p-4 overflow-auto flex-1">
         {children}
       </div>
+
+      <ResizeHandles 
+        isMaximized={isMaximized}
+        onResizeMouseDown={handleResizeMouseDown}
+      />
     </div>
   );
 }

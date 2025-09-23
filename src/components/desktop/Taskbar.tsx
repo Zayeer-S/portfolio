@@ -52,12 +52,14 @@ export default function Taskbar({
       </div>
 
       {/* System Tray */}
-      <div className="ml-auto flex items-center space-x-2">
-        <div className="text-xs text-gray-700">
-          {isClient ? currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--'}
-        </div>
-        <div className="text-xs text-gray-700">
-          {isClient ? currentTime.toLocaleDateString("en-GB") : '--/--/----'}
+      <div className="ml-auto flex items-center pr-2">
+        <div className="flex flex-col items-end text-xs text-gray-700 leading-tight">
+          <div>
+            {isClient ? currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--'}
+          </div>
+          <div>
+            {isClient ? currentTime.toLocaleDateString('en-GB') : '--/--/----'}
+          </div>
         </div>
       </div>
     </div>

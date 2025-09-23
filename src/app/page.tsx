@@ -5,6 +5,7 @@ import Window from '@/components/desktop/Window';
 import DesktopIcon from '@/components/desktop/DesktopIcon';
 import StartMenu from '@/components/desktop/StartMenu';
 import Taskbar from '@/components/desktop/Taskbar';
+import TypewriterIntro from '@/components/desktop/TypewriterIntro';
 
 import ProjectsWindow from '@/components/windows/ProjectsWindow';
 import TechnologiesWindow from '@/components/windows/TechnologiesWindow';
@@ -31,6 +32,8 @@ export default function Home() {
     <div className="h-screen w-screen overflow-hidden relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900">
       {/* Desktop Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-blue-800"></div>
+
+      <TypewriterIntro/>
       
       <div className="absolute top-4 left-4 grid grid-cols-1 gap-4">
         <DesktopIcon

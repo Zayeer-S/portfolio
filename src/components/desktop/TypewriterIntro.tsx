@@ -1,18 +1,25 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Theme } from '@/contexts/ThemeContext';
+import { getThemeClasses } from '@/styles/themes';
 
 interface TypewriterIntroProps {
   delay?: number;
   secondDelay?: number;
   speed?: number;
+  theme?: Theme;
 }
 
 export default function TypewriterIntro({ 
   delay = 750,
   secondDelay = 400,
   speed = 75,
+  theme,
 }: TypewriterIntroProps) {
+  const styles = theme ? getThemeClasses(theme) : null;
+  const textColor = styles?.typewriter || "text-white";
+
   const lines = ["CS Student @ SHU", "Software Engineer"];
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');

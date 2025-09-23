@@ -1,17 +1,23 @@
 'use client';
 
 import { useWindowManager } from '@/hooks/useWindowManager';
+import { useTheme } from '@/contexts/ThemeContext';
+import { getThemeClasses } from '@/styles/themes';
 import Window from '@/components/desktop/Window';
 import DesktopIcon from '@/components/desktop/DesktopIcon';
 import StartMenu from '@/components/desktop/StartMenu';
 import Taskbar from '@/components/desktop/Taskbar';
 import TypewriterIntro from '@/components/desktop/TypewriterIntro';
+import SettingsWindow from '@/components/windows/SettingsWindow';
 
 import ProjectsWindow from '@/components/windows/ProjectsWindow';
 import TechnologiesWindow from '@/components/windows/TechnologiesWindow';
 import ContactWindow from '@/components/windows/ContactWindow';
 
 export default function Home() {
+  const { theme } = useTheme();
+  const styles = getThemeClasses(theme);
+  
   const {
     windows,
     startMenuOpen,
@@ -28,37 +34,42 @@ export default function Home() {
   } = useWindowManager();
 
   return (
-    <div className="h-screen w-screen overflow-hidden relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900">
+    <div className="h-screen w-screen overflow-hidden relative">
       {/* Desktop Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-blue-800"></div>
+      <div className={`absolute inset-0 ${styles.desktop.background}`}></div>
 
-      <TypewriterIntro/>
+      <TypewriterIntro theme={theme} />
       
       <div className="absolute top-4 left-4 grid grid-cols-1 gap-4">
         <DesktopIcon
           icon="📄"
           label="CV"
           onClick={() => window.open('/Zayeer Sultan - CV.pdf')}
+          hoverClass={styles.desktop.iconHover}
         />
         <DesktopIcon
           icon="📁"
           label="Projects"
           onClick={() => openWindow('projects')}
+          hoverClass={styles.desktop.iconHover}
         />
         <DesktopIcon
           icon="⚙️"
           label="Technologies"
           onClick={() => openWindow('technologies')}
+          hoverClass={styles.desktop.iconHover}
         />
         <DesktopIcon
           icon="👤"
           label="About Me"
           onClick={() => openWindow('about')}
+          hoverClass={styles.desktop.iconHover}
         />
         <DesktopIcon
           icon="📧"
           label="Contact"
           onClick={() => openWindow('contact')}
+          hoverClass={styles.desktop.iconHover}
         />
       </div>
 
@@ -73,6 +84,7 @@ export default function Home() {
         onMaximize={() => maximizeWindow('projects')}
         zIndex={getWindowZIndex('projects')}
         onFocus={() => focusWindow('projects')}
+        theme={theme}
       >
         <ProjectsWindow />
       </Window>
@@ -88,6 +100,7 @@ export default function Home() {
         onMaximize={() => maximizeWindow('technologies')}
         zIndex={getWindowZIndex('technologies')}
         onFocus={() => focusWindow('technologies')}
+        theme={theme}
       >
         <TechnologiesWindow />
       </Window>
@@ -103,8 +116,25 @@ export default function Home() {
         onMaximize={() => maximizeWindow('contact')}
         zIndex={getWindowZIndex('contact')}
         onFocus={() => focusWindow('contact')}
+        theme={theme}
       >
         <ContactWindow />
+      </Window>
+
+      <Window
+        id="settings"
+        title="Settings"
+        isOpen={windows.settings.isOpen}
+        isMinimized={windows.settings.isMinimized}
+        isMaximized={windows.settings.isMaximized}
+        onClose={() => closeWindow('settings')}
+        onMinimize={() => minimizeWindow('settings')}
+        onMaximize={() => maximizeWindow('settings')}
+        zIndex={getWindowZIndex('settings')}
+        onFocus={() => focusWindow('settings')}
+        theme={theme}
+      >
+        <SettingsWindow />
       </Window>
 
       {/* Start Menu */}

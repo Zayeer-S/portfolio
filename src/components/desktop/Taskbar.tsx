@@ -14,7 +14,8 @@ export default function Taskbar({
       projects: '📁 Projects',
       technologies: '⚙️ Tech',
       about: '👤 About',
-      contact: '📧 Contact'
+      contact: '📧 Contact',
+      settings: '⚙️ Settings',
     };
     return labels[windowId] || windowId;
   };

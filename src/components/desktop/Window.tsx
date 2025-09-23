@@ -2,8 +2,14 @@
 
 import { useRef } from 'react';
 import { WindowProps } from '@/types';
+import { Theme } from '@/contexts/ThemeContext';
+import { getThemeClasses } from '@/styles/themes';
 import { useWindowResize } from '@/hooks/useWindowResize';
 import ResizeHandles from './ResizeHandles';
+
+interface WindowPropsWithTheme extends Omit<WindowProps, 'theme'> {
+  theme?: Theme;
+}
 
 export default function Window({ 
   id, 
@@ -16,9 +22,28 @@ export default function Window({
   onMinimize, 
   onMaximize, 
   zIndex, 
-  onFocus 
-}: WindowProps) {
+  onFocus,
+  theme 
+}: WindowPropsWithTheme) {
   const windowRef = useRef<HTMLDivElement>(null);
+  
+  const styles = theme ? getThemeClasses(theme) : {
+    window: {
+      background: 'bg-white',
+      border: 'border border-gray-400',
+      shadow: 'shadow-lg',
+      borderRadius: 'rounded-lg',
+      titleBar: {
+        background: 'bg-gradient-to-b from-blue-500 to-blue-600',
+        text: 'text-white',
+        buttons: {
+          minimize: 'bg-gradient-to-b from-gray-200 to-gray-300 hover:from-gray-100 hover:to-gray-200 border border-gray-400 text-black',
+          maximize: 'bg-gradient-to-b from-gray-200 to-gray-300 hover:from-gray-100 hover:to-gray-200 border border-gray-400 text-black',
+          close: 'bg-gradient-to-b from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 border border-gray-400 text-white'
+        }
+      }
+    }
+  };
   
   const {
     handleMouseDown,
@@ -36,7 +61,7 @@ export default function Window({
   return (
     <div
       ref={windowRef}
-      className={`fixed bg-white border border-gray-400 shadow-lg rounded-t-lg rounded-b-lg flex flex-col ${
+      className={`fixed ${styles.window.background} ${styles.window.border} ${styles.window.shadow} ${styles.window.borderRadius} flex flex-col ${
         isMinimized ? 'hidden' : ''
       } ${isMaximized ? 'rounded-none' : ''}`}
       style={{
@@ -48,8 +73,9 @@ export default function Window({
       }}
       onMouseDown={onFocus}
     >
+      {/* Title Bar */}
       <div
-        className="title-bar h-8 bg-gradient-to-b from-blue-500 to-blue-600 text-white px-2 flex items-center justify-between cursor-move rounded-t-lg"
+        className={`title-bar h-8 ${styles.window.titleBar.background} ${styles.window.titleBar.text} px-2 flex items-center justify-between cursor-move rounded-t-lg`}
         onMouseDown={handleMouseDown}
       >
         <div className="flex items-center pointer-events-none">
@@ -64,16 +90,16 @@ export default function Window({
               e.stopPropagation();
               onMinimize();
             }}
-            className="w-6 h-5 bg-gradient-to-b from-gray-200 to-gray-300 border border-gray-400 text-xs hover:from-gray-100 hover:to-gray-200 mr-1"
+            className={`w-6 h-5 ${styles.window.titleBar.buttons.minimize} text-xs mr-1`}
           >
-            –
+            _
           </button>
           <button
             onClick={(e) => {
               e.stopPropagation();
               onMaximize();
             }}
-            className="w-6 h-5 bg-gradient-to-b from-gray-200 to-gray-300 border border-gray-400 text-xs hover:from-gray-100 hover:to-gray-200 mr-1"
+            className={`w-6 h-5 ${styles.window.titleBar.buttons.maximize} text-xs mr-1`}
           >
             □
           </button>
@@ -82,7 +108,7 @@ export default function Window({
               e.stopPropagation();
               onClose();
             }}
-            className="w-6 h-5 bg-gradient-to-b from-red-400 to-red-500 border border-gray-400 text-white text-xs hover:from-red-500 hover:to-red-600"
+            className={`w-6 h-5 ${styles.window.titleBar.buttons.close} text-xs`}
           >
             ×
           </button>

@@ -10,6 +10,7 @@ export function useWindowManager() {
     about: { isOpen: false, isMinimized: false, isMaximized: false },
     contact: { isOpen: false, isMinimized: false, isMaximized: false },
     technologies: { isOpen: false, isMinimized: false, isMaximized: false },
+    settings: { isOpen: false, isMinimized: false, isMaximized: false },
   });
 
   const [windowOrder, setWindowOrder] = useState<string[]>([]);

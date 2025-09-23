@@ -1,3 +1,5 @@
+import { Theme } from '@/contexts/ThemeContext';
+
 export interface WindowState {
   isOpen: boolean;
   isMinimized: boolean;
@@ -20,12 +22,14 @@ export interface WindowProps {
   onMaximize: () => void;
   zIndex: number;
   onFocus: () => void;
+  theme?: Theme;
 }
 
 export interface DesktopIconProps {
   icon: string;
   label: string;
   onClick: () => void;
+  hoverClass?: string;
 }
 
 export interface StartMenuProps {
@@ -43,4 +47,4 @@ export interface TaskbarProps {
   isClient: boolean;
 }
 
-export type WindowId = 'resume' | 'projects' | 'technologies' | 'about' | 'contact';
+export type WindowId = 'resume' | 'projects' | 'technologies' | 'about' | 'contact' | 'settings';

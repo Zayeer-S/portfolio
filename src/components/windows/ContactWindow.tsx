@@ -28,29 +28,6 @@ export default function ContactWindow() {
           </a>
         </div>
       </div>
-      
-      <div className="mt-6 pt-4 border-t">
-        <form className="space-y-3">
-          <input
-            type="text"
-            placeholder="Your Name"
-            className="w-full p-2 border border-gray-300 rounded text-sm"
-          />
-          <input
-            type="email"
-            placeholder="Your Email"
-            className="w-full p-2 border border-gray-300 rounded text-sm"
-          />
-          <textarea
-            placeholder="Your Message"
-            rows={3}
-            className="w-full p-2 border border-gray-300 rounded text-sm resize-none"
-          />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded text-sm hover:bg-blue-600 transition-colors">
-            Send Message
-          </button>
-        </form>
-      </div>
     </div>
   );
 }

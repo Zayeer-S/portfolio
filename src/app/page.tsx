@@ -4,7 +4,7 @@ import { useWindowManager } from '@/hooks/useWindowManager';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
 import Window from '@/components/desktop/Window';
-import DesktopIcon from '@/components/desktop/DesktopIcon';
+import DesktopGrid from '@/components/desktop/DesktopGrid';
 import StartMenu from '@/components/desktop/StartMenu';
 import Taskbar from '@/components/desktop/Taskbar';
 import TypewriterIntro from '@/components/desktop/TypewriterIntro';
@@ -40,38 +40,41 @@ export default function Home() {
 
       <TypewriterIntro theme={theme} />
       
-      <div className="absolute top-4 left-4 grid grid-cols-1 gap-4">
-        <DesktopIcon
-          icon="📄"
-          label="CV"
-          onClick={() => window.open('/Zayeer Sultan - CV.pdf')}
-          hoverClass={styles.desktop.iconHover}
-        />
-        <DesktopIcon
-          icon="📁"
-          label="Projects"
-          onClick={() => openWindow('projects')}
-          hoverClass={styles.desktop.iconHover}
-        />
-        <DesktopIcon
-          icon="⚙️"
-          label="Technologies"
-          onClick={() => openWindow('technologies')}
-          hoverClass={styles.desktop.iconHover}
-        />
-        <DesktopIcon
-          icon="👤"
-          label="About Me"
-          onClick={() => openWindow('about')}
-          hoverClass={styles.desktop.iconHover}
-        />
-        <DesktopIcon
-          icon="📧"
-          label="Contact"
-          onClick={() => openWindow('contact')}
-          hoverClass={styles.desktop.iconHover}
-        />
-      </div>
+      <DesktopGrid
+        icons={[
+          {
+            id: 'cv',
+            icon: '📄',
+            label: 'CV',
+            onClick: () => window.open('/Zayeer Sultan - CV.pdf')
+          },
+          {
+            id: 'projects',
+            icon: '📁',
+            label: 'Projects',
+            onClick: () => openWindow('projects')
+          },
+          {
+            id: 'technologies',
+            icon: '⚙️',
+            label: 'Technologies',
+            onClick: () => openWindow('technologies')
+          },
+          {
+            id: 'about',
+            icon: '👤',
+            label: 'About Me',
+            onClick: () => openWindow('about')
+          },
+          {
+            id: 'contact',
+            icon: '📧',
+            label: 'Contact',
+            onClick: () => openWindow('contact')
+          }
+        ]}
+        hoverClass={styles.desktop.iconHover}
+      />
 
       <Window
         id="projects"

@@ -8,6 +8,7 @@ interface UseWindowResizeProps {
   initialPosition: { x: number; y: number };
   initialSize: { width: number; height: number };
   isMaximized: boolean;
+  minSize?: {width: number, height: number};
   onFocus: () => void;
 }
 

@@ -16,6 +16,7 @@ export default function Taskbar({
       about: '👤 About',
       contact: '📧 Contact',
       settings: '⚙️ Settings',
+      calculator: '🔢 Calc',
     };
     return labels[windowId] || windowId;
   };

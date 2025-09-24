@@ -9,6 +9,7 @@ import StartMenu from '@/components/desktop/StartMenu';
 import Taskbar from '@/components/desktop/Taskbar';
 import TypewriterIntro from '@/components/desktop/TypewriterIntro';
 import SettingsWindow from '@/components/windows/SettingsWindow';
+import CalculatorWindow from '@/components/windows/CalculatorWindow';
 
 import ProjectsWindow from '@/components/windows/ProjectsWindow';
 import TechnologiesWindow from '@/components/windows/TechnologiesWindow';
@@ -138,6 +139,22 @@ export default function Home() {
         theme={theme}
       >
         <SettingsWindow />
+      </Window>
+
+      <Window
+        id="calculator"
+        title="Calculator"
+        isOpen={windows.calculator.isOpen}
+        isMinimized={windows.calculator.isMinimized}
+        isMaximized={windows.calculator.isMaximized}
+        onClose={() => closeWindow('calculator')}
+        onMinimize={() => minimizeWindow('calculator')}
+        onMaximize={() => maximizeWindow('calculator')}
+        zIndex={getWindowZIndex('calculator')}
+        onFocus={() => focusWindow('calculator')}
+        theme={theme}
+      >
+        <CalculatorWindow />
       </Window>
 
       {/* Start Menu */}

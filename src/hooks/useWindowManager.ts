@@ -11,6 +11,7 @@ export function useWindowManager() {
     contact: { isOpen: false, isMinimized: false, isMaximized: false },
     technologies: { isOpen: false, isMinimized: false, isMaximized: false },
     settings: { isOpen: false, isMinimized: false, isMaximized: false },
+    calculator: { isOpen: false, isMinimized: false, isMaximized: false },
   });
 
   const [windowOrder, setWindowOrder] = useState<string[]>([]);

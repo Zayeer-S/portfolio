@@ -53,7 +53,7 @@ export default function Taskbar({
       </div>
 
       {/* System Tray */}
-      <div className="ml-auto flex items-center pr-2">
+      <div className="ml-auto flex items-center pr-2 select-none">
         <div className="flex flex-col items-end text-xs text-gray-700 leading-tight">
           <div>
             {isClient ? currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--'}

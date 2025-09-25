@@ -11,6 +11,49 @@ interface WindowPropsWithTheme extends Omit<WindowProps, 'theme'> {
   theme?: Theme;
 }
 
+const getInitialDimensions = (windowId?: string) => {
+  if (typeof window === 'undefined') {
+    return { position: { x: 100, y: 100 }, size: { width: 384, height: 320 } };
+  }
+
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const taskbarHeight = 44;
+  const availableHeight = viewportHeight - taskbarHeight;
+
+  const windowIndex = windowId ? windowId.length : 0;
+  const offsetMultiplier = (windowIndex % 5) * 30;
+
+  if (viewportWidth < 500) { // Mobile
+    const baseX = Math.min(10 + offsetMultiplier, viewportWidth - 370);
+    const baseY = Math.min(10 + offsetMultiplier, availableHeight - 420);
+    return {
+      position: { x: Math.max(5, baseX), y: Math.max(5, baseY) },
+      size: { 
+        width: Math.min(viewportWidth - 20, 350), 
+        height: Math.min(availableHeight - 20, 400) 
+      }
+    };
+  } else if (viewportWidth < 1024) { // Tablet
+    const baseX = Math.min(50 + offsetMultiplier, viewportWidth - 520);
+    const baseY = Math.min(50 + offsetMultiplier, availableHeight - 520);
+    return {
+      position: { x: Math.max(20, baseX), y: Math.max(20, baseY) },
+      size: { 
+        width: Math.min(viewportWidth * 0.8, 500), 
+        height: Math.min(availableHeight * 0.8, 500) 
+      }
+    };
+  } else { // Desktop... or TV 😭
+    const baseX = Math.min(100 + offsetMultiplier, viewportWidth - 404);
+    const baseY = Math.min(100 + offsetMultiplier, availableHeight - 340);
+    return {
+      position: { x: Math.max(20, baseX), y: Math.max(20, baseY) },
+      size: { width: 384, height: 320 }
+    };
+  }
+};
+
 export default function Window({ 
   id, 
   title, 
@@ -26,6 +69,7 @@ export default function Window({
   theme 
 }: WindowPropsWithTheme) {
   const windowRef = useRef<HTMLDivElement>(null);
+  const initialDimensions = getInitialDimensions(id);
   
   const styles = theme ? getThemeClasses(theme) : {
     window: {
@@ -44,14 +88,13 @@ export default function Window({
       }
     }
   };
-  
   const {
     handleMouseDown,
     handleResizeMouseDown,
     getWindowStyle
   } = useWindowResize({
-    initialPosition: { x: 100, y: 100 },
-    initialSize: { width: 384, height: 320 },
+    initialPosition: initialDimensions.position,
+    initialSize: initialDimensions.size,
     isMaximized,
     onFocus
   });

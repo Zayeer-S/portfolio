@@ -33,6 +33,15 @@ export function useWindowResize({
     posY: 0 
   });
 
+  const constraintToViewport = (x: number, y: number, width: number, height: number,) => {
+    const maxX = window.innerWidth - width;
+    const maxY = window.innerHeight - height - 44; // 44px for the taskbar
+    return {
+      x: Math.max(0, Math.min(x, maxX)),
+      y: Math.max(0, Math.min(y, maxY)),
+    };
+  };
+
   const handleMouseDown = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     // Don't start dragging if clicking on window control buttons or resize handles
@@ -68,10 +77,10 @@ export function useWindowResize({
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging && !isMaximized) {
-        setPosition({
-          x: e.clientX - dragStart.x,
-          y: e.clientY - dragStart.y,
-        });
+        const newX = e.clientX - dragStart.x;
+        const newY = e.clientY - dragStart.y;
+        const constrained = constraintToViewport(newX, newY, size.width, size.height);
+        setPosition(constrained);
       }
       
       if (isResizing && !isMaximized && resizeDirection) {
@@ -105,8 +114,9 @@ export function useWindowResize({
           }
         }
 
+        const constrained = constraintToViewport(newX, newY, size.width, size.height);
         setSize({ width: newWidth, height: newHeight });
-        setPosition({ x: newX, y: newY });
+        setPosition(constrained);
       }
     };
 
@@ -126,6 +136,20 @@ export function useWindowResize({
       document.removeEventListener('mouseup', handleMouseUp);
     };
   }, [isDragging, isResizing, dragStart, resizeStart, isMaximized, resizeDirection]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (!isMaximized) {
+        const constrained = constraintToViewport(position.x, position.y, size.width, size.height);
+        if (constrained.x != position.x || constrained.y != position.y) {
+          setPosition (constrained);
+        }
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [position, size, isMaximized]);
 
   const getWindowStyle = () => {
     return isMaximized 

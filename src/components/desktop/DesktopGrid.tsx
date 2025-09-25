@@ -190,7 +190,7 @@ export default function DesktopGrid({
 
   return (
     <div 
-      className="absolute inset-0 grid gap-0"
+      className="fixed inset-0 grid gap-0"
       style={{
         gridTemplateColumns: `repeat(${gridDimensions.cols}, ${cellSize}px)`,
         gridTemplateRows: `repeat(${gridDimensions.rows}, ${cellSize}px)`,

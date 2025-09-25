@@ -23,7 +23,7 @@ export default function Taskbar({
   };
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 h-11 bg-gradient-to-b from-blue-200 to-blue-300 border-t border-blue-400 flex items-center px-2">
+    <div className="fixed bottom-0 left-0 right-0 h-11 bg-gradient-to-b from-blue-200 to-blue-300 border-t border-blue-400 flex items-center px-2 z-50">
       {/* Start Button */}
       <button
         className="h-8 px-4 bg-gradient-to-b from-green-400 to-green-500 border border-green-600 rounded text-white text-sm font-medium hover:from-green-500 hover:to-green-600 flex items-center"

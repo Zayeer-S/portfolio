@@ -28,9 +28,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <div className="fixed inset-0 overflow-hidden">
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </div>
       </body>
     </html>
   );

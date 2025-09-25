@@ -14,7 +14,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
   };
 
   return (
-    <div className={`absolute bottom-10 left-0 w-80 h-96 ${styles.startMenu.background} rounded-tr-lg shadow-lg`}>
+    <div className={`fixed bottom-10 left-0 w-80 h-96 ${styles.startMenu.background} rounded-tr-lg shadow-lg`}>
       <div className={`h-12 ${styles.startMenu.header} flex items-center px-4 rounded-tr-lg`}>
         <div className="w-8 h-8 bg-blue-300 rounded-full mr-3"></div>
         <span className={`font-medium ${styles.startMenu.text}`}>Zayeer Sultan</span>

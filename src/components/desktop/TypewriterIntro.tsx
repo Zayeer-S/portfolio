@@ -80,7 +80,7 @@ export default function TypewriterIntro({
   }, [currentLineIndex, lines.length]);
 
   return (
-    <div className="absolute inset-0 flex items-start justify-center pt-16 sm:pt-20 md:pt-24 pointer-events-none px-4">
+    <div className="fixed inset-0 flex items-start justify-center pt-16 sm:pt-20 md:pt-24 pointer-events-none px-4">
       <div className="text-center w-full max-w-4xl">
         <div className="space-y-2">
           <div className="text-white text-4xl sm:text-5xl md:text-6xl font-light tracking-wide drop-shadow-lg">

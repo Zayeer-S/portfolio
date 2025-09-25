@@ -18,7 +18,21 @@ export function useWindowResize({
   isMaximized,
   onFocus
 }: UseWindowResizeProps) {
-  const [position, setPosition] = useState(initialPosition);
+  const constrainToViewport = (x: number, y: number, width: number, height: number) => {
+    const maxX = window.innerWidth - width;
+    const maxY = window.innerHeight - height - 44; // 44px for taskbar
+    return {
+      x: Math.max(0, Math.min(x, maxX)),
+      y: Math.max(0, Math.min(y, maxY)),
+    };
+  };
+
+  const getConstrainedInitialPosition = () => {
+    if (typeof window === 'undefined') return initialPosition;
+    return constrainToViewport(initialPosition.x, initialPosition.y, initialSize.width, initialSize.height);
+  };
+  
+  const [position, setPosition] = useState(getConstrainedInitialPosition);
   const [size, setSize] = useState(initialSize);
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -33,14 +47,14 @@ export function useWindowResize({
     posY: 0 
   });
 
-  const constraintToViewport = (x: number, y: number, width: number, height: number,) => {
-    const maxX = window.innerWidth - width;
-    const maxY = window.innerHeight - height - 44; // 44px for the taskbar
-    return {
-      x: Math.max(0, Math.min(x, maxX)),
-      y: Math.max(0, Math.min(y, maxY)),
-    };
-  };
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const constrained = constrainToViewport(initialPosition.x, initialPosition.y, initialSize.width, initialSize.height);
+      if (constrained.x !== initialPosition.x || constrained.y !== initialPosition.y) {
+        setPosition(constrained);
+      }
+    }
+  }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
@@ -53,6 +67,23 @@ export function useWindowResize({
       setDragStart({
         x: e.clientX - position.x,
         y: e.clientY - position.y,
+      });
+      onFocus();
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const target = e.target as HTMLElement;
+    // Don't start dragging if touching window control buttons or resize handles
+    if (target.tagName === 'BUTTON' || target.classList.contains('resize-handle')) {
+      return;
+    }
+    if (e.target === e.currentTarget || target.classList.contains('title-bar')) {
+      const touch = e.touches[0];
+      setIsDragging(true);
+      setDragStart({
+        x: touch.clientX - position.x,
+        y: touch.clientY - position.y,
       });
       onFocus();
     }
@@ -79,7 +110,7 @@ export function useWindowResize({
       if (isDragging && !isMaximized) {
         const newX = e.clientX - dragStart.x;
         const newY = e.clientY - dragStart.y;
-        const constrained = constraintToViewport(newX, newY, size.width, size.height);
+        const constrained = constrainToViewport(newX, newY, size.width, size.height);
         setPosition(constrained);
       }
       
@@ -114,9 +145,24 @@ export function useWindowResize({
           }
         }
 
-        const constrained = constraintToViewport(newX, newY, size.width, size.height);
+        const constrained = constrainToViewport(newX, newY, newWidth, newHeight);
+        
         setSize({ width: newWidth, height: newHeight });
         setPosition(constrained);
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isDragging && !isMaximized) {
+        const touch = e.touches[0];
+        const newX = touch.clientX - dragStart.x;
+        const newY = touch.clientY - dragStart.y;
+        const constrained = constrainToViewport(newX, newY, size.width, size.height);
+        setPosition(constrained);
+      }
+      
+      if (isDragging) {
+        e.preventDefault(); // to avoid scrolling while dragging
       }
     };
 
@@ -126,28 +172,38 @@ export function useWindowResize({
       setResizeDirection(null);
     };
 
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+      setIsResizing(false);
+      setResizeDirection(null);
+    };
+
     if (isDragging || isResizing) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd);
     }
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [isDragging, isResizing, dragStart, resizeStart, isMaximized, resizeDirection]);
+  }, [isDragging, isResizing, dragStart, resizeStart, isMaximized, resizeDirection, size]);
 
   useEffect(() => {
     const handleResize = () => {
       if (!isMaximized) {
-        const constrained = constraintToViewport(position.x, position.y, size.width, size.height);
-        if (constrained.x != position.x || constrained.y != position.y) {
-          setPosition (constrained);
+        const constrained = constrainToViewport(position.x, position.y, size.width, size.height);
+        if (constrained.x !== position.x || constrained.y !== position.y) {
+          setPosition(constrained);
         }
       }
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [position, size, isMaximized]);
 
@@ -168,6 +224,7 @@ export function useWindowResize({
     isDragging,
     isResizing,
     handleMouseDown,
+    handleTouchStart,
     handleResizeMouseDown,
     getWindowStyle
   };

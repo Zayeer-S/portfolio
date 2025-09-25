@@ -90,6 +90,7 @@ export default function Window({
   };
   const {
     handleMouseDown,
+    handleTouchStart,
     handleResizeMouseDown,
     getWindowStyle
   } = useWindowResize({
@@ -120,6 +121,7 @@ export default function Window({
       <div
         className={`title-bar h-8 ${styles.window.titleBar.background} ${styles.window.titleBar.text} px-2 flex items-center justify-between cursor-move rounded-t-lg`}
         onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
       >
         <div className="flex items-center pointer-events-none">
           <div className="w-4 h-4 mr-2 pointer-events-none">

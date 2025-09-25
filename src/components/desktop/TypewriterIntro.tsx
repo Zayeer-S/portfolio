@@ -80,18 +80,18 @@ export default function TypewriterIntro({
   }, [currentLineIndex, lines.length]);
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center pb-95 pointer-events-none">
-      <div className="text mr-16">
+    <div className="absolute inset-0 flex items-start justify-center pt-16 sm:pt-20 md:pt-24 pointer-events-none px-4">
+      <div className="text-center w-full max-w-4xl">
         <div className="space-y-2">
-          <div className="text-center text-white text-5xl font-light tracking-wide drop-shadow-lg">
+          <div className="text-white text-4xl sm:text-5xl md:text-6xl font-light tracking-wide drop-shadow-lg">
             Hi, I'm Zayeer
           </div>
           
-          <div className="text-center text-white text-3xl font-light tracking-wide drop-shadow-lg min-h-[2.25rem] flex items-center justify-center">
+          <div className="text-white text-2xl sm:text-3xl md:text-4xl font-light tracking-wide drop-shadow-lg min-h-[1.75rem] sm:min-h-[2rem] md:min-h-[2.25rem] flex items-center justify-center">
             <span>
               {completedLines[0] || (currentLineIndex === 0 ? displayedText : '')}
             </span>
-            <span className="inline-block w-0.5 h-7 ml-1" style={{ minWidth: '2px' }}>
+            <span className="inline-block w-0.5 h-5 sm:h-7 md:h-8 ml-1" style={{ minWidth: '2px' }}>
               {currentLineIndex === 0 && (
                 <span 
                   className={`block w-full h-full bg-white ${
@@ -102,12 +102,11 @@ export default function TypewriterIntro({
             </span>
           </div>
           
-           {/* Currently typing line */}
-          <div className="text-center text-white text-3xl font-light tracking-wide drop-shadow-lg min-h-[2.25rem] flex items-center justify-center">
+          <div className="text-white text-2xl sm:text-3xl md:text-4xl font-light tracking-wide drop-shadow-lg min-h-[1.75rem] sm:min-h-[2rem] md:min-h-[2.25rem] flex items-center justify-center">
             <span>
               {completedLines[1] || (currentLineIndex === 1 ? displayedText : '')}
             </span>
-            <span className="inline-block w-0.5 h-7 ml-1" style={{ minWidth: '2px' }}>
+            <span className="inline-block w-0.5 h-5 sm:h-7 md:h-8 ml-1" style={{ minWidth: '2px' }}>
               {currentLineIndex === 1 && (
                 <span 
                   className={`block w-full h-full bg-white ${

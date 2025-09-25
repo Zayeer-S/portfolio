@@ -46,6 +46,11 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
         </div>
         <div 
           className={`${styles.startMenu.items} p-2 rounded cursor-pointer`} 
+          onClick={() => handleItemClick('notepad')}
+        >
+          <span className="text-sm">📝 Notepad</span>
+        </div>        <div 
+          className={`${styles.startMenu.items} p-2 rounded cursor-pointer`} 
           onClick={() => handleItemClick('settings')}
         >
           <span className="text-sm">⚙️ Settings</span>

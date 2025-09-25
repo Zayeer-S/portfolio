@@ -10,6 +10,7 @@ import Taskbar from '@/components/desktop/Taskbar';
 import TypewriterIntro from '@/components/desktop/TypewriterIntro';
 import SettingsWindow from '@/components/windows/SettingsWindow';
 import CalculatorWindow from '@/components/windows/CalculatorWindow';
+import NotepadWindow from '@/components/windows/NotepadWindow';
 
 import ProjectsWindow from '@/components/windows/ProjectsWindow';
 import TechnologiesWindow from '@/components/windows/TechnologiesWindow';
@@ -157,6 +158,22 @@ export default function Home() {
         <CalculatorWindow />
       </Window>
 
+      <Window
+        id="notepad"
+        title="Notepad"
+        isOpen={windows.notepad.isOpen}
+        isMinimized={windows.notepad.isMinimized}
+        isMaximized={windows.notepad.isMaximized}
+        onClose={() => closeWindow('notepad')}
+        onMinimize={() => minimizeWindow('notepad')}
+        onMaximize={() => maximizeWindow('notepad')}
+        zIndex={getWindowZIndex('notepad')}
+        onFocus={() => focusWindow('notepad')}
+        theme={theme}
+      >
+        <NotepadWindow />
+      </Window>
+      
       {/* Start Menu */}
       <StartMenu 
         isOpen={startMenuOpen}

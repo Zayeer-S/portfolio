@@ -5,6 +5,7 @@ import { WindowProps } from '@/types';
 import { Theme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
 import { useWindowResize } from '@/hooks/useWindowResize';
+import { LAYOUT_CONSTANTS } from '@/constants/layout';
 import ResizeHandles from './ResizeHandles';
 
 interface WindowPropsWithTheme extends Omit<WindowProps, 'theme'> {
@@ -13,7 +14,13 @@ interface WindowPropsWithTheme extends Omit<WindowProps, 'theme'> {
 
 const getInitialDimensions = (windowId?: string) => {
   if (typeof window === 'undefined') {
-    return { position: { x: 100, y: 100 }, size: { width: 384, height: 320 } };
+    return { 
+      position: { x: 100, y: 100 }, 
+      size: { 
+        width: LAYOUT_CONSTANTS.DEFAULT_WINDOW.WIDTH, 
+        height: LAYOUT_CONSTANTS.DEFAULT_WINDOW.HEIGHT 
+      } 
+    };
   }
 
   const viewportWidth = window.innerWidth;
@@ -22,34 +29,41 @@ const getInitialDimensions = (windowId?: string) => {
   const availableHeight = viewportHeight - taskbarHeight;
 
   const windowIndex = windowId ? windowId.length : 0;
-  const offsetMultiplier = (windowIndex % 5) * 30;
+  const offsetMultiplier = (windowIndex % LAYOUT_CONSTANTS.WINDOW_STACK_CYCLE_COUNT) * LAYOUT_CONSTANTS.WINDOW_STACK_OFFSET;
 
-  if (viewportWidth < 500) { // Mobile
-    const baseX = Math.min(10 + offsetMultiplier, viewportWidth - 370);
-    const baseY = Math.min(10 + offsetMultiplier, availableHeight - 420);
+  if (viewportWidth < LAYOUT_CONSTANTS.MOBILE_BREAKPOINT) { // Mobile
+    const maxWindowWidth = LAYOUT_CONSTANTS.MOBILE_WINDOW.MAX_WIDTH;
+    const maxWindowHeight = LAYOUT_CONSTANTS.MOBILE_WINDOW.MAX_HEIGHT;
+    const baseX = Math.min(10 + offsetMultiplier, viewportWidth - maxWindowWidth - 10);
+    const baseY = Math.min(10 + offsetMultiplier, availableHeight - maxWindowHeight - 10);
     return {
-      position: { x: Math.max(5, baseX), y: Math.max(5, baseY) },
+      position: { x: Math.max(LAYOUT_CONSTANTS.MOBILE_MIN_MARGIN, baseX), y: Math.max(LAYOUT_CONSTANTS.MOBILE_MIN_MARGIN, baseY) },
       size: { 
-        width: Math.min(viewportWidth - 20, 350), 
-        height: Math.min(availableHeight - 20, 400) 
+        width: Math.min(viewportWidth - LAYOUT_CONSTANTS.MOBILE_MARGIN, maxWindowWidth), 
+        height: Math.min(availableHeight - LAYOUT_CONSTANTS.MOBILE_MARGIN, maxWindowHeight) 
       }
     };
-  } else if (viewportWidth < 1024) { // Tablet
-    const baseX = Math.min(50 + offsetMultiplier, viewportWidth - 520);
-    const baseY = Math.min(50 + offsetMultiplier, availableHeight - 520);
+  } else if (viewportWidth < LAYOUT_CONSTANTS.TABLET_BREAKPOINT) { // Tablet
+    const windowWidth = Math.min(viewportWidth * 0.8, 500);
+    const windowHeight = Math.min(availableHeight * 0.8, 500);
+    const baseX = Math.min(50 + offsetMultiplier, viewportWidth - windowWidth - 20);
+    const baseY = Math.min(50 + offsetMultiplier, availableHeight - windowHeight - 20);
     return {
-      position: { x: Math.max(20, baseX), y: Math.max(20, baseY) },
+      position: { x: Math.max(LAYOUT_CONSTANTS.TABLET_MIN_MARGIN, baseX), y: Math.max(LAYOUT_CONSTANTS.TABLET_MIN_MARGIN, baseY) },
       size: { 
-        width: Math.min(viewportWidth * 0.8, 500), 
-        height: Math.min(availableHeight * 0.8, 500) 
+        width: windowWidth, 
+        height: windowHeight 
       }
     };
   } else { // Desktop... or TV 😭
-    const baseX = Math.min(100 + offsetMultiplier, viewportWidth - 404);
-    const baseY = Math.min(100 + offsetMultiplier, availableHeight - 340);
+    const baseX = Math.min(100 + offsetMultiplier, viewportWidth - LAYOUT_CONSTANTS.DEFAULT_WINDOW.WIDTH - LAYOUT_CONSTANTS.DESKTOP_MARGIN);
+    const baseY = Math.min(100 + offsetMultiplier, availableHeight - LAYOUT_CONSTANTS.DEFAULT_WINDOW.HEIGHT - LAYOUT_CONSTANTS.DESKTOP_MARGIN);
     return {
-      position: { x: Math.max(20, baseX), y: Math.max(20, baseY) },
-      size: { width: 384, height: 320 }
+      position: { x: Math.max(LAYOUT_CONSTANTS.DESKTOP_MIN_MARGIN, baseX), y: Math.max(LAYOUT_CONSTANTS.DESKTOP_MIN_MARGIN, baseY) },
+      size: { 
+        width: LAYOUT_CONSTANTS.DEFAULT_WINDOW.WIDTH, 
+        height: LAYOUT_CONSTANTS.DEFAULT_WINDOW.HEIGHT 
+      }
     };
   }
 };
@@ -112,8 +126,8 @@ export default function Window({
         ...getWindowStyle(),
         zIndex: zIndex,
         pointerEvents: 'auto',
-        minWidth: '200px',
-        minHeight: '150px',
+        minWidth: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
+        minHeight: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
       }}
       onMouseDown={onFocus}
     >

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import DesktopIcon from './DesktopIcon';
+import { LAYOUT_CONSTANTS } from '@/constants/layout';
 
 interface DesktopGridProps {
   icons: Array<{
@@ -50,8 +51,8 @@ export default function DesktopGrid({
   
   useEffect(() => {
     const updateGridDimensions = () => {
-      const cols = Math.floor(window.innerWidth / cellSize);
-      const rows = Math.floor((window.innerHeight - 44) / cellSize); // 44(px) is taskbar height
+      const cols = Math.floor(window.innerWidth / LAYOUT_CONSTANTS.DESKTOP_CELL_SIZE);
+      const rows = Math.floor((window.innerHeight - 44) / LAYOUT_CONSTANTS.TASKBAR_HEIGHT);
       setGridDimensions({ cols, rows });
     };
     
@@ -179,9 +180,9 @@ export default function DesktopGrid({
     <div 
       className="absolute inset-0 grid gap-0"
       style={{
-        gridTemplateColumns: `repeat(${gridDimensions.cols}, ${cellSize}px)`,
-        gridTemplateRows: `repeat(${gridDimensions.rows}, ${cellSize}px)`,
-        paddingBottom: '44px', // Taskbar width
+        gridTemplateColumns: `repeat(${gridDimensions.cols}, ${LAYOUT_CONSTANTS.DESKTOP_CELL_SIZE}px)`,
+        gridTemplateRows: `repeat(${gridDimensions.rows}, ${LAYOUT_CONSTANTS.DESKTOP_CELL_SIZE}px)`,
+        paddingBottom: `${LAYOUT_CONSTANTS.TASKBAR_HEIGHT}px`,
       }}
     >
       {/* Render grid cells as drop zones */}

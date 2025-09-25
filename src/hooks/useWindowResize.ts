@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { LAYOUT_CONSTANTS } from '@/constants/layout';
 
 export type ResizeDirection = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 
@@ -20,7 +21,7 @@ export function useWindowResize({
 }: UseWindowResizeProps) {
   const constrainToViewport = (x: number, y: number, width: number, height: number) => {
     const maxX = window.innerWidth - width;
-    const maxY = window.innerHeight - height - 44; // 44px for taskbar
+    const maxY = window.innerHeight - height - LAYOUT_CONSTANTS.TASKBAR_HEIGHT;
     return {
       x: Math.max(0, Math.min(x, maxX)),
       y: Math.max(0, Math.min(y, maxY)),
@@ -125,22 +126,22 @@ export function useWindowResize({
 
         // Handle horizontal resizing
         if (resizeDirection.includes('e')) {
-          newWidth = Math.max(200, resizeStart.width + deltaX);
+          newWidth = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH, resizeStart.width + deltaX); // CHANGE HERE: Use constant
         }
         if (resizeDirection.includes('w')) {
-          newWidth = Math.max(200, resizeStart.width - deltaX);
-          if (newWidth > 200) {
+          newWidth = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH, resizeStart.width - deltaX); // CHANGE HERE: Use constant
+          if (newWidth > LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH) {
             newX = resizeStart.posX + deltaX;
           }
         }
 
         // Handle vertical resizing
         if (resizeDirection.includes('s')) {
-          newHeight = Math.max(150, resizeStart.height + deltaY);
+          newHeight = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT, resizeStart.height + deltaY); // CHANGE HERE: Use constant
         }
         if (resizeDirection.includes('n')) {
-          newHeight = Math.max(150, resizeStart.height - deltaY);
-          if (newHeight > 150) {
+          newHeight = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT, resizeStart.height - deltaY); // CHANGE HERE: Use constant
+          if (newHeight > LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT) {
             newY = resizeStart.posY + deltaY;
           }
         }

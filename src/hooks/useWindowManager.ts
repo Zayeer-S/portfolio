@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { WindowsState, WindowId } from '@/types';
+import { LAYOUT_CONSTANTS } from '@/constants/layout';
 
 export function useWindowManager() {
   const [windows, setWindows] = useState<WindowsState>({
@@ -62,7 +63,7 @@ export function useWindowManager() {
 
   const getWindowZIndex = (windowId: WindowId) => {
     const index = windowOrder.indexOf(windowId);
-    return index === -1 ? 1000 : 1000 + (windowOrder.length - 1 - index);
+    return index === -1 ? LAYOUT_CONSTANTS.Z_INDEX.BASE : LAYOUT_CONSTANTS.Z_INDEX.BASE + (windowOrder.length - 1 - index);
   };
 
   const toggleStartMenu = () => {

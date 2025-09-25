@@ -20,10 +20,10 @@ export default function DesktopIcon({ icon, label, onClick, hoverClass }: Deskto
       className={`flex flex-col items-center px-1 py-1 ${hoverClass || 'hover:bg-gray-500/30'} cursor-pointer rounded group transition-opacity`}      
       onDoubleClick={onClick}
     >
-      <div className="w-10 h-12 mb-1 flex items-center justify-center text-5xl pointer-events-none">
+      <div className="w-8 h-10 sm:w-10 sm:h-12 mb-1 flex items-center justify-center text-4xl sm:text-5xl pointer-events-none">
         {icon}
       </div>
-      <span className="text-white text-xs text-center group-hover px-1 rounded pointer-events-none">
+      <span className="text-white text-xs sm:text-xs text-center group-hover rounded pointer-events-none leading-tight">
         {label}
       </span>
     </div>

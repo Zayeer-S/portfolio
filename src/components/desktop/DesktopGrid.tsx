@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import DesktopIcon from './DesktopIcon';
 import { LAYOUT_CONSTANTS } from '@/constants/layout';
+import DesktopIcon from './DesktopIcon';
 
 interface DesktopGridProps {
   icons: Array<{
@@ -16,7 +16,6 @@ export default function DesktopGrid({
   icons, 
   hoverClass
 }: DesktopGridProps) {
-  const cellSize = 80;
   const STORAGE_KEY = 'desktop-icon-positions';
   
   // Track hydration to prevent the SSR mismatch
@@ -24,6 +23,10 @@ export default function DesktopGrid({
   
   // Grid dimensions based on viewport size
   const [gridDimensions, setGridDimensions] = useState({ cols: 8, rows: 10 });
+  
+  // Tracks responsive top padding and cell size with proper typing
+  const [topPadding, setTopPadding] = useState<number>(5);
+  const [cellSize, setCellSize] = useState<number>(LAYOUT_CONSTANTS.DESKTOP_CELL_SIZE);
   
   const loadSavedPositions = () => {
     if (!isClient) return null;
@@ -51,9 +54,18 @@ export default function DesktopGrid({
   
   useEffect(() => {
     const updateGridDimensions = () => {
-      const cols = Math.floor(window.innerWidth / LAYOUT_CONSTANTS.DESKTOP_CELL_SIZE);
-      const rows = Math.floor((window.innerHeight - 44) / LAYOUT_CONSTANTS.TASKBAR_HEIGHT);
+      const cellSize = window.innerWidth < LAYOUT_CONSTANTS.MOBILE_BREAKPOINT 
+        ? LAYOUT_CONSTANTS.DESKTOP_CELL_SIZE_MOBILE 
+        : LAYOUT_CONSTANTS.DESKTOP_CELL_SIZE;
+        
+      const cols = Math.floor(window.innerWidth / cellSize);
+      const topPadding = window.innerWidth < LAYOUT_CONSTANTS.MOBILE_BREAKPOINT ? 15 : 5;
+      const availableHeight = window.innerHeight - LAYOUT_CONSTANTS.TASKBAR_HEIGHT - topPadding;
+      const rows = Math.floor(availableHeight / cellSize);
       setGridDimensions({ cols, rows });
+      
+      setTopPadding(topPadding);
+      setCellSize(cellSize);
     };
     
     updateGridDimensions();
@@ -180,9 +192,10 @@ export default function DesktopGrid({
     <div 
       className="absolute inset-0 grid gap-0"
       style={{
-        gridTemplateColumns: `repeat(${gridDimensions.cols}, ${LAYOUT_CONSTANTS.DESKTOP_CELL_SIZE}px)`,
-        gridTemplateRows: `repeat(${gridDimensions.rows}, ${LAYOUT_CONSTANTS.DESKTOP_CELL_SIZE}px)`,
+        gridTemplateColumns: `repeat(${gridDimensions.cols}, ${cellSize}px)`,
+        gridTemplateRows: `repeat(${gridDimensions.rows}, ${cellSize}px)`,
         paddingBottom: `${LAYOUT_CONSTANTS.TASKBAR_HEIGHT}px`,
+        paddingTop: `${topPadding}px`,
       }}
     >
       {/* Render grid cells as drop zones */}
@@ -195,9 +208,13 @@ export default function DesktopGrid({
           return (
             <div
               key={`${row}-${col}`}
-              className={`w-20 h-20 border border-transparent rounded transition-colors ${
+              className={`border border-transparent rounded transition-colors ${
                 hoveredCell === `${row}-${col}` ? 'bg-white/20' : ''
               }`}
+              style={{ 
+                width: `${cellSize}px`, 
+                height: `${cellSize}px` 
+              }}
               onDrop={(e) => handleDrop(e, row, col)}
               onDragOver={handleDragOver}
               onDragEnter={(e) => handleDragEnter(e, row, col)}

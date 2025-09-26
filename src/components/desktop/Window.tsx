@@ -147,7 +147,9 @@ export default function Window({
     handleMouseDown,
     handleTouchStart,
     handleResizeMouseDown,
-    getWindowStyle
+    getWindowStyle,
+    isDragging,
+    isResizing
   } = useWindowResize({
     initialPosition: initialDimensions.position,
     initialSize: initialDimensions.size,
@@ -158,25 +160,28 @@ export default function Window({
   if (!shouldRender) return null;
 
   const getAnimationStyle = () => {
+    const baseStyle = {
+      transition: (isDragging || isResizing) ? 'none' : undefined
+    };
+
     if (!isAnimating || !animationType) {
       return {
-        opacity: 1,
-        transform: 'scale(1) translateY(0px)',
-        transition: 'all 0.2s ease-out'
+        ...baseStyle,
+        opacity: 1
       };
     }
     
     if (animationType === 'opening') {
       return {
+        ...baseStyle,
         opacity: 1,
-        transform: 'scale(1) translateY(0px)',
-        transition: 'all 0.2s ease-out',
         animation: 'windowOpen 0.2s ease-out'
       };
     }
     
     if (animationType === 'closing') {
       return {
+        ...baseStyle,
         opacity: 0,
         transform: 'scale(0.95) translateY(10px)',
         transition: 'all 0.15s ease-in'
@@ -184,9 +189,8 @@ export default function Window({
     }
     
     return {
-      opacity: 1,
-      transform: 'scale(1) translateY(0px)',
-      transition: 'all 0.2s ease-out'
+      ...baseStyle,
+      opacity: 1
     };
   };
 
@@ -217,12 +221,13 @@ export default function Window({
           pointerEvents: 'auto',
           minWidth: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
           minHeight: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
+          willChange: (isDragging || isResizing) ? 'transform' : 'auto'
         }}
         onMouseDown={onFocus}
       >
         {/* Title Bar */}
         <div
-          className={`title-bar h-8 ${styles.window.titleBar.background} ${styles.window.titleBar.text} px-2 flex items-center justify-between cursor-move rounded-t-lg`}
+          className={`title-bar h-8 ${styles.window.titleBar.background} ${styles.window.titleBar.text} px-2 flex items-center justify-between cursor-move rounded-t-lg select-none`}
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
         >

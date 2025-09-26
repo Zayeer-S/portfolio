@@ -86,8 +86,12 @@ export default function Window({
   const initialDimensions = getInitialDimensions(id);
   
   const [isAnimating, setIsAnimating] = useState(false);
-  const [animationType, setAnimationType] = useState<'opening' | 'closing' | null>(null);
+  const [animationType, setAnimationType] = useState<'opening' | 'closing' | 'minimizing' | 'unminimizing' | 'maximizing' | 'unmaximizing' | null>(null);
   const [shouldRender, setShouldRender] = useState(isOpen);
+  
+  // Refs to track values and detect real transitions
+  const prevMinimizedRef = useRef<boolean | undefined>(undefined);
+  const prevMaximizedRef = useRef<boolean | undefined>(undefined);
 
   useEffect(() => {
     if (isOpen && !shouldRender) {
@@ -104,6 +108,42 @@ export default function Window({
     }
   }, [isOpen, shouldRender]);
 
+  useEffect(() => {
+    const wasMinimized = prevMinimizedRef.current;
+    const isNowMinimized = isMinimized;
+    
+    // Update the ref for next comparison
+    prevMinimizedRef.current = isMinimized;
+    
+    if (!shouldRender || !isOpen) return;
+
+    if (isNowMinimized && (wasMinimized === undefined || !wasMinimized)) {
+      // Starting to minimize (including first time)
+      setIsAnimating(true);
+      setAnimationType('minimizing');
+      
+      const timer = setTimeout(() => {
+        setIsAnimating(false);
+        setAnimationType(null);
+      }, 300);
+      
+      return () => clearTimeout(timer);
+    } else if (!isNowMinimized && wasMinimized === true) {
+      // Starting to unminimize
+      if (animationType !== 'opening') {
+        setIsAnimating(true);
+        setAnimationType('unminimizing');
+        
+        const timer = setTimeout(() => {
+          setIsAnimating(false);
+          setAnimationType(null);
+        }, 200);
+        
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [isMinimized, shouldRender, isOpen, animationType]);
+
   const handleClose = () => {
     if (isAnimating && animationType === 'closing') {
       return;
@@ -118,6 +158,28 @@ export default function Window({
       setAnimationType(null);
       onClose();
     }, 150);
+  };
+
+  const handleMaximize = () => {
+    if (!isMaximized) {
+      setIsAnimating(true);
+      setAnimationType('maximizing');
+      
+      setTimeout(() => {
+        setIsAnimating(false);
+        setAnimationType(null);
+      }, 250);
+    } else {
+      setIsAnimating(true);
+      setAnimationType('unmaximizing');
+      
+      setTimeout(() => {
+        setIsAnimating(false);
+        setAnimationType(null);
+      }, 250);
+    }
+    
+    onMaximize();
   };
 
   useEffect(() => {
@@ -143,6 +205,7 @@ export default function Window({
       }
     }
   };
+  
   const {
     handleMouseDown,
     handleTouchStart,
@@ -167,31 +230,63 @@ export default function Window({
     if (!isAnimating || !animationType) {
       return {
         ...baseStyle,
-        opacity: 1
+        opacity: isMinimized && !isAnimating ? 0 : 1,
+        visibility: isMinimized && !isAnimating ? 'hidden' as const : 'visible' as const
       };
     }
     
-    if (animationType === 'opening') {
-      return {
-        ...baseStyle,
-        opacity: 1,
-        animation: 'windowOpen 0.2s ease-out'
-      };
+    switch (animationType) {
+      case 'opening':
+        return {
+          ...baseStyle,
+          opacity: 1,
+          animation: 'windowOpen 0.2s ease-out'
+        };
+      
+      case 'closing':
+        return {
+          ...baseStyle,
+          opacity: 0,
+          transform: 'scale(0.95) translateY(10px)',
+          transition: 'all 0.15s ease-in'
+        };
+      
+      case 'minimizing':
+        const taskbarY = window.innerHeight - LAYOUT_CONSTANTS.TASKBAR_HEIGHT;
+        const currentY = getWindowStyle().top as number || 0;
+        const translateY = taskbarY - currentY;
+        return {
+          ...baseStyle,
+          opacity: 0,
+          transform: `translateY(${translateY}px)`,
+          transition: 'all 0.3s ease-in'
+        };
+      
+      case 'unminimizing':
+        return {
+          ...baseStyle,
+          opacity: 1,
+          animation: 'windowOpen 0.2s ease-out'
+        };
+      
+      case 'maximizing':
+        return {
+          ...baseStyle,
+          transition: 'all 0.25s ease-out'
+        };
+      
+      case 'unmaximizing':
+        return {
+          ...baseStyle,
+          transition: 'all 0.25s ease-out'
+        };
+      
+      default:
+        return {
+          ...baseStyle,
+          opacity: 1
+        };
     }
-    
-    if (animationType === 'closing') {
-      return {
-        ...baseStyle,
-        opacity: 0,
-        transform: 'scale(0.95) translateY(10px)',
-        transition: 'all 0.15s ease-in'
-      };
-    }
-    
-    return {
-      ...baseStyle,
-      opacity: 1
-    };
   };
 
   return (
@@ -212,7 +307,7 @@ export default function Window({
       <div
         ref={windowRef}
         className={`fixed ${styles.window.background} ${styles.window.border} ${styles.window.shadow} ${styles.window.borderRadius} flex flex-col ${
-          isMinimized ? 'hidden' : ''
+          isMinimized && !isAnimating ? 'hidden' : ''
         } ${isMaximized ? 'rounded-none' : ''}`}
         style={{
           ...getWindowStyle(),
@@ -221,7 +316,7 @@ export default function Window({
           pointerEvents: 'auto',
           minWidth: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
           minHeight: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
-          willChange: (isDragging || isResizing) ? 'transform' : 'auto'
+          willChange: (isDragging || isResizing || isAnimating) ? 'transform' : 'auto'
         }}
         onMouseDown={onFocus}
       >
@@ -250,7 +345,7 @@ export default function Window({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onMaximize();
+                handleMaximize();
               }}
               className={`w-6 h-5 ${styles.window.titleBar.buttons.maximize} text-xs mr-1`}
             >

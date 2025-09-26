@@ -10,10 +10,8 @@ export default function Taskbar({
 }: TaskbarProps) {
   const getWindowLabel = (windowId: string) => {
     const labels: { [key: string]: string } = {
-      resume: '📄 Resume',
       projects: '📁 Projects',
       technologies: '⚙️ Tech',
-      about: '👤 About',
       contact: '📧 Contact',
       settings: '⚙️ Settings',
       calculator: '🔢 Calc',

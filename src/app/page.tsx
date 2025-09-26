@@ -63,12 +63,6 @@ export default function Home() {
             onClick: () => openWindow('technologies')
           },
           {
-            id: 'about',
-            icon: '👤',
-            label: 'About Me',
-            onClick: () => openWindow('about')
-          },
-          {
             id: 'contact',
             icon: '📧',
             label: 'Contact',

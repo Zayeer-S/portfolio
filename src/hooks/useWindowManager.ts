@@ -6,9 +6,7 @@ import { LAYOUT_CONSTANTS } from '@/constants/layout';
 
 export function useWindowManager() {
   const [windows, setWindows] = useState<WindowsState>({
-    resume: { isOpen: false, isMinimized: false, isMaximized: false },
     projects: { isOpen: false, isMinimized: false, isMaximized: false },
-    about: { isOpen: false, isMinimized: false, isMaximized: false },
     contact: { isOpen: false, isMinimized: false, isMaximized: false },
     technologies: { isOpen: false, isMinimized: false, isMaximized: false },
     settings: { isOpen: false, isMinimized: false, isMaximized: false },

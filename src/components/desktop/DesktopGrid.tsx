@@ -93,10 +93,13 @@ export default function DesktopGrid({
     setGridState(prevGrid => {
       const newGrid = Array(gridDimensions.rows).fill(null).map(() => Array(gridDimensions.cols).fill(null));
       
+      const validIconIds = new Set(icons.map(icon => icon.id));
+      
       for (let r = 0; r < Math.min(prevGrid.length, gridDimensions.rows); r++) {
         for (let c = 0; c < Math.min(prevGrid[0]?.length || 0, gridDimensions.cols); c++) {
-          if (prevGrid[r] && prevGrid[r][c]) {
-            newGrid[r][c] = prevGrid[r][c];
+          const iconId = prevGrid[r] && prevGrid[r][c];
+          if (iconId && validIconIds.has(iconId)) {
+            newGrid[r][c] = iconId;
           }
         }
       }

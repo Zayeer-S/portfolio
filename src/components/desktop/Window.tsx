@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { WindowProps } from '@/types';
 import { Theme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
@@ -85,6 +85,47 @@ export default function Window({
   const windowRef = useRef<HTMLDivElement>(null);
   const initialDimensions = getInitialDimensions(id);
   
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [animationType, setAnimationType] = useState<'opening' | 'closing' | null>(null);
+  const [shouldRender, setShouldRender] = useState(isOpen);
+
+  useEffect(() => {
+    if (isOpen && !shouldRender) {
+      setShouldRender(true);
+      setIsAnimating(true);
+      setAnimationType('opening');
+
+      const timer = setTimeout(() => {
+        setIsAnimating(false);
+        setAnimationType(null);
+      }, 200);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, shouldRender]);
+
+  const handleClose = () => {
+    if (isAnimating && animationType === 'closing') {
+      return;
+    }
+
+    setIsAnimating(true);
+    setAnimationType('closing');
+
+    setTimeout(() => {
+      setShouldRender(false);
+      setIsAnimating(false);
+      setAnimationType(null);
+      onClose();
+    }, 150);
+  };
+
+  useEffect(() => {
+    if (!isOpen && shouldRender && !isAnimating) {
+      setShouldRender(false);
+    }
+  }, [isOpen, shouldRender, isAnimating]);
+
   const styles = theme ? getThemeClasses(theme) : {
     window: {
       background: 'bg-white',
@@ -114,75 +155,125 @@ export default function Window({
     onFocus
   });
 
-  if (!isOpen) return null;
+  if (!shouldRender) return null;
+
+  const getAnimationStyle = () => {
+    if (!isAnimating || !animationType) {
+      return {
+        opacity: 1,
+        transform: 'scale(1) translateY(0px)',
+        transition: 'all 0.2s ease-out'
+      };
+    }
+    
+    if (animationType === 'opening') {
+      return {
+        opacity: 1,
+        transform: 'scale(1) translateY(0px)',
+        transition: 'all 0.2s ease-out',
+        animation: 'windowOpen 0.2s ease-out'
+      };
+    }
+    
+    if (animationType === 'closing') {
+      return {
+        opacity: 0,
+        transform: 'scale(0.95) translateY(10px)',
+        transition: 'all 0.15s ease-in'
+      };
+    }
+    
+    return {
+      opacity: 1,
+      transform: 'scale(1) translateY(0px)',
+      transition: 'all 0.2s ease-out'
+    };
+  };
 
   return (
-    <div
-      ref={windowRef}
-      className={`fixed ${styles.window.background} ${styles.window.border} ${styles.window.shadow} ${styles.window.borderRadius} flex flex-col ${
-        isMinimized ? 'hidden' : ''
-      } ${isMaximized ? 'rounded-none' : ''}`}
-      style={{
-        ...getWindowStyle(),
-        zIndex: zIndex,
-        pointerEvents: 'auto',
-        minWidth: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
-        minHeight: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
-      }}
-      onMouseDown={onFocus}
-    >
-      {/* Title Bar */}
-      <div
-        className={`title-bar h-8 ${styles.window.titleBar.background} ${styles.window.titleBar.text} px-2 flex items-center justify-between cursor-move rounded-t-lg`}
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
-      >
-        <div className="flex items-center pointer-events-none">
-          <div className="w-4 h-4 mr-2 pointer-events-none">
-            <div className="w-full h-full bg-blue-300 rounded-sm pointer-events-none"></div>
-          </div>
-          <span className="text-sm font-normal pointer-events-none">{title}</span>
-        </div>
-        <div className="flex">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onMinimize();
-            }}
-            className={`w-6 h-5 ${styles.window.titleBar.buttons.minimize} text-xs mr-1`}
-          >
-            _
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onMaximize();
-            }}
-            className={`w-6 h-5 ${styles.window.titleBar.buttons.maximize} text-xs mr-1`}
-          >
-            □
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onClose();
-            }}
-            className={`w-6 h-5 ${styles.window.titleBar.buttons.close} text-xs`}
-          >
-            ×
-          </button>
-        </div>
-      </div>
+    <>
+      <style jsx>{`
+        @keyframes windowOpen {
+          0% {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) translateY(0px);
+          }
+        }
+      `}</style>
       
-      {/* Window Content */}
-      <div className="p-4 overflow-auto flex-1">
-        {children}
-      </div>
+      <div
+        ref={windowRef}
+        className={`fixed ${styles.window.background} ${styles.window.border} ${styles.window.shadow} ${styles.window.borderRadius} flex flex-col ${
+          isMinimized ? 'hidden' : ''
+        } ${isMaximized ? 'rounded-none' : ''}`}
+        style={{
+          ...getWindowStyle(),
+          ...getAnimationStyle(),
+          zIndex: zIndex,
+          pointerEvents: 'auto',
+          minWidth: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
+          minHeight: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
+        }}
+        onMouseDown={onFocus}
+      >
+        {/* Title Bar */}
+        <div
+          className={`title-bar h-8 ${styles.window.titleBar.background} ${styles.window.titleBar.text} px-2 flex items-center justify-between cursor-move rounded-t-lg`}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+        >
+          <div className="flex items-center pointer-events-none">
+            <div className="w-4 h-4 mr-2 pointer-events-none">
+              <div className="w-full h-full bg-blue-300 rounded-sm pointer-events-none"></div>
+            </div>
+            <span className="text-sm font-normal pointer-events-none">{title}</span>
+          </div>
+          <div className="flex">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onMinimize();
+              }}
+              className={`w-6 h-5 ${styles.window.titleBar.buttons.minimize} text-xs mr-1`}
+            >
+              _
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onMaximize();
+              }}
+              className={`w-6 h-5 ${styles.window.titleBar.buttons.maximize} text-xs mr-1`}
+            >
+              □
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                handleClose();
+              }}
+              className={`w-6 h-5 ${styles.window.titleBar.buttons.close} text-xs`}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+        
+        {/* Window Content */}
+        <div className="p-4 overflow-auto flex-1">
+          {children}
+        </div>
 
-      <ResizeHandles 
-        isMaximized={isMaximized}
-        onResizeMouseDown={handleResizeMouseDown}
-      />
-    </div>
+        <ResizeHandles 
+          isMaximized={isMaximized}
+          onResizeMouseDown={handleResizeMouseDown}
+        />
+      </div>
+    </>
   );
 }

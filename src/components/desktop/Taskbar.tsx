@@ -276,8 +276,9 @@ export default function Taskbar({
          style={{ zIndex: LAYOUT_CONSTANTS.Z_INDEX.TASKBAR }}>
       {/* Start Button */}
       <button
-        className={`h-8 px-4 ${styles.taskbar.startButton} rounded text-sm font-medium flex items-center`}
+        className={`h-8 px-4 ${styles.taskbar.startButton} rounded text-sm font-medium flex items-center border-0`}
         onClick={onToggleStartMenu}
+        style={{ border: 'none', outline: 'none' }}
       >
         <div className="w-4 h-4 mr-2">
           <div className="w-full h-full bg-white rounded-sm opacity-80"></div>
@@ -311,6 +312,8 @@ export default function Taskbar({
                   ? '0 0 3px rgba(0,0,0,0.3)' 
                   : '0 0 4px rgba(0,0,0,0.5)',
                 opacity: window.isMinimized ? 0.7 : 1,
+                border: 'none',
+                outline: 'none',
                 touchAction: 'manipulation'
               }}
             >

@@ -1,72 +1,78 @@
+import { useTheme } from '@/contexts/ThemeContext';
+import { getThemeClasses } from '@/styles/themes';
+
 export default function TechnologiesWindow() {
+  const { theme } = useTheme();
+  const styles = getThemeClasses(theme);
+
   return (
     <div className="space-y-6">
-      <div className="text-center border-b pb-3">
-        <h2 className="text-lg font-bold text-gray-800">Technical Skills & Tools</h2>
-        <p className="text-sm text-gray-600">Technologies I work with</p>
+      <div className={`text-center border-b pb-3 ${styles.window.content.border}`}>
+        <h2 className={`text-lg font-bold ${styles.window.content.text}`}>Technical Skills & Tools</h2>
+        <p className={`text-sm ${styles.window.content.textSecondary}`}>Technologies I work with</p>
       </div>
 
       <div className="space-y-4">
         {/* Programming Languages */}
         <div>
-          <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+          <h3 className={`font-semibold ${styles.window.content.text} mb-3 flex items-center`}>
             <span className="text-lg mr-2">💻</span>
             Programming Languages
           </h3>
           <div className="grid grid-cols-3 gap-2">
             <div className="bg-blue-50 border border-blue-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">🐍</div>
-              <div className="text-xs font-medium">Python</div>
+              <div className="text-xs font-medium text-blue-800">Python</div>
             </div>
             <div className="bg-yellow-50 border border-yellow-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">📜</div>
-              <div className="text-xs font-medium">JavaScript</div>
+              <div className="text-xs font-medium text-yellow-800">JavaScript</div>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded p-2 text-center">
-              <div className="text-2xl mb-1">🔷</div>
-              <div className="text-xs font-medium">TypeScript</div>
+              <div className="text-2xl mb-1">📷</div>
+              <div className="text-xs font-medium text-blue-800">TypeScript</div>
             </div>
             <div className="bg-purple-50 border border-purple-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">⚡</div>
-              <div className="text-xs font-medium">C++</div>
+              <div className="text-xs font-medium text-purple-800">C++</div>
             </div>
             <div className="bg-green-50 border border-green-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">#️⃣</div>
-              <div className="text-xs font-medium">C#</div>
+              <div className="text-xs font-medium text-green-800">C#</div>
             </div>
             <div className="bg-gray-50 border border-gray-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">🔧</div>
-              <div className="text-xs font-medium">C</div>
+              <div className="text-xs font-medium text-gray-800">C</div>
             </div>
             <div className="bg-purple-50 border border-purple-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">🐘</div>
-              <div className="text-xs font-medium">PHP</div>
+              <div className="text-xs font-medium text-purple-800">PHP</div>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">🗃️</div>
-              <div className="text-xs font-medium">SQL</div>
+              <div className="text-xs font-medium text-blue-800">SQL</div>
             </div>
             <div className="bg-orange-50 border border-orange-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">📄</div>
-              <div className="text-xs font-medium">HTML/CSS</div>
+              <div className="text-xs font-medium text-orange-800">HTML/CSS</div>
             </div>
           </div>
         </div>
 
         {/* Frameworks & Libraries */}
         <div>
-          <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+          <h3 className={`font-semibold ${styles.window.content.text} mb-3 flex items-center`}>
             <span className="text-lg mr-2">🛠️</span>
             Frameworks & Libraries
           </h3>
           <div className="grid grid-cols-3 gap-2">
             <div className="bg-cyan-50 border border-cyan-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">⚛️</div>
-              <div className="text-xs font-medium">React</div>
+              <div className="text-xs font-medium text-cyan-800">React</div>
             </div>
             <div className="bg-green-50 border border-green-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">🟢</div>
-              <div className="text-xs font-medium">Node.js</div>
+              <div className="text-xs font-medium text-green-800">Node.js</div>
             </div>
             <div className="bg-black text-white border border-gray-300 rounded p-2 text-center">
               <div className="text-2xl mb-1">▲</div>
@@ -74,45 +80,45 @@ export default function TechnologiesWindow() {
             </div>
             <div className="bg-gray-50 border border-gray-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">🌶️</div>
-              <div className="text-xs font-medium">Flask</div>
+              <div className="text-xs font-medium text-gray-800">Flask</div>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">💨</div>
-              <div className="text-xs font-medium">Tailwind</div>
+              <div className="text-xs font-medium text-blue-800">Tailwind</div>
             </div>
           </div>
         </div>
 
         {/* Tools & Cloud */}
         <div>
-          <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+          <h3 className={`font-semibold ${styles.window.content.text} mb-3 flex items-center`}>
             <span className="text-lg mr-2">☁️</span>
             Tools & Cloud
           </h3>
           <div className="grid grid-cols-3 gap-2">
             <div className="bg-orange-50 border border-orange-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">🐙</div>
-              <div className="text-xs font-medium">Git/GitHub</div>
+              <div className="text-xs font-medium text-orange-800">Git/GitHub</div>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">🐳</div>
-              <div className="text-xs font-medium">Docker</div>
+              <div className="text-xs font-medium text-blue-800">Docker</div>
             </div>
             <div className="bg-yellow-50 border border-yellow-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">☁️</div>
-              <div className="text-xs font-medium">AWS</div>
+              <div className="text-xs font-medium text-yellow-800">AWS</div>
             </div>
             <div className="bg-orange-50 border border-orange-200 rounded p-2 text-center">
-              <div className="text-2xl mb-1">📮</div>
-              <div className="text-xs font-medium">Postman</div>
+              <div className="text-2xl mb-1">🔮</div>
+              <div className="text-xs font-medium text-orange-800">Postman</div>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">🐘</div>
-              <div className="text-xs font-medium">PostgreSQL</div>
+              <div className="text-xs font-medium text-blue-800">PostgreSQL</div>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded p-2 text-center">
               <div className="text-2xl mb-1">🗄️</div>
-              <div className="text-xs font-medium">MySQL</div>
+              <div className="text-xs font-medium text-blue-800">MySQL</div>
             </div>
           </div>
         </div>

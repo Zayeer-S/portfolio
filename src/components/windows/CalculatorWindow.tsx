@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useTheme } from '@/contexts/ThemeContext';
+import { getThemeClasses } from '@/styles/themes';
 
 export default function CalculatorWindow() {
   const [display, setDisplay] = useState('0');
@@ -7,10 +9,11 @@ export default function CalculatorWindow() {
   const [waitingForOperand, setWaitingForOperand] = useState(false);
   const [previousDisplay, setPreviousDisplay] = useState('');
 
+  const { theme } = useTheme();
+  const styles = getThemeClasses(theme);
+
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      console.log('Key pressed:', e.key); // TODO REMOVE DEBUG LINE
-      
       if (e.key >= '0' && e.key <= '9') {
         inputNumber(e.key);
       } else if (e.key === '.') {
@@ -108,6 +111,11 @@ export default function CalculatorWindow() {
     }
   };
 
+  const displayBg = theme === 'modern-dark' ? 'bg-black' : 'bg-white';
+  const buttonBg = theme === 'modern-dark' 
+    ? 'bg-neutral-700 hover:bg-neutral-600 border-neutral-600' 
+    : 'bg-gradient-to-b from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 border-gray-400';
+
   const Button = ({ 
     onClick, 
     className = '', 
@@ -127,7 +135,6 @@ export default function CalculatorWindow() {
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log('Button clicked:', children);
         onClick();
       }}
       onPointerDown={(e) => {
@@ -135,11 +142,10 @@ export default function CalculatorWindow() {
         e.stopPropagation();
       }}
       className={`
-        min-h-8 text-sm font-medium border border-gray-400 
-        bg-gradient-to-b from-gray-100 to-gray-200 
-        hover:from-gray-200 hover:to-gray-300
-        active:from-gray-300 active:to-gray-200
+        min-h-8 text-sm font-medium border ${buttonBg}
+        active:transform active:scale-95
         transition-all duration-75 select-none
+        ${styles.window.content.text}
         ${wide ? 'col-span-2' : ''}
         ${className}
       `}
@@ -151,16 +157,16 @@ export default function CalculatorWindow() {
   return (
     <div 
       className="h-full flex flex-col p-3 space-y-3"
-      style={{ minWidth: '280px', minHeight: '320px' }} // Min window size
+      style={{ minWidth: '280px', minHeight: '320px' }}
     >
-      {/* Dispaly calculator with previous input as a "shadow" */}
-      <div className="bg-white border-2 border-inset border-gray-300 p-3 flex flex-col justify-end text-right font-mono flex-shrink-0 min-h-16">
+      {/* Display calculator with previous input as a "shadow" */}
+      <div className={`${displayBg} border-2 border-inset ${styles.window.content.border} p-3 flex flex-col justify-end text-right font-mono flex-shrink-0 min-h-16`}>
         {/* Shadow */}
-        <div className="text-xs text-gray-500 h-4 overflow-hidden">
+        <div className={`text-xs ${styles.window.content.textMuted} h-4 overflow-hidden`}>
           {previousDisplay}
         </div>
         {/* Current display */}
-        <div className="text-xl font-bold">
+        <div className={`text-xl font-bold ${styles.window.content.text}`}>
           {display}
         </div>
       </div>
@@ -168,43 +174,43 @@ export default function CalculatorWindow() {
       <div className="grid grid-cols-4 gap-1 flex-1"
            onMouseDown={(e) => e.stopPropagation()}
       >
-        <Button onClick={clear} className="bg-gradient-to-b from-red-200 to-red-300 hover:from-red-300 hover:to-red-400">
+        <Button onClick={clear} className="bg-gradient-to-b from-red-200 to-red-300 hover:from-red-300 hover:to-red-400 text-red-800">
           C
         </Button>
-        <Button onClick={() => {}} className="text-gray-400">
+        <Button onClick={() => {}} className={`${styles.window.content.textMuted} cursor-not-allowed`}>
           ±
         </Button>
-        <Button onClick={() => {}} className="text-gray-400">
+        <Button onClick={() => {}} className={`${styles.window.content.textMuted} cursor-not-allowed`}>
           %
         </Button>
-        <Button onClick={() => performOperation('÷')} className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400">
+        <Button onClick={() => performOperation('÷')} className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-800">
           ÷
         </Button>
 
         <Button onClick={() => inputNumber('7')}>7</Button>
         <Button onClick={() => inputNumber('8')}>8</Button>
         <Button onClick={() => inputNumber('9')}>9</Button>
-        <Button onClick={() => performOperation('×')} className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400">
+        <Button onClick={() => performOperation('×')} className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-800">
           ×
         </Button>
 
         <Button onClick={() => inputNumber('4')}>4</Button>
         <Button onClick={() => inputNumber('5')}>5</Button>
         <Button onClick={() => inputNumber('6')}>6</Button>
-        <Button onClick={() => performOperation('-')} className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400">
+        <Button onClick={() => performOperation('-')} className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-800">
           -
         </Button>
 
         <Button onClick={() => inputNumber('1')}>1</Button>
         <Button onClick={() => inputNumber('2')}>2</Button>
         <Button onClick={() => inputNumber('3')}>3</Button>
-        <Button onClick={() => performOperation('+')} className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400">
+        <Button onClick={() => performOperation('+')} className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-800">
           +
         </Button>
 
         <Button onClick={() => inputNumber('0')} wide>0</Button>
         <Button onClick={inputDecimal}>.</Button>
-        <Button onClick={handleEquals} className="bg-gradient-to-b from-green-200 to-green-300 hover:from-green-300 hover:to-green-400">
+        <Button onClick={handleEquals} className="bg-gradient-to-b from-green-200 to-green-300 hover:from-green-300 hover:to-green-400 text-green-800">
           =
         </Button>
       </div>

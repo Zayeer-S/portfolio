@@ -328,7 +328,7 @@ export default function Window({
         >
           <div className="flex items-center pointer-events-none">
             <div className="w-4 h-4 mr-2 pointer-events-none">
-              <div className="w-full h-full bg-blue-300 rounded-sm pointer-events-none"></div>
+              <div className="w-full h-full rounded-sm pointer-events-none"></div>
             </div>
             <span className="text-sm font-normal pointer-events-none">{title}</span>
           </div>

@@ -1,7 +1,9 @@
 import { useTheme } from '@/contexts/ThemeContext';
+import { getThemeClasses } from '@/styles/themes';
 
 export default function SettingsWindow() {
   const { theme, setTheme } = useTheme();
+  const styles = getThemeClasses(theme);
 
   const themes = [
     { value: 'modern-light', label: 'Modern Light', description: 'Clean and bright Windows 11 style' },
@@ -11,8 +13,8 @@ export default function SettingsWindow() {
 
   return (
     <div className="space-y-6">
-      <div className="border-b pb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Theme Settings</h2>
+      <div className={`border-b pb-4 ${styles.window.content.border}`}>
+        <h2 className={`text-xl font-semibold ${styles.window.content.text}`}>Theme Settings</h2>
       </div>
 
       <div>
@@ -22,20 +24,20 @@ export default function SettingsWindow() {
               key={themeOption.value}
               className={`border rounded-lg p-3 cursor-pointer transition-all ${
                 theme === themeOption.value
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                  ? `border-blue-500 ${theme === 'modern-dark' ? 'bg-blue-900/20' : 'bg-blue-50'}`
+                  : `${styles.window.content.border} ${styles.window.content.hover}`
               }`}
               onClick={() => setTheme(themeOption.value)}
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-medium text-gray-800">{themeOption.label}</div>
-                  <div className="text-sm text-gray-600">{themeOption.description}</div>
+                  <div className={`font-medium ${styles.window.content.text}`}>{themeOption.label}</div>
+                  <div className={`text-sm ${styles.window.content.textSecondary}`}>{themeOption.description}</div>
                 </div>
                 <div className={`w-4 h-4 rounded-full border-2 ${
                   theme === themeOption.value
                     ? 'border-blue-500 bg-blue-500'
-                    : 'border-gray-300'
+                    : styles.window.content.border
                 }`}>
                   {theme === themeOption.value && (
                     <div className="w-full h-full rounded-full bg-white transform scale-50"></div>

@@ -1,10 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTheme } from '@/contexts/ThemeContext';
+import { getThemeClasses } from '@/styles/themes';
 
 export default function NotepadWindow() {
   const [content, setContent] = useState('');
   const [fileName, setFileName] = useState('Untitled.txt');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  const { theme } = useTheme();
+  const styles = getThemeClasses(theme);
   
   const STORAGE_KEY = 'notepad-content';
   const FILENAME_KEY = 'notepad-filename';
@@ -100,31 +105,35 @@ export default function NotepadWindow() {
 
   const stats = getStats();
 
+  const menuBarBg = theme === 'modern-dark' ? 'bg-neutral-800' : 'bg-gray-50';
+  const statusBarBg = theme === 'modern-dark' ? 'bg-neutral-800' : 'bg-gray-100';
+  const textAreaBg = theme === 'modern-dark' ? 'bg-neutral-900' : 'bg-white';
+
   return (
     <div 
       className="h-full flex flex-col"
       style={{ minWidth: '400px', minHeight: '300px' }}
     >
       {/* Menu bar */}
-      <div className="flex-shrink-0 bg-gray-50 border-b border-gray-300 p-1">
+      <div className={`flex-shrink-0 ${menuBarBg} border-b ${styles.window.content.border} p-1`}>
         <div className="flex space-x-1">
           <button
             onClick={handleNew}
-            className="px-2 py-1 text-xs hover:bg-gray-200 rounded"
+            className={`px-2 py-1 text-xs ${styles.window.content.hover} rounded ${styles.window.content.text}`}
             title="New (Ctrl+N)"
           >
             New
           </button>
           <button
             onClick={handleOpen}
-            className="px-2 py-1 text-xs hover:bg-gray-200 rounded"
+            className={`px-2 py-1 text-xs ${styles.window.content.hover} rounded ${styles.window.content.text}`}
             title="Open (Ctrl+O)"
           >
             Open
           </button>
           <button
             onClick={handleSave}
-            className="px-2 py-1 text-xs hover:bg-gray-200 rounded"
+            className={`px-2 py-1 text-xs ${styles.window.content.hover} rounded ${styles.window.content.text}`}
             title="Save (Ctrl+S)"
           >
             Save
@@ -133,7 +142,7 @@ export default function NotepadWindow() {
       </div>
 
       {/* File name and status */}
-      <div className="flex-shrink-0 bg-gray-100 border-b border-gray-300 px-3 py-1 flex items-center justify-between text-xs">
+      <div className={`flex-shrink-0 ${statusBarBg} border-b ${styles.window.content.border} px-3 py-1 flex items-center justify-between text-xs`}>
         <div className="flex items-center space-x-2">
           <input
             type="text"
@@ -142,23 +151,23 @@ export default function NotepadWindow() {
               setFileName(e.target.value);
               setHasUnsavedChanges(true);
             }}
-            className="bg-transparent border-none outline-none font-medium"
+            className={`bg-transparent border-none outline-none font-medium ${styles.window.content.text}`}
             style={{ width: `${fileName.length + 1}ch` }}
           />
           {hasUnsavedChanges && <span className="text-red-500">*</span>}
         </div>
-        <div className="text-gray-600">
+        <div className={styles.window.content.textSecondary}>
           Lines: {stats.lines} | Words: {stats.words} | Characters: {stats.chars}
         </div>
       </div>
 
-      {/** Text editor area */}
+      {/* Text editor area */}
       <textarea
         ref={textareaRef}
         value={content}
         onChange={handleContentChange}
         placeholder="Start typing..."
-        className="flex-1 p-3 border-none outline-none resize-none font-mono text-sm leading-relaxed"
+        className={`flex-1 p-3 border-none outline-none resize-none font-mono text-sm leading-relaxed ${textAreaBg} ${styles.window.content.text}`}
         style={{
           fontFamily: 'Consolas, "Courier New", monospace',
           tabSize: 4,

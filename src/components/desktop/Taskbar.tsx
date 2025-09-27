@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { TaskbarProps, WindowId } from '@/types';
 import { LAYOUT_CONSTANTS } from '@/constants/layout';
+import { useTheme } from '@/contexts/ThemeContext';
+import { getThemeClasses } from '@/styles/themes';
 
 export default function Taskbar({ 
   windows, 
@@ -18,6 +20,9 @@ export default function Taskbar({
   const [insertionIndex, setInsertionIndex] = useState<number>(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const draggedElementRef = useRef<HTMLButtonElement>(null);
+
+  const { theme } = useTheme();
+  const styles = getThemeClasses(theme);
 
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
@@ -267,11 +272,11 @@ export default function Taskbar({
   }, [draggedItem, dragStartPosition, hasDraggedBeyondThreshold, updateInsertionPosition, handleDragEnd]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-11 bg-gradient-to-b from-blue-200 to-blue-300 border-t border-blue-400 flex items-center px-2 z-50"
+    <div className={`fixed bottom-0 left-0 right-0 h-11 ${styles.taskbar.background} flex items-center px-2 z-50`}
          style={{ zIndex: LAYOUT_CONSTANTS.Z_INDEX.TASKBAR }}>
       {/* Start Button */}
       <button
-        className="h-8 px-4 bg-gradient-to-b from-green-400 to-green-500 border border-green-600 rounded text-white text-sm font-medium hover:from-green-500 hover:to-green-600 flex items-center"
+        className={`h-8 px-4 ${styles.taskbar.startButton} rounded text-sm font-medium flex items-center`}
         onClick={onToggleStartMenu}
       >
         <div className="w-4 h-4 mr-2">
@@ -295,9 +300,7 @@ export default function Taskbar({
               data-taskbar-item={windowId}
               onMouseDown={(e) => handleMouseDown(e, windowId)}
               onTouchStart={(e) => handleTouchStart(e, windowId)}
-              className={`h-8 w-10 text-lg transition-all duration-150 flex items-center justify-center ${
-                ''
-              } ${
+              className={`h-8 w-10 text-lg transition-all duration-150 flex items-center justify-center ${styles.taskbar.taskButtons} ${
                 isBeingDragged ? 'opacity-0 pointer-events-none' : 
                 clickedItem === windowId ? 'scale-75' : 'hover:scale-105'
               } ${isTouchDevice ? 'touch-manipulation' : ''}`}
@@ -340,7 +343,7 @@ export default function Taskbar({
 
       {/* System Tray */}
       <div className="ml-auto flex items-center pr-2 select-none">
-        <div className="flex flex-col items-end text-xs text-gray-700 leading-tight">
+        <div className={`flex flex-col items-end text-xs ${styles.taskbar.systemTray} leading-tight`}>
           <div>
             {isClient ? currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--'}
           </div>

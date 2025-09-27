@@ -1,7 +1,22 @@
-import { DesktopIconProps } from '@/types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 
-export default function DesktopIcon({ icon, label, onClick, hoverClass }: DesktopIconProps) {
+interface DesktopIconProps {
+  icon: string | ReactNode;
+  label: string;
+  onClick: () => void;
+  hoverClass?: string;
+  useReactIcon?: boolean;
+  iconId: string;
+}
+
+export default function DesktopIcon({ 
+  icon, 
+  label, 
+  onClick, 
+  hoverClass, 
+  useReactIcon = false,
+  iconId 
+}: DesktopIconProps) {
   const [isTouchDevice, setIsTouchDevice] = useState(false)
 
   useEffect(() => {
@@ -16,9 +31,8 @@ export default function DesktopIcon({ icon, label, onClick, hoverClass }: Deskto
     return () => window.removeEventListener('resize', checkTouchDevice);
   }, []);
 
-  // Add/Remove the select/hover color appropriately
   const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData('text/plain', `${icon}|${label}`);
+    e.dataTransfer.setData('text/plain', iconId);
     e.dataTransfer.effectAllowed = 'move';
     e.currentTarget.classList.add('opacity-50');
   };
@@ -42,8 +56,16 @@ export default function DesktopIcon({ icon, label, onClick, hoverClass }: Deskto
       onClick={handleClick}
       onDoubleClick={isTouchDevice ? undefined : onClick}
     >
-      <div className="w-8 h-10 sm:w-10 sm:h-12 mb-1 flex items-center justify-center text-4xl sm:text-5xl pointer-events-none">
-        {icon}
+      <div className="w-8 h-10 sm:w-10 sm:h-12 mb-1 flex items-center justify-center pointer-events-none">
+        {useReactIcon ? (
+          <div className="flex items-center justify-center">
+            {icon}
+          </div>
+        ) : (
+          <span className="text-4xl sm:text-5xl pointer-events-none">
+            {icon}
+          </span>
+        )}
       </div>
       <span className="text-white text-xs sm:text-xs text-center group-hover rounded pointer-events-none leading-tight">
         {label}

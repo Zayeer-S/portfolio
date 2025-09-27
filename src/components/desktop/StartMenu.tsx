@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StartMenuProps, WindowId } from '@/types';
 import { getThemeClasses } from '@/styles/themes';
 import { useTheme } from '@/contexts/ThemeContext';
+import { getAppIcon } from '@/styles/icons';
 
 export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuProps) {
   const [showPowerMenu, setShowPowerMenu] = useState(false);
@@ -28,8 +29,8 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
   };
 
   const menuItems = [
-    { id: 'calculator' as WindowId, name: 'Calculator', icon: '🔢' },
-    { id: 'notepad' as WindowId, name: 'Notepad', icon: '📝' }
+    { id: 'calculator' as WindowId, name: 'Calculator', iconKey: 'calculator' as const },
+    { id: 'notepad' as WindowId, name: 'Notepad', iconKey: 'notepad' as const }
   ];
   const sortedItems = menuItems.sort((a, b) => a.name.localeCompare(b.name));
   
@@ -68,7 +69,9 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
                     className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-105 flex items-center space-x-2 ml-3`}
                     onClick={() => handleItemClick(item.id)}
                   >
-                    <span className="text-sm">{item.icon}</span>
+                    <span className="flex items-center justify-center w-5 h-5">
+                      {getAppIcon(item.iconKey, { size: 16 })}
+                    </span>
                     <span className="text-sm">{item.name}</span>
                   </div>
                 ))}
@@ -101,7 +104,9 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
               onClick={() => handleItemClick('settings')}
               title={!isLeftColumnExpanded ? "Settings" : undefined}
             >
-              <span className="text-lg select-none">⚙</span>
+              <span className="flex items-center justify-center">
+                {getAppIcon('settings', { size: 18 })}
+              </span>
             </div>
             
             {/* Power icon */}
@@ -111,7 +116,9 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
               onClick={handlePowerClick}
               title={!isLeftColumnExpanded ? "Power" : undefined}
             >
-              <span className="text-lg select-none">⏻</span>
+              <span className="flex items-center justify-center">
+                {getAppIcon('power', { size: 18 })}
+              </span>
             </div>
           </div>
         </div>
@@ -140,13 +147,16 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
             style={{ bottom: '64px', left: '16px', zIndex: 30 }}
           >
             <div 
-              className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-105 select-none`}
+              className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-105 select-none flex items-center space-x-2`}
               onClick={(e) => {
                 e.stopPropagation();
                 handleReloadPage();
               }}
             >
-              <span className="text-xs select-none">🔄 Reload Page</span>
+              <span className="flex items-center justify-center w-4 h-4">
+                {getAppIcon('reload', { size: 12 })}
+              </span>
+              <span className="text-xs select-none">Reload Page</span>
             </div>
           </div>
         )}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { LAYOUT_CONSTANTS } from '@/constants/layout';
 import DesktopIcon from './DesktopIcon';
+import { getAppIcon, AppIconKey } from '@/styles/icons';
 
 interface DesktopGridProps {
   icons: Array<{
@@ -8,6 +9,7 @@ interface DesktopGridProps {
     icon: string;
     label: string;
     onClick: () => void;
+    iconKey?: AppIconKey;
   }>;
   hoverClass?: string;
 }
@@ -138,11 +140,9 @@ export default function DesktopGrid({
     e.preventDefault();
     setHoveredCell(null);
     const data = e.dataTransfer.getData('text/plain');
-    const [draggedIconEmoji, draggedLabel] = data.split('|');
+    const [draggedIconId] = data.split('|');
     
-    const draggedIconObj = icons.find(icon => 
-      icon.icon === draggedIconEmoji && icon.label === draggedLabel
-    );
+    const draggedIconObj = icons.find(icon => icon.id === draggedIconId);
     
     if (!draggedIconObj) return;
 
@@ -225,10 +225,12 @@ export default function DesktopGrid({
             >
               {icon && (
                 <DesktopIcon
-                  icon={icon.icon}
+                  icon={icon.iconKey ? getAppIcon(icon.iconKey, { size: 32 }) : icon.icon}
                   label={icon.label}
                   onClick={icon.onClick}
                   hoverClass={hoverClass}
+                  useReactIcon={!!icon.iconKey}
+                  iconId={icon.id}
                 />
               )}
             </div>

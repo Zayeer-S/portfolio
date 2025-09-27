@@ -3,6 +3,7 @@ import { TaskbarProps, WindowId } from '@/types';
 import { LAYOUT_CONSTANTS } from '@/constants/layout';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
+import { getAppIcon, AppIconKey } from '@/styles/icons';
 
 export default function Taskbar({ 
   windows, 
@@ -47,16 +48,11 @@ export default function Taskbar({
     return () => window.removeEventListener('resize', checkTouchDevice);
   }, []);
 
-  const getWindowSymbol = (windowId: string) => {
-    const symbols: { [key: string]: string } = {
-      projects: '📁',
-      technologies: '⚙️',
-      contact: '📧',
-      settings: '⚙️',
-      calculator: '🔢',
-      notepad: '📝',    
-    };
-    return symbols[windowId] || '❓';
+  const getWindowIcon = (windowId: string) => {
+    if (windowId === 'projects') {
+      return getAppIcon('projectsOpen', { size: Math.round(18 * 1.7) });
+    }
+    return getAppIcon(windowId as AppIconKey, { size: Math.round(18 * 1.7) });
   };
 
   // Get open windows and maintain order
@@ -90,10 +86,7 @@ export default function Taskbar({
   };
 
   const handleTouchStart = (e: React.TouchEvent, windowId: string) => {
-    console.log('TASKBAR DEBUG: touchStart for', windowId, 'touches:', e.touches.length, 'isProcessingTouch:', isProcessingTouch);
-    
     if (isProcessingTouch) {
-      console.log('TASKBAR DEBUG: Skipping touchStart - already processing');
       return;
     }
     
@@ -155,18 +148,14 @@ export default function Taskbar({
   }, [draggedItem, orderedWindowIds, insertionIndex]);
 
   const handleDragEnd = useCallback(() => {
-    console.log('TASKBAR DEBUG: handleDragEnd called', { draggedItem, hasDraggedBeyondThreshold, isProcessingTouch });
-    
     // Prevent multiple rapid calls
     if (isProcessingTouch) {
-      console.log('TASKBAR DEBUG: Already processing touch, skipping');
       return;
     }
     
     // Handle click/tap if no drag occurred
     if (draggedItem && !hasDraggedBeyondThreshold) {
       const now = Date.now();
-      console.log('TASKBAR DEBUG: Time since last minimize:', now - lastMinimizeTime);
       
       // Debounce rapid calls
       if (now - lastMinimizeTime > MINIMIZE_DEBOUNCE) {
@@ -175,7 +164,6 @@ export default function Taskbar({
         setLastMinimizeTime(now);
         
         setTimeout(() => {
-          console.log('TASKBAR DEBUG: About to call onMinimizeWindow for', draggedItem);
           onMinimizeWindow(draggedItem as WindowId);
           setClickedItem(null);
           
@@ -184,8 +172,6 @@ export default function Taskbar({
             setIsProcessingTouch(false);
           }, 200);
         }, 100);
-      } else {
-        console.log('TASKBAR DEBUG: Minimize call debounced');
       }
     }
     
@@ -244,8 +230,6 @@ export default function Taskbar({
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
-      console.log('TASKBAR DEBUG: Global touchEnd fired, isProcessingTouch:', isProcessingTouch);
-      
       // Only handle if not already processing
       if (!isProcessingTouch) {
         handleDragEnd();
@@ -276,13 +260,11 @@ export default function Taskbar({
          style={{ zIndex: LAYOUT_CONSTANTS.Z_INDEX.TASKBAR }}>
       {/* Start Button */}
       <button
-        className={`h-9 px-3 ${styles.taskbar.startButton} rounded text-sm font-medium flex items-center border-0`}
+        className={`h-9 px-3 ${styles.taskbar.startButton} rounded text-sm font-medium flex items-center justify-center border-0`}
         onClick={onToggleStartMenu}
         style={{ border: 'none', outline: 'none' }}
       >
-        <div className="w-5 h-5">
-          <div className="w-full h-full bg-white rounded-sm opacity-80"></div>
-        </div>
+        {getAppIcon('startMenu', { size: Math.round(20 * 1.7) })}
       </button>
 
       {/* Task Buttons Container */}
@@ -300,16 +282,17 @@ export default function Taskbar({
               data-taskbar-item={windowId}
               onMouseDown={(e) => handleMouseDown(e, windowId)}
               onTouchStart={(e) => handleTouchStart(e, windowId)}
-              className={`h-8 w-10 text-[32px] transition-all duration-150 flex items-center justify-center leading-none ${styles.taskbar.taskButtons} ${
+              className={`h-8 w-10 transition-all duration-150 flex items-center justify-center ${styles.taskbar.taskButtons} ${
                 isBeingDragged ? 'opacity-0 pointer-events-none' : 
                 clickedItem === windowId ? 'scale-75' : 'hover:scale-105'
               } ${isTouchDevice ? 'touch-manipulation' : ''}`}
               style={{ 
                 cursor: 'default',
                 userSelect: 'none',
+                opacity: window.isMinimized ? 0.7 : 1,
               }}
             >
-              {getWindowSymbol(windowId)}
+              {getWindowIcon(windowId)}
             </button>
           );
         })}
@@ -324,14 +307,13 @@ export default function Taskbar({
           }}
         >
           <button
-            className="h-8 w-10 text-lg shadow-lg transform rotate-3 scale-110 flex items-center justify-center"
+            className="h-8 w-10 shadow-lg transform rotate-3 scale-110 flex items-center justify-center"
             style={{ 
               userSelect: 'none',
-              textShadow: '0 0 6px rgba(0,0,0,0.8)',
               filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))'
             }}
           >
-            {getWindowSymbol(draggedItem)}
+            {getWindowIcon(draggedItem)}
           </button>
         </div>
       )}

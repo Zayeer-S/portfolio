@@ -46,25 +46,29 @@ export default function Home() {
         icons={[
           {
             id: 'cv',
-            icon: '📄',
+            icon: 'PDF',
+            iconKey: 'cv',
             label: 'CV',
-            onClick: () => window.open('/Zayeer Sultan - CV.pdf')
+            onClick: () => window.open('/zayeer-sultan-cv.pdf')
           },
           {
             id: 'projects',
-            icon: '📁',
+            icon: 'Folder',
+            iconKey: 'projects',
             label: 'Projects',
             onClick: () => openWindow('projects')
           },
           {
             id: 'technologies',
-            icon: '⚙️',
+            icon: 'Desktop',
+            iconKey: 'technologies',
             label: 'Technologies',
             onClick: () => openWindow('technologies')
           },
           {
             id: 'contact',
-            icon: '📧',
+            icon: 'Mail',
+            iconKey: 'contact',
             label: 'Contact',
             onClick: () => openWindow('contact')
           }

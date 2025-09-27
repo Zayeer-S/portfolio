@@ -31,7 +31,7 @@ export const themeStyles = {
     },
     taskbar: {
       background: 'bg-white/80 backdrop-blur-md border-t border-neutral-200',
-      startButton: 'bg-blue-500 hover:bg-blue-600 text-white',
+      startButton: 'hover:bg-neutral-200 text-white',
       taskButtons: 'bg-transparent hover:bg-neutral-200/50 text-neutral-800 rounded',
       systemTray: 'text-neutral-700'
     },

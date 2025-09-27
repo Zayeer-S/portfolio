@@ -301,7 +301,7 @@ export default function Taskbar({
               data-taskbar-item={windowId}
               onMouseDown={(e) => handleMouseDown(e, windowId)}
               onTouchStart={(e) => handleTouchStart(e, windowId)}
-              className={`h-8 w-10 text-lg transition-all duration-150 flex items-center justify-center ${styles.taskbar.taskButtons} ${
+              className={`h-8 w-10 text-3xl transition-all duration-150 flex items-center justify-center leading-none ${styles.taskbar.taskButtons} ${
                 isBeingDragged ? 'opacity-0 pointer-events-none' : 
                 clickedItem === windowId ? 'scale-75' : 'hover:scale-105'
               } ${isTouchDevice ? 'touch-manipulation' : ''}`}

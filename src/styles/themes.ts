@@ -30,13 +30,13 @@ export const themeStyles = {
       }
     },
     taskbar: {
-      background: 'bg-white/70 backdrop-blur-md border-t border-neutral-200',
+      background: 'bg-white/60 backdrop-blur-md border-t border-neutral-200',
       startButton: 'bg-blue-500 hover:bg-blue-600 text-white',
       taskButtons: 'bg-transparent hover:bg-neutral-200/50 text-neutral-800 rounded',
       systemTray: 'text-neutral-700'
     },
     startMenu: {
-      background: 'bg-white/60 backdrop-blur-md border border-neutral-300 shadow-2xl',
+      background: 'bg-white/50 backdrop-blur-md border border-neutral-300 shadow-2xl',
       header: 'bg-neutral-100 border-b border-neutral-300',
       items: 'hover:bg-neutral-100 text-neutral-800',
       text: 'text-neutral-800'
@@ -45,7 +45,7 @@ export const themeStyles = {
   },
   'modern-dark': {
     desktop: {
-      background: 'bg-gradient-to-br from-black via-neutral-900 to-black',
+      background: 'bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900',
       iconHover: 'hover:bg-white/10'
     },
     window: {
@@ -72,13 +72,13 @@ export const themeStyles = {
       }
     },
     taskbar: {
-      background: 'bg-black/70 backdrop-blur-md border-t border-neutral-800',
+      background: 'bg-neutral-900/85 backdrop-blur-md border-t border-neutral-800',
       startButton: 'bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700',
       taskButtons: 'bg-transparent hover:bg-neutral-700/50 text-white rounded',
       systemTray: 'text-neutral-300'
     },
     startMenu: {
-      background: 'bg-black/60 backdrop-blur-md border border-neutral-700 shadow-2xl',
+      background: 'bg-neutral-900/70 backdrop-blur-md border border-neutral-700 shadow-2xl',
       header: 'bg-neutral-900 border-b border-neutral-700',
       items: 'hover:bg-neutral-800 text-neutral-100',
       text: 'text-neutral-100'
@@ -114,16 +114,16 @@ export const themeStyles = {
       }
     },
     taskbar: {
-      background: 'bg-gradient-to-b from-neutral-200/70 to-neutral-400/70 backdrop-blur-md border-t-2 border-neutral-500',
+      background: 'bg-neutral-300/85 backdrop-blur-md border-t-2 border-neutral-500',
       startButton: 'bg-gradient-to-b from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white shadow-lg',
       taskButtons: 'bg-transparent hover:bg-blue-200/50 text-neutral-800 rounded',
       systemTray: 'text-neutral-800'
     },
     startMenu: {
-      background: 'bg-gradient-to-b from-neutral-100/60 to-neutral-200/60 backdrop-blur-md border border-neutral-400',
+      background: 'bg-neutral-200/70 backdrop-blur-md border border-neutral-400',
       header: 'bg-gradient-to-r from-blue-600 to-blue-400',
       items: 'hover:bg-blue-100 text-neutral-800',
-      text: 'text-white'
+      text: 'text-neutral-800'
     },
     typewriter: 'text-white'
   }

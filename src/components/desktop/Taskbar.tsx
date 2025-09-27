@@ -276,14 +276,13 @@ export default function Taskbar({
          style={{ zIndex: LAYOUT_CONSTANTS.Z_INDEX.TASKBAR }}>
       {/* Start Button */}
       <button
-        className={`h-8 px-4 ${styles.taskbar.startButton} rounded text-sm font-medium flex items-center border-0`}
+        className={`h-9 px-3 ${styles.taskbar.startButton} rounded text-sm font-medium flex items-center border-0`}
         onClick={onToggleStartMenu}
         style={{ border: 'none', outline: 'none' }}
       >
-        <div className="w-4 h-4 mr-2">
+        <div className="w-5 h-5">
           <div className="w-full h-full bg-white rounded-sm opacity-80"></div>
         </div>
-        Start
       </button>
 
       {/* Task Buttons Container */}
@@ -301,7 +300,7 @@ export default function Taskbar({
               data-taskbar-item={windowId}
               onMouseDown={(e) => handleMouseDown(e, windowId)}
               onTouchStart={(e) => handleTouchStart(e, windowId)}
-              className={`h-8 w-10 text-3xl transition-all duration-150 flex items-center justify-center leading-none ${styles.taskbar.taskButtons} ${
+              className={`h-8 w-10 text-[32px] transition-all duration-150 flex items-center justify-center leading-none ${styles.taskbar.taskButtons} ${
                 isBeingDragged ? 'opacity-0 pointer-events-none' : 
                 clickedItem === windowId ? 'scale-75' : 'hover:scale-105'
               } ${isTouchDevice ? 'touch-manipulation' : ''}`}

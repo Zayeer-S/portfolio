@@ -69,8 +69,8 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
                     className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-105 flex items-center space-x-2 ml-3`}
                     onClick={() => handleItemClick(item.id)}
                   >
-                    <span className="flex items-center justify-center w-5 h-5">
-                      {getAppIcon(item.iconKey, { size: 16 })}
+                    <span className="flex items-center justify-center w-8 h-8">
+                      {getAppIcon(item.iconKey, { size: 32 })}
                     </span>
                     <span className="text-sm">{item.name}</span>
                   </div>
@@ -100,25 +100,21 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
             {/* Settings icon */}
             <div 
               className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
-              style={{ width: '40px', height: '40px' }}
+              style={{ width: '48px', height: '48px' }}
               onClick={() => handleItemClick('settings')}
               title={!isLeftColumnExpanded ? "Settings" : undefined}
             >
-              <span className="flex items-center justify-center">
-                {getAppIcon('settings', { size: 18 })}
-              </span>
+              {getAppIcon('settings', { size: 32 })}
             </div>
             
             {/* Power icon */}
             <div 
               className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
-              style={{ width: '40px', height: '40px' }}
+              style={{ width: '48px', height: '48px' }}
               onClick={handlePowerClick}
               title={!isLeftColumnExpanded ? "Power" : undefined}
             >
-              <span className="flex items-center justify-center">
-                {getAppIcon('power', { size: 18 })}
-              </span>
+              {getAppIcon('power', { size: 32, theme })}
             </div>
           </div>
         </div>
@@ -154,7 +150,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
               }}
             >
               <span className="flex items-center justify-center w-4 h-4">
-                {getAppIcon('reload', { size: 12 })}
+                {getAppIcon('reload', { size: 12, theme })}
               </span>
               <span className="text-xs select-none">Reload Page</span>
             </div>

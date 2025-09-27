@@ -225,7 +225,7 @@ export default function DesktopGrid({
             >
               {icon && (
                 <DesktopIcon
-                  icon={icon.iconKey ? getAppIcon(icon.iconKey, { size: 32 }) : icon.icon}
+                  icon={icon.iconKey ? getAppIcon(icon.iconKey, { size: 50 }) : icon.icon}
                   label={icon.label}
                   onClick={icon.onClick}
                   hoverClass={hoverClass}

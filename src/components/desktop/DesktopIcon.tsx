@@ -56,7 +56,7 @@ export default function DesktopIcon({
       onClick={handleClick}
       onDoubleClick={isTouchDevice ? undefined : onClick}
     >
-      <div className="w-8 h-10 sm:w-10 sm:h-12 mb-1 flex items-center justify-center pointer-events-none">
+      <div className="w-12 h-14 sm:w-16 sm:h-16 mb-1 flex items-center justify-center pointer-events-none">
         {useReactIcon ? (
           <div className="flex items-center justify-center">
             {icon}

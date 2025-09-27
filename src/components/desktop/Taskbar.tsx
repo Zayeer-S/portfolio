@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { TaskbarProps, WindowId } from '@/types';
+import { LAYOUT_CONSTANTS } from '@/constants/layout';
 
 export default function Taskbar({ 
   windows, 
@@ -17,6 +18,29 @@ export default function Taskbar({
   const [insertionIndex, setInsertionIndex] = useState<number>(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const draggedElementRef = useRef<HTMLButtonElement>(null);
+
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  const [clickedItem, setClickedItem] = useState<string | null>(null);
+  const [dragStartPosition, setDragStartPosition] = useState({ x: 0, y: 0 });
+  const [hasDraggedBeyondThreshold, setHasDraggedBeyondThreshold] = useState(false);
+  const [lastMinimizeTime, setLastMinimizeTime] = useState<number>(0);
+  const [isProcessingTouch, setIsProcessingTouch] = useState<boolean>(false);
+  
+  const DRAG_THRESHOLD = 5;
+  const MINIMIZE_DEBOUNCE = 200;
+
+  useEffect(() => {
+    const checkTouchDevice = () => {
+      const touchSupported = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      setIsTouchDevice(touchSupported);
+    };
+    
+    checkTouchDevice();
+    window.addEventListener('resize', checkTouchDevice);
+    
+    return () => window.removeEventListener('resize', checkTouchDevice);
+  }, []);
 
   const getWindowSymbol = (windowId: string) => {
     const symbols: { [key: string]: string } = {
@@ -44,13 +68,6 @@ export default function Taskbar({
     }
   }, [currentWindowIds.join(',')]);
 
-  const [clickedItem, setClickedItem] = useState<string | null>(null);
-
-  // Add drag detection
-  const [dragStartPosition, setDragStartPosition] = useState({ x: 0, y: 0 });
-  const [hasDraggedBeyondThreshold, setHasDraggedBeyondThreshold] = useState(false);
-  const DRAG_THRESHOLD = 5; // pixels
-
   const handleMouseDown = (e: React.MouseEvent, windowId: string) => {
     if (e.button !== 0) return; // Only left click
     
@@ -66,6 +83,112 @@ export default function Taskbar({
     
     e.preventDefault();
   };
+
+  const handleTouchStart = (e: React.TouchEvent, windowId: string) => {
+    console.log('TASKBAR DEBUG: touchStart for', windowId, 'touches:', e.touches.length, 'isProcessingTouch:', isProcessingTouch);
+    
+    if (isProcessingTouch) {
+      console.log('TASKBAR DEBUG: Skipping touchStart - already processing');
+      return;
+    }
+    
+    const touch = e.touches[0];
+    const rect = e.currentTarget.getBoundingClientRect();
+    setDraggedItem(windowId);
+    setDragStartPosition({ x: touch.clientX, y: touch.clientY });
+    setDragOffset({
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top
+    });
+    setDragPosition({ x: touch.clientX, y: touch.clientY });
+    setHasDraggedBeyondThreshold(false);
+    
+    e.stopPropagation();
+  };
+
+  const updateInsertionPosition = useCallback((clientX: number) => {
+    if (containerRef.current && draggedItem) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const mouseX = clientX - containerRect.left;
+      
+      // Find which position to insert at
+      let newInsertionIndex = 0;
+      const buttons = containerRef.current.querySelectorAll('[data-taskbar-item]');
+      
+      for (let i = 0; i < buttons.length; i++) {
+        const button = buttons[i] as HTMLElement;
+        const buttonRect = button.getBoundingClientRect();
+        const buttonX = buttonRect.left - containerRect.left;
+        const buttonWidth = buttonRect.width;
+        
+        if (mouseX < buttonX + buttonWidth / 2) {
+          newInsertionIndex = i;
+          break;
+        }
+        newInsertionIndex = i + 1;
+      }
+      
+      // Don't count the dragged item itself
+      const draggedIndex = orderedWindowIds.indexOf(draggedItem);
+      if (newInsertionIndex > draggedIndex) {
+        newInsertionIndex--;
+      }
+      
+      if (newInsertionIndex !== insertionIndex) {
+        setInsertionIndex(newInsertionIndex);
+        
+        // Update order in real-time during drag
+        const newOrder = [...orderedWindowIds];
+        const draggedItemIndex = newOrder.indexOf(draggedItem);
+        if (draggedItemIndex !== -1) {
+          newOrder.splice(draggedItemIndex, 1);
+          newOrder.splice(newInsertionIndex, 0, draggedItem);
+          setTaskbarOrder(newOrder);
+        }
+      }
+    }
+  }, [draggedItem, orderedWindowIds, insertionIndex]);
+
+  const handleDragEnd = useCallback(() => {
+    console.log('TASKBAR DEBUG: handleDragEnd called', { draggedItem, hasDraggedBeyondThreshold, isProcessingTouch });
+    
+    // Prevent multiple rapid calls
+    if (isProcessingTouch) {
+      console.log('TASKBAR DEBUG: Already processing touch, skipping');
+      return;
+    }
+    
+    // Handle click/tap if no drag occurred
+    if (draggedItem && !hasDraggedBeyondThreshold) {
+      const now = Date.now();
+      console.log('TASKBAR DEBUG: Time since last minimize:', now - lastMinimizeTime);
+      
+      // Debounce rapid calls
+      if (now - lastMinimizeTime > MINIMIZE_DEBOUNCE) {
+        setIsProcessingTouch(true);
+        setClickedItem(draggedItem);
+        setLastMinimizeTime(now);
+        
+        setTimeout(() => {
+          console.log('TASKBAR DEBUG: About to call onMinimizeWindow for', draggedItem);
+          onMinimizeWindow(draggedItem as WindowId);
+          setClickedItem(null);
+          
+          // Reset processing state after a delay
+          setTimeout(() => {
+            setIsProcessingTouch(false);
+          }, 200);
+        }, 100);
+      } else {
+        console.log('TASKBAR DEBUG: Minimize call debounced');
+      }
+    }
+    
+    setIsDragging(false);
+    setDraggedItem(null);
+    setInsertionIndex(-1);
+    setHasDraggedBeyondThreshold(false);
+  }, [draggedItem, hasDraggedBeyondThreshold, onMinimizeWindow, lastMinimizeTime, isProcessingTouch]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -83,83 +206,69 @@ export default function Taskbar({
       
       if (hasDraggedBeyondThreshold) {
         setDragPosition({ x: e.clientX, y: e.clientY });
-        
-        // Calculate insertion position based on mouse position
-        if (containerRef.current) {
-          const containerRect = containerRef.current.getBoundingClientRect();
-          const mouseX = e.clientX - containerRect.left;
-          
-          // Find which position to insert at
-          let newInsertionIndex = 0;
-          const buttons = containerRef.current.querySelectorAll('[data-taskbar-item]');
-          
-          for (let i = 0; i < buttons.length; i++) {
-            const button = buttons[i] as HTMLElement;
-            const buttonRect = button.getBoundingClientRect();
-            const buttonX = buttonRect.left - containerRect.left;
-            const buttonWidth = buttonRect.width;
-            
-            if (mouseX < buttonX + buttonWidth / 2) {
-              newInsertionIndex = i;
-              break;
-            }
-            newInsertionIndex = i + 1;
-          }
-          
-          // Don't count the dragged item itself
-          const draggedIndex = orderedWindowIds.indexOf(draggedItem);
-          if (newInsertionIndex > draggedIndex) {
-            newInsertionIndex--;
-          }
-          
-          if (newInsertionIndex !== insertionIndex) {
-            setInsertionIndex(newInsertionIndex);
-            
-            // Update order in real-time during drag
-            const newOrder = [...orderedWindowIds];
-            const draggedItemIndex = newOrder.indexOf(draggedItem);
-            if (draggedItemIndex !== -1) {
-              newOrder.splice(draggedItemIndex, 1);
-              newOrder.splice(newInsertionIndex, 0, draggedItem);
-              setTaskbarOrder(newOrder);
-            }
-          }
-        }
+        updateInsertionPosition(e.clientX);
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!draggedItem) return;
+      
+      const touch = e.touches[0];
+      if (!touch) return;
+      
+      // Check if we've moved beyond the threshold to start actual dragging
+      const deltaX = Math.abs(touch.clientX - dragStartPosition.x);
+      const deltaY = Math.abs(touch.clientY - dragStartPosition.y);
+      const hasMovedBeyondThreshold = deltaX > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD;
+      
+      if (hasMovedBeyondThreshold && !hasDraggedBeyondThreshold) {
+        setHasDraggedBeyondThreshold(true);
+        setIsDragging(true);
+        e.preventDefault(); // Prevent scrolling when dragging
+      }
+      
+      if (hasDraggedBeyondThreshold) {
+        setDragPosition({ x: touch.clientX, y: touch.clientY });
+        updateInsertionPosition(touch.clientX);
+        e.preventDefault();
       }
     };
 
     const handleMouseUp = () => {
-      // Handle click animation and window minimize/restore
-      if (draggedItem && !hasDraggedBeyondThreshold) {
-        setClickedItem(draggedItem);
-        
-        setTimeout(() => {
-          onMinimizeWindow(draggedItem as WindowId);
-          setClickedItem(null);
-        }, 100);
-      }
+      handleDragEnd();
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      console.log('TASKBAR DEBUG: Global touchEnd fired, isProcessingTouch:', isProcessingTouch);
       
-      setIsDragging(false);
-      setDraggedItem(null);
-      setInsertionIndex(-1);
-      setHasDraggedBeyondThreshold(false);
+      // Only handle if not already processing
+      if (!isProcessingTouch) {
+        handleDragEnd();
+      }
     };
 
     if (draggedItem) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
+
+      document.addEventListener('touchmove', handleTouchMove, { passive: false, capture: true });
+      document.addEventListener('touchend', handleTouchEnd, { passive: false, capture: true });
       document.body.style.userSelect = 'none';
     }
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+
+      document.removeEventListener('touchmove', handleTouchMove, { capture: true } as any);
+      document.removeEventListener('touchend', handleTouchEnd, { capture: true } as any);
       document.body.style.userSelect = '';
     };
-  }, [draggedItem, dragStartPosition, hasDraggedBeyondThreshold, orderedWindowIds, insertionIndex]);
+  }, [draggedItem, dragStartPosition, hasDraggedBeyondThreshold, updateInsertionPosition, handleDragEnd]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-11 bg-gradient-to-b from-blue-200 to-blue-300 border-t border-blue-400 flex items-center px-2 z-50">
+    <div className="fixed bottom-0 left-0 right-0 h-11 bg-gradient-to-b from-blue-200 to-blue-300 border-t border-blue-400 flex items-center px-2 z-50"
+         style={{ zIndex: LAYOUT_CONSTANTS.Z_INDEX.TASKBAR }}>
       {/* Start Button */}
       <button
         className="h-8 px-4 bg-gradient-to-b from-green-400 to-green-500 border border-green-600 rounded text-white text-sm font-medium hover:from-green-500 hover:to-green-600 flex items-center"
@@ -185,19 +294,21 @@ export default function Taskbar({
               ref={isBeingDragged ? draggedElementRef : undefined}
               data-taskbar-item={windowId}
               onMouseDown={(e) => handleMouseDown(e, windowId)}
+              onTouchStart={(e) => handleTouchStart(e, windowId)}
               className={`h-8 w-10 text-lg transition-all duration-150 flex items-center justify-center ${
                 ''
               } ${
                 isBeingDragged ? 'opacity-0 pointer-events-none' : 
                 clickedItem === windowId ? 'scale-75' : 'hover:scale-105'
-              }`}
+              } ${isTouchDevice ? 'touch-manipulation' : ''}`}
               style={{ 
                 cursor: 'default',
                 userSelect: 'none',
                 textShadow: window.isMinimized 
                   ? '0 0 3px rgba(0,0,0,0.3)' 
                   : '0 0 4px rgba(0,0,0,0.5)',
-                opacity: window.isMinimized ? 0.7 : 1
+                opacity: window.isMinimized ? 0.7 : 1,
+                touchAction: 'manipulation'
               }}
             >
               {getWindowSymbol(windowId)}

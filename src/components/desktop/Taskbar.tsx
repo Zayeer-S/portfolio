@@ -307,13 +307,6 @@ export default function Taskbar({
               style={{ 
                 cursor: 'default',
                 userSelect: 'none',
-                textShadow: window.isMinimized 
-                  ? '0 0 3px rgba(0,0,0,0.3)' 
-                  : '0 0 4px rgba(0,0,0,0.5)',
-                opacity: window.isMinimized ? 0.7 : 1,
-                border: 'none',
-                outline: 'none',
-                touchAction: 'manipulation'
               }}
             >
               {getWindowSymbol(windowId)}

@@ -30,13 +30,13 @@ export const themeStyles = {
       }
     },
     taskbar: {
-      background: 'bg-white/60 backdrop-blur-md border-t border-neutral-200',
+      background: 'bg-white/80 backdrop-blur-md border-t border-neutral-200',
       startButton: 'bg-blue-500 hover:bg-blue-600 text-white',
       taskButtons: 'bg-transparent hover:bg-neutral-200/50 text-neutral-800 rounded',
       systemTray: 'text-neutral-700'
     },
     startMenu: {
-      background: 'bg-white/50 backdrop-blur-md border border-neutral-300 shadow-2xl',
+      background: 'bg-white/70 backdrop-blur-md border border-neutral-300 shadow-2xl',
       header: 'bg-neutral-100 border-b border-neutral-300',
       items: 'hover:bg-neutral-100 text-neutral-800',
       text: 'text-neutral-800'

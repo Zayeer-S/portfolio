@@ -32,7 +32,7 @@ export const themeStyles = {
     taskbar: {
       background: 'bg-white/80 backdrop-blur-md border-t border-neutral-200',
       startButton: 'hover:bg-neutral-200 text-white',
-      taskButtons: 'bg-transparent hover:bg-neutral-200/50 text-neutral-800 rounded',
+      taskButtons: 'bg-transparent hover:bg-neutral-200/50 text-neutral-800 rounded border-none',
       systemTray: 'text-neutral-700'
     },
     startMenu: {
@@ -74,7 +74,7 @@ export const themeStyles = {
     taskbar: {
       background: 'bg-neutral-900/85 backdrop-blur-md border-t border-neutral-800',
       startButton: 'bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700',
-      taskButtons: 'bg-transparent hover:bg-neutral-700/50 text-white rounded',
+      taskButtons: 'bg-transparent hover:bg-neutral-700/50 text-white rounded border-none',
       systemTray: 'text-neutral-300'
     },
     startMenu: {
@@ -116,7 +116,7 @@ export const themeStyles = {
     taskbar: {
       background: 'bg-neutral-300/85 backdrop-blur-md border-t-2 border-neutral-500',
       startButton: 'bg-gradient-to-b from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white shadow-lg',
-      taskButtons: 'bg-transparent hover:bg-blue-200/50 text-neutral-800 rounded',
+      taskButtons: 'bg-transparent hover:bg-blue-200/50 text-neutral-800 rounded border-none',
       systemTray: 'text-neutral-800'
     },
     startMenu: {

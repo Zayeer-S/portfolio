@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { TaskbarProps, WindowId } from '@/types';
+import { TaskbarProps } from '@/types';
 import { LAYOUT_CONSTANTS } from '@/constants/layout';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
@@ -15,7 +15,6 @@ export default function Taskbar({
   windows, 
   onToggleStartMenu, 
   onMinimizeWindow, 
-  startMenuOpen, 
   currentTime, 
   isClient 
 }: TaskbarProps) {
@@ -121,7 +120,7 @@ export default function Taskbar({
         }
       }
     }
-  }, [dragLogic.draggedItem, orderedWindowIds, dragLogic.insertionIndex, dragLogic.setInsertionIndex]);
+  }, [dragLogic, orderedWindowIds]);
 
   // Global mouse/touch handlers for drag operations
   useEffect(() => {

@@ -41,7 +41,7 @@ export default function DesktopIcon({
     e.currentTarget.classList.remove('opacity-50');
   };
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = () => {
     if (isTouchDevice) {
       onClick();
     }

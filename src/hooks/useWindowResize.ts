@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { LAYOUT_CONSTANTS } from '@/constants/layout';
 
 export type ResizeDirection = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
@@ -48,14 +48,19 @@ export function useWindowResize({
     posY: 0 
   });
 
+  const initialDimensions = useMemo(() => ({
+    position: initialPosition,
+    size: initialSize
+  }), [initialPosition, initialSize]);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const constrained = constrainToViewport(initialPosition.x, initialPosition.y, initialSize.width, initialSize.height);
-      if (constrained.x !== initialPosition.x || constrained.y !== initialPosition.y) {
+      const constrained = constrainToViewport(initialDimensions.position.x, initialDimensions.position.y, initialDimensions.size.width, initialDimensions.size.height);
+      if (constrained.x !== initialDimensions.position.x || constrained.y !== initialDimensions.position.y) {
         setPosition(constrained);
       }
     }
-  }, []);
+  }, [initialDimensions]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;

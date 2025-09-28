@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { LAYOUT_CONSTANTS } from '@/constants/layout';
 import DesktopIcon from './DesktopIcon';
 import { getAppIcon, AppIconKey } from '@/styles/icons';
@@ -30,7 +30,7 @@ export default function DesktopGrid({
   const [topPadding, setTopPadding] = useState<number>(5);
   const [cellSize, setCellSize] = useState<number>(LAYOUT_CONSTANTS.DESKTOP_CELL_SIZE);
   
-  const loadSavedPositions = () => {
+  const loadSavedPositions = useCallback(() => {
     if (!isClient) return null;
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -39,16 +39,16 @@ export default function DesktopGrid({
       console.error('Failed to load icon positions:', error);
       return null;
     }
-  };
+  }, [isClient]);
   
-  const savePositions = (gridState: (string | null)[][]) => {
+  const savePositions = useCallback((gridState: (string | null)[][]) => {
     if (!isClient) return; // Only access localStorage on client side to prevent the server side error
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(gridState));
     } catch (error) {
       console.error('Failed to save icon positions:', error);
     }
-  };
+  }, [isClient]);
 
   useEffect(() => {
     setIsClient(true);
@@ -88,7 +88,7 @@ export default function DesktopGrid({
         setGridState(savedPositions);
       }
     }
-  }, [isClient]);
+  }, [isClient, loadSavedPositions]);
 
   // Update grid state when dimensions change
   useEffect(() => {
@@ -132,11 +132,11 @@ export default function DesktopGrid({
       savePositions(newGrid);
       return newGrid;
     });
-  }, [gridDimensions, icons]);
+  }, [gridDimensions, icons, savePositions]);
 
-  const [draggedIcon, setDraggedIcon] = useState<string | null>(null);
+  const [hoveredCell, setHoveredCell] = useState<string | null>(null);
 
-  const handleDrop = (e: React.DragEvent, row: number, col: number) => {
+  const handleDrop = (e: React.DragEvent, dropRow: number, dropCol: number) => {
     e.preventDefault();
     setHoveredCell(null);
     const data = e.dataTransfer.getData('text/plain');
@@ -159,8 +159,8 @@ export default function DesktopGrid({
       }
       
       // Place icon in new position (if empty)
-      if (newGrid[row][col] === null) {
-        newGrid[row][col] = draggedIconObj.id;
+      if (newGrid[dropRow][dropCol] === null) {
+        newGrid[dropRow][dropCol] = draggedIconObj.id;
       }
       
       savePositions(newGrid);
@@ -173,15 +173,13 @@ export default function DesktopGrid({
     e.dataTransfer.dropEffect = 'move';
   };
 
-  const [hoveredCell, setHoveredCell] = useState<string | null>(null);
-
   const handleDragEnter = (e: React.DragEvent, row: number, col: number) => {
     e.preventDefault();
     setHoveredCell(`${row}-${col}`);
   };
 
   // Remove hover if we're leaving this cell but not entering a child
-  const handleDragLeave = (e: React.DragEvent, row: number, col: number) => {
+  const handleDragLeave = (e: React.DragEvent) => {
     if (!e.currentTarget.contains(e.relatedTarget as Node)) {
       setHoveredCell(null);
     }
@@ -221,7 +219,7 @@ export default function DesktopGrid({
               onDrop={(e) => handleDrop(e, row, col)}
               onDragOver={handleDragOver}
               onDragEnter={(e) => handleDragEnter(e, row, col)}
-              onDragLeave={(e) => handleDragLeave(e, row, col)}
+              onDragLeave={handleDragLeave}
             >
               {icon && (
                 <DesktopIcon

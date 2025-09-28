@@ -1,6 +1,7 @@
 import { FaPowerOff, FaRedo } from 'react-icons/fa';
 import { Theme } from '@/contexts/ThemeContext';
 import { IconType } from 'react-icons';
+import Image from 'next/image';
 
 export interface IconProps {
   size?: number;
@@ -44,7 +45,7 @@ const PngIcon = ({
   size?: number; 
   className?: string; 
 }) => (
-  <img 
+  <Image 
     src={src} 
     alt={alt} 
     width={size} 

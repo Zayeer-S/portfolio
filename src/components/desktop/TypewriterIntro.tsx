@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Theme } from '@/contexts/ThemeContext';
-import { getThemeClasses } from '@/styles/themes';
 
 interface TypewriterIntroProps {
   delay?: number;
@@ -15,12 +14,8 @@ export default function TypewriterIntro({
   delay = 750,
   secondDelay = 400,
   speed = 75,
-  theme,
 }: TypewriterIntroProps) {
-  const styles = theme ? getThemeClasses(theme) : null;
-  const textColor = styles?.typewriter || "text-white";
-
-  const lines = ["CS Student @ SHU", "Software Engineer"];
+  const lines = useMemo(() => ["CS Student @ SHU", "Software Engineer"], []);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
@@ -58,7 +53,7 @@ export default function TypewriterIntro({
 
       return () => clearTimeout(nextLineTimer);
     }
-  }, [currentCharIndex, currentLineIndex, lines, speed, hasStarted]);
+  }, [currentCharIndex, currentLineIndex, lines, speed, hasStarted, secondDelay]);
 
   // Cursor blinking effect
   useEffect(() => {
@@ -84,7 +79,7 @@ export default function TypewriterIntro({
       <div className="text-center w-full max-w-4xl">
         <div className="space-y-2">
           <div className="text-white text-4xl sm:text-5xl md:text-6xl font-light tracking-wide drop-shadow-lg">
-            Hi, I'm Zayeer
+            Hi, I&apos;m Zayeer
           </div>
           
           <div className="text-white text-2xl sm:text-3xl md:text-4xl font-light tracking-wide drop-shadow-lg min-h-[1.75rem] sm:min-h-[2rem] md:min-h-[2.25rem] flex items-center justify-center">

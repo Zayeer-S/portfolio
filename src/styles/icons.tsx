@@ -81,7 +81,9 @@ export const AppIcons = {
   startMenu: ({ size = 18, className }: IconProps) => (
     <PngIcon src="/start-menu-symbol-modern.png" alt="Start Menu" size={size} className={className} />
   ),
-  // Theme-aware React Icons for power and reload
+  credits: ({ size = 18, className }: IconProps) => (
+    <PngIcon src="/closed-folder-modern.png" alt="Credits" size={size} className={className} />
+  ),  // React icons ahead
   power: ({ size = 18, className, theme }: IconProps) => (
     <ThemedReactIcon IconComponent={FaPowerOff} size={size} className={className} theme={theme} />
   ),

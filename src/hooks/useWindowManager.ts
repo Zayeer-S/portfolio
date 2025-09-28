@@ -12,6 +12,7 @@ export function useWindowManager() {
     settings: { isOpen: false, isMinimized: false, isMaximized: false },
     calculator: { isOpen: false, isMinimized: false, isMaximized: false },
     notepad: { isOpen: false, isMinimized: false, isMaximized: false },
+    credits: { isOpen: false, isMinimized: false, isMaximized: false },
   });
 
   const [windowOrder, setWindowOrder] = useState<string[]>([]);

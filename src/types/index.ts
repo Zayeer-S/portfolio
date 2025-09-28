@@ -47,4 +47,4 @@ export interface TaskbarProps {
   isClient: boolean;
 }
 
-export type WindowId = 'projects' | 'technologies' |'contact' | 'settings' | 'calculator' | 'notepad';
+export type WindowId = 'projects' | 'technologies' |'contact' | 'settings' | 'calculator' | 'notepad' | 'credits';

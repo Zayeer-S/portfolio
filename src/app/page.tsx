@@ -16,6 +16,7 @@ import NotepadWindow from '@/components/windows/NotepadWindow';
 import ProjectsWindow from '@/components/windows/ProjectsWindow';
 import TechnologiesWindow from '@/components/windows/TechnologiesWindow';
 import ContactWindow from '@/components/windows/ContactWindow';
+import CreditsWindow from '@/components/windows/CreditsWindow';
 
 export default function Home() {
   const { theme } = useTheme();
@@ -72,8 +73,14 @@ export default function Home() {
             iconKey: 'contact',
             label: 'Contact',
             onClick: () => openWindow('contact')
-          }
-        ]}
+          },
+          {
+            id: 'credits',
+            icon: 'credits',
+            iconKey: 'credits',
+            label: 'Credits',
+            onClick: () => openWindow('credits'),
+          },        ]}
         hoverClass={styles.desktop.iconHover}
       />
 
@@ -172,7 +179,23 @@ export default function Home() {
       >
         <NotepadWindow />
       </Window>
-      
+
+      <Window
+        id="credits"
+        title="Credits & Attributions"
+        isOpen={windows.credits.isOpen}
+        isMinimized={windows.credits.isMinimized}
+        isMaximized={windows.credits.isMaximized}
+        onClose={() => closeWindow('credits')}
+        onMinimize={() => minimizeWindow('credits')}
+        onMaximize={() => maximizeWindow('credits')}
+        zIndex={getWindowZIndex('credits')}
+        onFocus={() => focusWindow('credits')}
+        theme={theme}
+      >
+        <CreditsWindow />
+      </Window>      
+
       {/* Start Menu */}
       <StartMenu 
         isOpen={startMenuOpen}

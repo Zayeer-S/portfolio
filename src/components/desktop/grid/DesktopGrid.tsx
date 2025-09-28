@@ -106,53 +106,26 @@ export default function DesktopGrid({
         }
       }
       
-      // Find icons that need to be placed
+      // Place any icons that don't have positions yet
       const placedIcons = new Set();
       newGrid.forEach(row => row.forEach(cell => {
         if (cell) placedIcons.add(cell);
       }));
       
       const unplacedIcons = icons.filter(icon => !placedIcons.has(icon.id));
+      let currentRow = 0, currentCol = 0;
       
-      const creditsIcon = unplacedIcons.find(icon => icon.id === 'credits');
-      if (creditsIcon && gridDimensions.rows > 0 && gridDimensions.cols > 0) {
-        const bottomRightRow = gridDimensions.rows - 1;
-        const bottomRightCol = gridDimensions.cols - 1;
-        
-        if (newGrid[bottomRightRow] && newGrid[bottomRightRow][bottomRightCol] === null) {
-          newGrid[bottomRightRow][bottomRightCol] = creditsIcon.id;
-        } else {
-          let placed = false;
-          for (let r = gridDimensions.rows - 1; r >= 0 && !placed; r--) {
-            for (let c = gridDimensions.cols - 1; c >= 0 && !placed; c--) {
-              if (newGrid[r][c] === null) {
-                newGrid[r][c] = creditsIcon.id;
-                placed = true;
-              }
-            }
+      for (const icon of unplacedIcons) {
+        while (currentRow < gridDimensions.rows && newGrid[currentRow][currentCol] !== null) {
+          currentRow++;
+          if (currentRow >= gridDimensions.rows) {
+            currentRow = 0;
+            currentCol++;
           }
         }
-      }
-      
-      // Place remaining unplaced icons
-      const remainingIcons = unplacedIcons.filter(icon => icon.id !== 'credits');
-      let currentRow = 0;
-      let currentCol = 0;
-      
-      for (const icon of remainingIcons) {
-        while (currentRow < gridDimensions.rows) {
-          if (newGrid[currentRow][currentCol] === null) {
-            newGrid[currentRow][currentCol] = icon.id;
-            currentRow++;
-            break;
-          } else {
-            currentRow++;
-            if (currentRow >= gridDimensions.rows) {
-              currentCol++;
-              currentRow = 0;
-              if (currentCol >= gridDimensions.cols) break;
-            }
-          }
+        
+        if (currentCol < gridDimensions.cols && currentRow < gridDimensions.rows) {
+          newGrid[currentRow][currentCol] = icon.id;
         }
       }
       

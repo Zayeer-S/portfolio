@@ -54,7 +54,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
     >
       <div className="p-4 h-full flex relative">
         {/* Applications in alphabetical order (always visible) */}
-        <div className="flex-1 overflow-y-auto ml-16">
+        <div className="flex-1 overflow-y-auto ml-[46px]">
           <div className="space-y-1">
             {Object.entries(groupedItems).map(([letter, items]) => (
               <div key={letter}>
@@ -83,7 +83,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
         {/* Hamburger button*/}
         <div 
           className="absolute select-none"
-          style={{ top: '16px', left: '16px', zIndex: 20 }}
+          style={{ top: '10px', left: '10px', zIndex: 20 }}
         >
           <button
             onClick={toggleLeftColumn}
@@ -95,7 +95,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
           </button>
         </div>
 
-        <div className="absolute" style={{ bottom: '16px', left: '16px', zIndex: 20 }}>
+        <div className="absolute" style={{ bottom: '10px', left: '10px', zIndex: 20 }}>
           <div className="flex flex-col space-y-2">
             {/* Settings icon */}
             <div 
@@ -122,7 +122,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
         {/* Settings text*/}
         <div 
           className={`absolute transition-all duration-300 ease-out select-none ${isLeftColumnExpanded ? 'opacity-100 translate-x-0 delay-100' : 'opacity-0 -translate-x-4'}`}
-          style={{ bottom: '63px', left: '48px', zIndex: 20 }}
+          style={{ bottom: '67px', left: '52px', zIndex: 20 }}
         >
           <span className="text-sm whitespace-nowrap select-none">Settings</span>
         </div>
@@ -130,7 +130,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
         {/*Power text*/}
         <div 
           className={`absolute transition-all duration-300 ease-out select-none ${isLeftColumnExpanded ? 'opacity-100 translate-x-0 delay-150' : 'opacity-0 -translate-x-4'}`}
-          style={{ bottom: '24px', left: '56px', zIndex: 20 }}
+          style={{ bottom: '20px', left: '52px', zIndex: 20 }}
         >
           <span className="text-sm whitespace-nowrap select-none">Power</span>
         </div>
@@ -158,7 +158,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
         )}
 
         {/* White background overlay i.e. the one toggled by hamburger */}
-        <div className={`absolute left-0 top-0 bottom-0 ${isLeftColumnExpanded ? 'w-44' : 'w-12'} transition-all duration-300 ease-out ${isLeftColumnExpanded ? styles.startMenu.background + ' rounded-tr-lg shadow-lg' : ''} z-10`}>
+        <div className={`absolute left-0 top-0 bottom-0 ${isLeftColumnExpanded ? 'w-60' : 'w-17'} transition-all duration-300 ease-out ${isLeftColumnExpanded ? styles.startMenu.background + ' rounded-tr-lg shadow-lg' : ''} z-10`}>
         </div>
       </div>
     </div>

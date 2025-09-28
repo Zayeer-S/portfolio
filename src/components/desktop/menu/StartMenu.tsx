@@ -100,21 +100,21 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
             {/* Settings icon */}
             <div 
               className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
-              style={{ width: '48px', height: '48px' }}
+              style={{ width: '40px', height: '40px' }}
               onClick={() => handleItemClick('settings')}
               title={!isLeftColumnExpanded ? "Settings" : undefined}
             >
-              {getAppIcon('settings', { size: 32 })}
+              {getAppIcon('settings', { size: 24 })}
             </div>
             
             {/* Power icon */}
             <div 
               className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
-              style={{ width: '48px', height: '48px' }}
+              style={{ width: '40px', height: '40px',}}
               onClick={handlePowerClick}
               title={!isLeftColumnExpanded ? "Power" : undefined}
             >
-              {getAppIcon('power', { size: 32, theme })}
+              {getAppIcon('power', { size: 24, theme })}
             </div>
           </div>
         </div>
@@ -122,7 +122,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
         {/* Settings text*/}
         <div 
           className={`absolute transition-all duration-300 ease-out select-none ${isLeftColumnExpanded ? 'opacity-100 translate-x-0 delay-100' : 'opacity-0 -translate-x-4'}`}
-          style={{ bottom: '71px', left: '56px', zIndex: 20 }}
+          style={{ bottom: '63px', left: '48px', zIndex: 20 }}
         >
           <span className="text-sm whitespace-nowrap select-none">Settings</span>
         </div>

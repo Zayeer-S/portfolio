@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { TaskbarProps, WindowId } from '@/types';
 import { LAYOUT_CONSTANTS } from '@/constants/layout';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -42,21 +42,26 @@ export default function Taskbar({
   }, []);
 
   // Get open windows and maintain order
-  const openWindows = Object.entries(windows).filter(([_, window]) => window.isOpen);
+  const openWindows = Object.entries(windows).filter(([, window]) => window.isOpen);
   const currentWindowIds = openWindows.map(([id]) => id);
-  const orderedWindowIds = taskbarOrder.filter(id => currentWindowIds.includes(id))
-    .concat(currentWindowIds.filter(id => !taskbarOrder.includes(id)));
+  
+  const orderedWindowIds = useMemo(() => {
+    return taskbarOrder.filter(id => currentWindowIds.includes(id))
+      .concat(currentWindowIds.filter(id => !taskbarOrder.includes(id)));
+  }, [taskbarOrder, currentWindowIds]);
 
   // Update order when windows change
   useEffect(() => {
-    if (orderedWindowIds.length !== taskbarOrder.length || 
-        !orderedWindowIds.every(id => taskbarOrder.includes(id))) {
+    const orderedIds = orderedWindowIds.join(',');
+    const currentOrderIds = taskbarOrder.filter(id => currentWindowIds.includes(id)).join(',');
+    
+    if (orderedIds !== currentOrderIds) {
       setTaskbarOrder(orderedWindowIds);
     }
-  }, [currentWindowIds.join(',')]);
+  }, [orderedWindowIds, taskbarOrder, currentWindowIds]);
 
   // Handle drag start
-  const handleMouseDown = (e: React.MouseEvent, windowId: string) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent, windowId: string) => {
     if (e.button !== 0) return;
     
     const containerRect = containerRef.current?.getBoundingClientRect();
@@ -64,9 +69,9 @@ export default function Taskbar({
 
     dragLogic.startDrag(windowId, e.clientX, e.clientY, containerRect);
     e.preventDefault();
-  };
+  }, [dragLogic]);
 
-  const handleTouchStart = (e: React.TouchEvent, windowId: string) => {
+  const handleTouchStart = useCallback((e: React.TouchEvent, windowId: string) => {
     if (dragLogic.isProcessingTouch) return;
     
     const touch = e.touches[0];
@@ -75,7 +80,7 @@ export default function Taskbar({
 
     dragLogic.startDrag(windowId, touch.clientX, touch.clientY, containerRect);
     e.stopPropagation();
-  };
+  }, [dragLogic]);
 
   // Handle insertion position updates during drag
   const updateInsertionPosition = useCallback((clientX: number) => {
@@ -116,7 +121,7 @@ export default function Taskbar({
         }
       }
     }
-  }, [dragLogic.draggedItem, orderedWindowIds, dragLogic.insertionIndex]);
+  }, [dragLogic.draggedItem, orderedWindowIds, dragLogic.insertionIndex, dragLogic.setInsertionIndex]);
 
   // Global mouse/touch handlers for drag operations
   useEffect(() => {
@@ -148,7 +153,7 @@ export default function Taskbar({
       dragLogic.endDrag(onMinimizeWindow);
     };
 
-    const handleTouchEnd = (e: TouchEvent) => {
+    const handleTouchEnd = () => {
       if (!dragLogic.isProcessingTouch) {
         dragLogic.endDrag(onMinimizeWindow);
       }
@@ -165,11 +170,11 @@ export default function Taskbar({
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('touchmove', handleTouchMove, { capture: true } as any);
-      document.removeEventListener('touchend', handleTouchEnd, { capture: true } as any);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
       document.body.style.userSelect = '';
     };
-  }, [dragLogic.draggedItem, dragLogic.hasDraggedBeyondThreshold, updateInsertionPosition, onMinimizeWindow]);
+  }, [dragLogic.draggedItem, dragLogic.hasDraggedBeyondThreshold, updateInsertionPosition, onMinimizeWindow, dragLogic]);
 
   return (
     <>

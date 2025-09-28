@@ -1,5 +1,6 @@
 import { FaPowerOff, FaRedo } from 'react-icons/fa';
 import { Theme } from '@/contexts/ThemeContext';
+import { IconType } from 'react-icons';
 
 export interface IconProps {
   size?: number;
@@ -13,7 +14,7 @@ const ThemedReactIcon = ({
   className,
   theme 
 }: { 
-  IconComponent: any; 
+  IconComponent: IconType; 
   size?: number; 
   className?: string; 
   theme?: Theme;

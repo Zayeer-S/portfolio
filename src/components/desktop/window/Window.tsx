@@ -91,7 +91,6 @@ export default function Window({
   
   // Refs to track values and detect real transitions
   const prevMinimizedRef = useRef<boolean | undefined>(undefined);
-  const prevMaximizedRef = useRef<boolean | undefined>(undefined);
 
   useEffect(() => {
     if (isOpen && !shouldRender) {

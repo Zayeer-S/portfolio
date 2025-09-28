@@ -45,7 +45,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
 
   return (
     <div 
-      className={`fixed bottom-10 left-0 w-80 h-96 ${styles.startMenu.background} rounded-tr-lg shadow-lg
+      className={`fixed bottom-10 left-0 w-80 h-96 ${styles.startMenu.background} rounded-tr-lg shadow-lg overflow-hidden
         transform transition-all duration-200 ease-out origin-bottom-left
         ${isOpen 
           ? 'translate-y-0 opacity-100 scale-100' 
@@ -54,7 +54,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
     >
       <div className="p-4 h-full flex relative">
         {/* Applications in alphabetical order (always visible) */}
-        <div className="flex-1 overflow-y-auto ml-[46px]">
+        <div className="flex-1 overflow-y-auto ml-[46px] pr-2">
           <div className="space-y-1">
             {Object.entries(groupedItems).map(([letter, items]) => (
               <div key={letter}>

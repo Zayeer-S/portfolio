@@ -11,9 +11,9 @@ interface TaskbarDragPreviewProps {
 
 function getWindowIcon(windowId: string) {
   if (windowId === 'projects') {
-    return getAppIcon('projectsOpen', { size: Math.round(18 * 1.7) });
+    return getAppIcon('projectsOpen', { size: 32 });
   }
-  return getAppIcon(windowId as AppIconKey, { size: Math.round(18 * 1.7) });
+  return getAppIcon(windowId as AppIconKey, { size: 32 });
 }
 
 export default function TaskbarDragPreview({ 
@@ -25,8 +25,8 @@ export default function TaskbarDragPreview({
     <div
       className="fixed pointer-events-none z-50"
       style={{
-        left: position.x - 20, // Center the 40px wide icon
-        top: taskbarRect.top + (taskbarRect.height - 32) / 2, // Center vertically in taskbar
+        left: position.x - 20,
+        top: taskbarRect.top + (taskbarRect.height - 32) / 2,
         width: '40px',
         height: '32px',
       }}

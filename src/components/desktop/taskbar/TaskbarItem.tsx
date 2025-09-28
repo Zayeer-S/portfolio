@@ -15,9 +15,9 @@ interface TaskbarItemProps {
 
 function getWindowIcon(windowId: string) {
   if (windowId === 'projects') {
-    return getAppIcon('projectsOpen', { size: Math.round(18 * 1.7) });
+    return getAppIcon('projectsOpen', { size: 32 });
   }
-  return getAppIcon(windowId as AppIconKey, { size: Math.round(18 * 1.7) });
+  return getAppIcon(windowId as AppIconKey, { size: 32 });
 }
 
 export default function TaskbarItem({
@@ -35,7 +35,7 @@ export default function TaskbarItem({
       data-taskbar-item={windowId}
       onMouseDown={(e) => onMouseDown(e, windowId)}
       onTouchStart={(e) => onTouchStart(e, windowId)}
-      className={`h-8 w-10 transition-all duration-150 flex items-center justify-center ${taskbarButtonClasses} ${
+      className={`h-[33.5px] w-[42px] transition-all duration-150 flex items-center justify-center ${taskbarButtonClasses} ${
         isBeingDragged ? 'opacity-30' : 
         isClicked ? 'scale-75' : 'hover:scale-105'
       } ${isTouchDevice ? 'touch-manipulation' : ''}`}

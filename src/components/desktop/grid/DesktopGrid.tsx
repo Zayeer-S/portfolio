@@ -198,6 +198,8 @@ export default function DesktopGrid({
         paddingBottom: `${LAYOUT_CONSTANTS.TASKBAR_HEIGHT}px`,
         paddingTop: `${topPadding}px`,
       }}
+      role="main"
+      aria-label="Desktop"
     >
       {/* Render grid cells as drop zones */}
       {Array(gridDimensions.rows).fill(null).map((_, row) =>
@@ -220,6 +222,8 @@ export default function DesktopGrid({
               onDragOver={handleDragOver}
               onDragEnter={(e) => handleDragEnter(e, row, col)}
               onDragLeave={handleDragLeave}
+              role="gridcell"
+              aria-label={icon ? `${icon.label} icon` : 'Empty cell'}
             >
               {icon && (
                 <DesktopIcon

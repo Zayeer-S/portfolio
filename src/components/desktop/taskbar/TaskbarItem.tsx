@@ -20,6 +20,19 @@ function getWindowIcon(windowId: string) {
   return getAppIcon(windowId as AppIconKey, { size: 32 });
 }
 
+function getWindowLabel(windowId: string): string {
+  const labels: Record<string, string> = {
+    'calculator': 'Calculator',
+    'notepad': 'Notepad',
+    'projects': 'Projects',
+    'technologies': 'Technologies',
+    'contact': 'Contact',
+    'settings': 'Settings',
+    'credits': 'Credits'
+  };
+  return labels[windowId] || windowId;
+}
+
 export default function TaskbarItem({
   windowId,
   isMinimized,
@@ -30,6 +43,8 @@ export default function TaskbarItem({
   onMouseDown,
   onTouchStart,
 }: TaskbarItemProps) {
+  const windowLabel = getWindowLabel(windowId);
+  
   return (
     <button
       data-taskbar-item={windowId}
@@ -44,6 +59,8 @@ export default function TaskbarItem({
         userSelect: 'none',
         opacity: isMinimized ? 0.7 : (isBeingDragged ? 0.3 : 1),
       }}
+      aria-label={`${windowLabel} window${isMinimized ? ' (minimized)' : ''}`}
+      aria-pressed={!isMinimized}
     >
       {getWindowIcon(windowId)}
     </button>

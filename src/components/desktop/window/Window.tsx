@@ -305,6 +305,10 @@ export default function Window({
       
       <div
         ref={windowRef}
+        role="dialog"
+        aria-labelledby={`${id}-title`}
+        aria-modal="false"
+        aria-hidden={isMinimized}
         className={`fixed ${styles.window.background} ${styles.window.border} ${styles.window.shadow} ${styles.window.borderRadius} flex flex-col ${
           isMinimized && !isAnimating ? 'hidden' : ''
         } ${isMaximized ? 'rounded-none' : ''}`}
@@ -322,6 +326,7 @@ export default function Window({
         {/* Title Bar */}
         <div
           className={`title-bar h-8 ${styles.window.titleBar.background} ${styles.window.titleBar.text} px-2 flex items-center justify-between cursor-move rounded-t-lg select-none`}
+          aria-label='Window title bar'
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
         >
@@ -329,10 +334,10 @@ export default function Window({
             <div className="w-4 h-4 mr-2 pointer-events-none">
               <div className="w-full h-full rounded-sm pointer-events-none"></div>
             </div>
-            <span className="text-sm font-normal pointer-events-none">{title}</span>
+            <span id={`${id}-title`} className="text-sm font-normal pointer-events-none">{title}</span>
           </div>
-          <div className="flex">
-            <button
+          <div className="flex" role="group" aria-label='Window minimize, maximise and close buttons'>
+            <button aria-label='Minimize the window' aria-pressed={isMinimized}
               onClick={(e) => {
                 e.stopPropagation();
                 onMinimize();
@@ -341,7 +346,7 @@ export default function Window({
             >
               _
             </button>
-            <button
+            <button aria-label='Maximise the window' aria-pressed={isMaximized}
               onClick={(e) => {
                 e.stopPropagation();
                 handleMaximize();
@@ -350,7 +355,7 @@ export default function Window({
             >
               □
             </button>
-            <button
+            <button aria-label='Close the window'
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
@@ -364,7 +369,7 @@ export default function Window({
         </div>
         
         {/* Window Content */}
-        <div className="p-4 overflow-auto flex-1">
+        <div className="p-4 overflow-auto flex-1" role="document" aria-label={`${title} content`}>
           {children}
         </div>
 

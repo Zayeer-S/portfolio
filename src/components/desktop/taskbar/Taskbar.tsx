@@ -180,18 +180,26 @@ export default function Taskbar({
       <div 
         className={`fixed bottom-0 left-0 right-0 h-11 ${styles.taskbar.background} flex items-center px-2 z-50`}
         style={{ zIndex: LAYOUT_CONSTANTS.Z_INDEX.TASKBAR }}
+        role="toolbar"
+        aria-label="Taskbar"
       >
         {/* Start Button */}
         <button
           className={`h-[33.5px] w-[42px] ${styles.taskbar.startButton} rounded text-sm font-medium flex items-center justify-center border-0 hover:scale-110 transition-all duration-150`}
           onClick={onToggleStartMenu}
           style={{ border: 'none', outline: 'none' }}
+          aria-label="Open start menu"
         >
           {getAppIcon('startMenu', { size: 32 })}
         </button>
 
         {/* Task Buttons Container */}
-        <div ref={containerRef} className="flex ml-3 space-x-1 relative">
+        <div 
+          ref={containerRef} 
+          className="flex ml-3 space-x-1 relative"
+          role="group"
+          aria-label="Open windows"
+        >
           {orderedWindowIds.map((windowId) => {
             const window = windows[windowId];
             if (!window?.isOpen) return null;

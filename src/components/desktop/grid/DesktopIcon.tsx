@@ -48,15 +48,16 @@ export default function DesktopIcon({
   };
 
   return (
-    <div
+    <button
       draggable
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      className={`flex flex-col items-center px-1 py-1 ${hoverClass || 'hover:bg-gray-500/30'} cursor-pointer rounded group transition-opacity`}
+      className={`flex flex-col items-center px-1 py-1 ${hoverClass || 'hover:bg-gray-500/30'} cursor-pointer rounded group transition-opacity w-full h-full`}
       onClick={handleClick}
       onDoubleClick={isTouchDevice ? undefined : onClick}
+      aria-label={`${label} icon`}
     >
-      <div className="w-12 h-14 sm:w-16 sm:h-16 mb-1 flex items-center justify-center pointer-events-none">
+      <div className="w-12 h-14 sm:w-16 sm:h-16 mb-1 flex items-center justify-center pointer-events-none" aria-hidden="true">
         {useReactIcon ? (
           <div className="flex items-center justify-center">
             {icon}
@@ -70,6 +71,6 @@ export default function DesktopIcon({
       <span className="text-white text-xs sm:text-xs text-center group-hover rounded pointer-events-none leading-tight">
         {label}
       </span>
-    </div>
+    </button>
   );
 }

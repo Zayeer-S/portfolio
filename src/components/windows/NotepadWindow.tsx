@@ -113,12 +113,15 @@ export default function NotepadWindow() {
     <div 
       className="h-full flex flex-col"
       style={{ minWidth: '400px', minHeight: '300px' }}
+      role="application"
     >
       {/* Menu bar */}
-      <div className={`flex-shrink-0 ${menuBarBg} border-b ${styles.window.content.border} p-1`}>
+      <div role="menubar" aria-label='File Menu'
+      className={`flex-shrink-0 ${menuBarBg} border-b ${styles.window.content.border} p-1`}>
         <div className="flex space-x-1">
           <button
             onClick={handleNew}
+            aria-label='Create new text file'
             className={`px-2 py-1 text-xs ${styles.window.content.hover} rounded ${styles.window.content.text}`}
             title="New (Ctrl+N)"
           >
@@ -126,6 +129,7 @@ export default function NotepadWindow() {
           </button>
           <button
             onClick={handleOpen}
+            aria-label='Open text file'
             className={`px-2 py-1 text-xs ${styles.window.content.hover} rounded ${styles.window.content.text}`}
             title="Open (Ctrl+O)"
           >
@@ -133,6 +137,7 @@ export default function NotepadWindow() {
           </button>
           <button
             onClick={handleSave}
+            aria-label='Save text file'
             className={`px-2 py-1 text-xs ${styles.window.content.hover} rounded ${styles.window.content.text}`}
             title="Save (Ctrl+S)"
           >
@@ -142,7 +147,8 @@ export default function NotepadWindow() {
       </div>
 
       {/* File name and status */}
-      <div className={`flex-shrink-0 ${statusBarBg} border-b ${styles.window.content.border} px-3 py-1 flex items-center justify-between text-xs`}>
+      <div role="status" aria-label='Document'
+      className={`flex-shrink-0 ${statusBarBg} border-b ${styles.window.content.border} px-3 py-1 flex items-center justify-between text-xs`}>
         <div className="flex items-center space-x-2">
           <input
             type="text"
@@ -151,6 +157,7 @@ export default function NotepadWindow() {
               setFileName(e.target.value);
               setHasUnsavedChanges(true);
             }}
+            aria-label='File name'
             className={`bg-transparent border-none outline-none font-medium ${styles.window.content.text}`}
             style={{ width: `${fileName.length + 1}ch` }}
           />
@@ -167,6 +174,7 @@ export default function NotepadWindow() {
         value={content}
         onChange={handleContentChange}
         placeholder="Start typing..."
+        aria-label='Typing area'
         className={`flex-1 p-3 border-none outline-none resize-none font-mono text-sm leading-relaxed ${textAreaBg} ${styles.window.content.text}`}
         style={{
           fontFamily: 'Consolas, "Courier New", monospace',

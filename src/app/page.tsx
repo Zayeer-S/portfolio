@@ -21,7 +21,7 @@ import CreditsWindow from '@/components/windows/CreditsWindow';
 export default function Home() {
   const { theme } = useTheme();
   const styles = getThemeClasses(theme);
-  
+
   const {
     windows,
     startMenuOpen,
@@ -43,7 +43,7 @@ export default function Home() {
       <div className={`absolute inset-0 ${styles.desktop.background}`}></div>
 
       <TypewriterIntro theme={theme} />
-      
+
       <DesktopGrid
         icons={[
           {
@@ -51,28 +51,28 @@ export default function Home() {
             icon: 'PDF',
             iconKey: 'cv',
             label: 'CV',
-            onClick: () => window.open('/zayeer-sultan-cv.pdf')
+            onClick: () => window.open('/zayeer-sultan-cv.pdf'),
           },
           {
             id: 'projects',
             icon: 'Folder',
             iconKey: 'projects',
             label: 'Projects',
-            onClick: () => openWindow('projects')
+            onClick: () => openWindow('projects'),
           },
           {
             id: 'technologies',
             icon: 'Desktop',
             iconKey: 'technologies',
             label: 'Technologies',
-            onClick: () => openWindow('technologies')
+            onClick: () => openWindow('technologies'),
           },
           {
             id: 'contact',
             icon: 'Mail',
             iconKey: 'contact',
             label: 'Contact',
-            onClick: () => openWindow('contact')
+            onClick: () => openWindow('contact'),
           },
           {
             id: 'credits',
@@ -80,7 +80,8 @@ export default function Home() {
             iconKey: 'credits',
             label: 'Credits',
             onClick: () => openWindow('credits'),
-          },        ]}
+          },
+        ]}
         hoverClass={styles.desktop.iconHover}
       />
 
@@ -194,14 +195,10 @@ export default function Home() {
         theme={theme}
       >
         <CreditsWindow />
-      </Window>      
+      </Window>
 
       {/* Start Menu */}
-      <StartMenu 
-        isOpen={startMenuOpen}
-        onClose={closeStartMenu}
-        onOpenWindow={openWindow}
-      />
+      <StartMenu isOpen={startMenuOpen} onClose={closeStartMenu} onOpenWindow={openWindow} />
 
       {/* Taskbar */}
       <Taskbar

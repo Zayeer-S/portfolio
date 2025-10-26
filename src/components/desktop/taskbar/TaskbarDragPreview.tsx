@@ -16,10 +16,10 @@ function getWindowIcon(windowId: string) {
   return getAppIcon(windowId as AppIconKey, { size: 32 });
 }
 
-export default function TaskbarDragPreview({ 
-  windowId, 
-  position, 
-  taskbarRect 
+export default function TaskbarDragPreview({
+  windowId,
+  position,
+  taskbarRect,
 }: TaskbarDragPreviewProps) {
   return createPortal(
     <div
@@ -33,7 +33,7 @@ export default function TaskbarDragPreview({
     >
       <div
         className="w-full h-full flex items-center justify-center transition-none"
-        style={{ 
+        style={{
           filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.4))',
           transform: 'scale(1.1)',
         }}

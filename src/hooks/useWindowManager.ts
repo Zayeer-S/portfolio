@@ -29,7 +29,7 @@ export function useWindowManager() {
   const openWindow = (windowId: WindowId) => {
     setWindows(prev => ({
       ...prev,
-      [windowId]: { isOpen: true, isMinimized: false, isMaximized: false }
+      [windowId]: { isOpen: true, isMinimized: false, isMaximized: false },
     }));
     focusWindow(windowId);
   };
@@ -37,7 +37,7 @@ export function useWindowManager() {
   const closeWindow = (windowId: WindowId) => {
     setWindows(prev => ({
       ...prev,
-      [windowId]: { isOpen: false, isMinimized: false, isMaximized: false }
+      [windowId]: { isOpen: false, isMinimized: false, isMaximized: false },
     }));
     setWindowOrder(prev => prev.filter(id => id !== windowId));
   };
@@ -45,14 +45,14 @@ export function useWindowManager() {
   const minimizeWindow = (windowId: WindowId) => {
     setWindows(prev => ({
       ...prev,
-      [windowId]: { ...prev[windowId], isMinimized: !prev[windowId].isMinimized }
+      [windowId]: { ...prev[windowId], isMinimized: !prev[windowId].isMinimized },
     }));
   };
 
   const maximizeWindow = (windowId: WindowId) => {
     setWindows(prev => ({
       ...prev,
-      [windowId]: { ...prev[windowId], isMaximized: !prev[windowId].isMaximized }
+      [windowId]: { ...prev[windowId], isMaximized: !prev[windowId].isMaximized },
     }));
   };
 
@@ -62,7 +62,9 @@ export function useWindowManager() {
 
   const getWindowZIndex = (windowId: WindowId) => {
     const index = windowOrder.indexOf(windowId);
-    return index === -1 ? LAYOUT_CONSTANTS.Z_INDEX.BASE : LAYOUT_CONSTANTS.Z_INDEX.BASE + (windowOrder.length - 1 - index);
+    return index === -1
+      ? LAYOUT_CONSTANTS.Z_INDEX.BASE
+      : LAYOUT_CONSTANTS.Z_INDEX.BASE + (windowOrder.length - 1 - index);
   };
 
   const toggleStartMenu = () => {

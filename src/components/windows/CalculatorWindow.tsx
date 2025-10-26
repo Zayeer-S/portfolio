@@ -12,14 +12,17 @@ export default function CalculatorWindow() {
   const { theme } = useTheme();
   const styles = getThemeClasses(theme);
 
-  const inputNumber = useCallback((num: string) => {
-    if (waitingForOperand) {
-      setDisplay(num);
-      setWaitingForOperand(false);
-    } else {
-      setDisplay(display === '0' ? num : display + num);
-    }
-  }, [display, waitingForOperand]);
+  const inputNumber = useCallback(
+    (num: string) => {
+      if (waitingForOperand) {
+        setDisplay(num);
+        setWaitingForOperand(false);
+      } else {
+        setDisplay(display === '0' ? num : display + num);
+      }
+    },
+    [display, waitingForOperand]
+  );
 
   const inputDecimal = useCallback(() => {
     if (waitingForOperand) {
@@ -54,24 +57,27 @@ export default function CalculatorWindow() {
     }
   }, []);
 
-  const performOperation = useCallback((nextOperation: string) => {
-    const inputValue = parseFloat(display);
+  const performOperation = useCallback(
+    (nextOperation: string) => {
+      const inputValue = parseFloat(display);
 
-    if (previousValue === null) {
-      setPreviousValue(inputValue);
-      setPreviousDisplay(display + ' ' + nextOperation);
-    } else if (operation) {
-      const currentValue = previousValue || 0;
-      const newValue = calculate(currentValue, inputValue, operation);
+      if (previousValue === null) {
+        setPreviousValue(inputValue);
+        setPreviousDisplay(display + ' ' + nextOperation);
+      } else if (operation) {
+        const currentValue = previousValue || 0;
+        const newValue = calculate(currentValue, inputValue, operation);
 
-      setDisplay(String(newValue));
-      setPreviousValue(newValue);
-      setPreviousDisplay(String(newValue) + ' ' + nextOperation);
-    }
+        setDisplay(String(newValue));
+        setPreviousValue(newValue);
+        setPreviousDisplay(String(newValue) + ' ' + nextOperation);
+      }
 
-    setWaitingForOperand(true);
-    setOperation(nextOperation);
-  }, [display, previousValue, operation, calculate]);
+      setWaitingForOperand(true);
+      setOperation(nextOperation);
+    },
+    [display, previousValue, operation, calculate]
+  );
 
   const handleEquals = useCallback(() => {
     const inputValue = parseFloat(display);
@@ -112,34 +118,35 @@ export default function CalculatorWindow() {
   }, [inputNumber, inputDecimal, performOperation, handleEquals, clear]);
 
   const displayBg = theme === 'modern-dark' ? 'bg-black' : 'bg-white';
-  const buttonBg = theme === 'modern-dark' 
-    ? 'bg-neutral-700 hover:bg-neutral-600 border-neutral-600' 
-    : 'bg-gradient-to-b from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 border-gray-400';
+  const buttonBg =
+    theme === 'modern-dark'
+      ? 'bg-neutral-700 hover:bg-neutral-600 border-neutral-600'
+      : 'bg-gradient-to-b from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 border-gray-400';
 
-  const Button = ({ 
-    onClick, 
-    className = '', 
-    children, 
+  const Button = ({
+    onClick,
+    className = '',
+    children,
     wide = false,
-    ariaLabel
-  }: { 
-    onClick: () => void; 
-    className?: string; 
+    ariaLabel,
+  }: {
+    onClick: () => void;
+    className?: string;
     children: React.ReactNode;
     wide?: boolean;
     ariaLabel: string;
   }) => (
     <button
-      onMouseDown={(e) => {
+      onMouseDown={e => {
         e.preventDefault();
         e.stopPropagation();
       }}
-      onClick={(e) => {
+      onClick={e => {
         e.preventDefault();
         e.stopPropagation();
         onClick();
       }}
-      onPointerDown={(e) => {
+      onPointerDown={e => {
         e.preventDefault();
         e.stopPropagation();
       }}
@@ -158,14 +165,14 @@ export default function CalculatorWindow() {
   );
 
   return (
-    <div 
+    <div
       className="h-full flex flex-col p-3 space-y-3"
       style={{ minWidth: '280px', minHeight: '320px' }}
       role="application"
       aria-label="Calculator"
     >
       {/* Display calculator with previous input as a "shadow" */}
-      <div 
+      <div
         className={`${displayBg} border-2 border-inset ${styles.window.content.border} p-3 flex flex-col justify-end text-right font-mono flex-shrink-0 min-h-16`}
         role="status"
         aria-live="polite"
@@ -173,90 +180,110 @@ export default function CalculatorWindow() {
         aria-label={`Calculator display showing ${display}`}
       >
         {/* Shadow - hidden from screen readers */}
-        <div 
+        <div
           className={`text-xs ${styles.window.content.textMuted} h-4 overflow-hidden`}
           aria-hidden="true"
         >
           {previousDisplay}
         </div>
         {/* Current display */}
-        <div className={`text-xl font-bold ${styles.window.content.text}`}>
-          {display}
-        </div>
+        <div className={`text-xl font-bold ${styles.window.content.text}`}>{display}</div>
       </div>
 
-      <div 
+      <div
         className="grid grid-cols-4 gap-1 flex-1"
-        onMouseDown={(e) => e.stopPropagation()}
+        onMouseDown={e => e.stopPropagation()}
         role="group"
         aria-label="Calculator buttons"
       >
-        <Button 
-          onClick={clear} 
+        <Button
+          onClick={clear}
           className="bg-gradient-to-b from-red-200 to-red-300 hover:from-red-300 hover:to-red-400 text-red-800"
           ariaLabel="Clear all"
         >
           C
         </Button>
-        <Button 
-          onClick={() => {}} 
+        <Button
+          onClick={() => {}}
           className={`${styles.window.content.textMuted} cursor-not-allowed`}
           ariaLabel="Plus minus (disabled)"
         >
           ±
         </Button>
-        <Button 
-          onClick={() => {}} 
+        <Button
+          onClick={() => {}}
           className={`${styles.window.content.textMuted} cursor-not-allowed`}
           ariaLabel="Percent (disabled)"
         >
           %
         </Button>
-        <Button 
-          onClick={() => performOperation('÷')} 
+        <Button
+          onClick={() => performOperation('÷')}
           className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-800"
           ariaLabel="Divide"
         >
           ÷
         </Button>
 
-        <Button onClick={() => inputNumber('7')} ariaLabel="7">7</Button>
-        <Button onClick={() => inputNumber('8')} ariaLabel="8">8</Button>
-        <Button onClick={() => inputNumber('9')} ariaLabel="9">9</Button>
-        <Button 
-          onClick={() => performOperation('×')} 
+        <Button onClick={() => inputNumber('7')} ariaLabel="7">
+          7
+        </Button>
+        <Button onClick={() => inputNumber('8')} ariaLabel="8">
+          8
+        </Button>
+        <Button onClick={() => inputNumber('9')} ariaLabel="9">
+          9
+        </Button>
+        <Button
+          onClick={() => performOperation('×')}
           className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-800"
           ariaLabel="Multiply"
         >
           ×
         </Button>
 
-        <Button onClick={() => inputNumber('4')} ariaLabel="4">4</Button>
-        <Button onClick={() => inputNumber('5')} ariaLabel="5">5</Button>
-        <Button onClick={() => inputNumber('6')} ariaLabel="6">6</Button>
-        <Button 
-          onClick={() => performOperation('-')} 
+        <Button onClick={() => inputNumber('4')} ariaLabel="4">
+          4
+        </Button>
+        <Button onClick={() => inputNumber('5')} ariaLabel="5">
+          5
+        </Button>
+        <Button onClick={() => inputNumber('6')} ariaLabel="6">
+          6
+        </Button>
+        <Button
+          onClick={() => performOperation('-')}
           className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-800"
           ariaLabel="Subtract"
         >
           -
         </Button>
 
-        <Button onClick={() => inputNumber('1')} ariaLabel="1">1</Button>
-        <Button onClick={() => inputNumber('2')} ariaLabel="2">2</Button>
-        <Button onClick={() => inputNumber('3')} ariaLabel="3">3</Button>
-        <Button 
-          onClick={() => performOperation('+')} 
+        <Button onClick={() => inputNumber('1')} ariaLabel="1">
+          1
+        </Button>
+        <Button onClick={() => inputNumber('2')} ariaLabel="2">
+          2
+        </Button>
+        <Button onClick={() => inputNumber('3')} ariaLabel="3">
+          3
+        </Button>
+        <Button
+          onClick={() => performOperation('+')}
           className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-800"
           ariaLabel="Add"
         >
           +
         </Button>
 
-        <Button onClick={() => inputNumber('0')} wide ariaLabel="0">0</Button>
-        <Button onClick={inputDecimal} ariaLabel="Decimal point">.</Button>
-        <Button 
-          onClick={handleEquals} 
+        <Button onClick={() => inputNumber('0')} wide ariaLabel="0">
+          0
+        </Button>
+        <Button onClick={inputDecimal} ariaLabel="Decimal point">
+          .
+        </Button>
+        <Button
+          onClick={handleEquals}
           className="bg-gradient-to-b from-green-200 to-green-300 hover:from-green-300 hover:to-green-400 text-green-800"
           ariaLabel="Equals"
         >

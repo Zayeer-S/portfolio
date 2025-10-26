@@ -7,7 +7,7 @@ import { getAppIcon } from '@/styles/icons';
 export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuProps) {
   const [showPowerMenu, setShowPowerMenu] = useState(false);
   const [isLeftColumnExpanded, setIsLeftColumnExpanded] = useState(false);
-  
+
   const { theme } = useTheme();
   const styles = getThemeClasses(theme);
 
@@ -30,26 +30,30 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
 
   const menuItems = [
     { id: 'calculator' as WindowId, name: 'Calculator', iconKey: 'calculator' as const },
-    { id: 'notepad' as WindowId, name: 'Notepad', iconKey: 'notepad' as const }
+    { id: 'notepad' as WindowId, name: 'Notepad', iconKey: 'notepad' as const },
   ];
   const sortedItems = menuItems.sort((a, b) => a.name.localeCompare(b.name));
-  
-  const groupedItems = sortedItems.reduce((groups, item) => {
-    const firstLetter = item.name[0].toUpperCase();
-    if (!groups[firstLetter]) {
-      groups[firstLetter] = [];
-    }
-    groups[firstLetter].push(item);
-    return groups;
-  }, {} as Record<string, typeof menuItems>);
+
+  const groupedItems = sortedItems.reduce(
+    (groups, item) => {
+      const firstLetter = item.name[0].toUpperCase();
+      if (!groups[firstLetter]) {
+        groups[firstLetter] = [];
+      }
+      groups[firstLetter].push(item);
+      return groups;
+    },
+    {} as Record<string, typeof menuItems>
+  );
 
   return (
-    <div 
+    <div
       className={`fixed bottom-10 left-0 w-80 h-96 ${styles.startMenu.background} rounded-tr-lg shadow-lg overflow-hidden
         transform transition-all duration-200 ease-out origin-bottom-left
-        ${isOpen 
-          ? 'translate-y-0 opacity-100 scale-100' 
-          : 'translate-y-14 opacity-0 scale-95 pointer-events-none'
+        ${
+          isOpen
+            ? 'translate-y-0 opacity-100 scale-100'
+            : 'translate-y-14 opacity-0 scale-95 pointer-events-none'
         }`}
     >
       <div className="p-4 h-full flex relative">
@@ -63,7 +67,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
                   {letter}
                 </div>
                 {/* Items under each letter */}
-                {items.map((item) => (
+                {items.map(item => (
                   <div
                     key={item.id}
                     className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-105 flex items-center space-x-2 ml-3`}
@@ -81,14 +85,11 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
         </div>
 
         {/* Hamburger button*/}
-        <div 
-          className="absolute select-none"
-          style={{ top: '10px', left: '10px', zIndex: 20 }}
-        >
+        <div className="absolute select-none" style={{ top: '10px', left: '10px', zIndex: 20 }}>
           <button
             onClick={toggleLeftColumn}
             className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
-            title={isLeftColumnExpanded ? "Collapse menu" : "Expand menu"}
+            title={isLeftColumnExpanded ? 'Collapse menu' : 'Expand menu'}
             style={{ width: '40px', height: '40px' }}
           >
             <span className="text-lg select-none">☰</span>
@@ -98,21 +99,21 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
         <div className="absolute" style={{ bottom: '10px', left: '10px', zIndex: 20 }}>
           <div className="flex flex-col space-y-2">
             {/* Settings icon */}
-            <div 
+            <div
               className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
               style={{ width: '40px', height: '40px' }}
               onClick={() => handleItemClick('settings')}
-              title={!isLeftColumnExpanded ? "Settings" : undefined}
+              title={!isLeftColumnExpanded ? 'Settings' : undefined}
             >
               {getAppIcon('settings', { size: 24 })}
             </div>
-            
+
             {/* Power icon */}
-            <div 
+            <div
               className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
-              style={{ width: '40px', height: '40px',}}
+              style={{ width: '40px', height: '40px' }}
               onClick={handlePowerClick}
-              title={!isLeftColumnExpanded ? "Power" : undefined}
+              title={!isLeftColumnExpanded ? 'Power' : undefined}
             >
               {getAppIcon('power', { size: 24, theme })}
             </div>
@@ -120,7 +121,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
         </div>
 
         {/* Settings text*/}
-        <div 
+        <div
           className={`absolute transition-all duration-300 ease-out select-none ${isLeftColumnExpanded ? 'opacity-100 translate-x-0 delay-100' : 'opacity-0 -translate-x-4'}`}
           style={{ bottom: '67px', left: '52px', zIndex: 20 }}
         >
@@ -128,7 +129,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
         </div>
 
         {/*Power text*/}
-        <div 
+        <div
           className={`absolute transition-all duration-300 ease-out select-none ${isLeftColumnExpanded ? 'opacity-100 translate-x-0 delay-150' : 'opacity-0 -translate-x-4'}`}
           style={{ bottom: '20px', left: '52px', zIndex: 20 }}
         >
@@ -137,14 +138,15 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
 
         {/* Power menu*/}
         {showPowerMenu && (
-          <div className={`absolute ${styles.startMenu.background} border border-gray-300 rounded shadow-lg w-32
+          <div
+            className={`absolute ${styles.startMenu.background} border border-gray-300 rounded shadow-lg w-32
             transform transition-all duration-200 ease-out
             animate-in slide-in-from-bottom-4 fade-in zoom-in-95 select-none`}
             style={{ bottom: '64px', left: '16px', zIndex: 30 }}
           >
-            <div 
+            <div
               className={`${styles.startMenu.items} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-105 select-none flex items-center space-x-2`}
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 handleReloadPage();
               }}
@@ -158,8 +160,9 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
         )}
 
         {/* White background overlay i.e. the one toggled by hamburger */}
-        <div className={`absolute left-0 top-0 bottom-0 ${isLeftColumnExpanded ? 'w-60' : 'w-17'} transition-all duration-300 ease-out ${isLeftColumnExpanded ? styles.startMenu.background + ' rounded-tr-lg shadow-lg' : ''} z-10`}>
-        </div>
+        <div
+          className={`absolute left-0 top-0 bottom-0 ${isLeftColumnExpanded ? 'w-60' : 'w-17'} transition-all duration-300 ease-out ${isLeftColumnExpanded ? styles.startMenu.background + ' rounded-tr-lg shadow-lg' : ''} z-10`}
+        ></div>
       </div>
     </div>
   );

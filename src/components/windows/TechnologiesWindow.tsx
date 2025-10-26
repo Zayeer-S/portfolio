@@ -8,7 +8,9 @@ export default function TechnologiesWindow() {
   return (
     <div className="space-y-6">
       <div className={`text-center border-b pb-3 ${styles.window.content.border}`}>
-        <h2 className={`text-lg font-bold ${styles.window.content.text}`}>Technical Skills & Tools</h2>
+        <h2 className={`text-lg font-bold ${styles.window.content.text}`}>
+          Technical Skills & Tools
+        </h2>
         <p className={`text-sm ${styles.window.content.textSecondary}`}>Technologies I work with</p>
       </div>
 

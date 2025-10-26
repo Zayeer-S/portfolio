@@ -11,7 +11,10 @@ export default function ContactWindow() {
       <div className="space-y-3">
         <div className="flex items-center space-x-3">
           <span className="text-lg">📧</span>
-          <a href="mailto:zayeersultan@gmail.com" className={`${styles.window.content.accent} hover:underline`}>
+          <a
+            href="mailto:zayeersultan@gmail.com"
+            className={`${styles.window.content.accent} hover:underline`}
+          >
             zayeersultan@gmail.com
           </a>
         </div>
@@ -23,13 +26,21 @@ export default function ContactWindow() {
         </div>
         <div className="flex items-center space-x-3">
           <span className="text-lg">💼</span>
-          <a href="https://linkedin.com/in/zayeer" target="_blank" className={`${styles.window.content.accent} hover:underline`}>
+          <a
+            href="https://linkedin.com/in/zayeer"
+            target="_blank"
+            className={`${styles.window.content.accent} hover:underline`}
+          >
             LinkedIn Profile
           </a>
         </div>
         <div className="flex items-center space-x-3">
           <span className="text-lg">💻</span>
-          <a href="https://github.com/Zayeer-S" target="_blank" className={`${styles.window.content.accent} hover:underline`}>
+          <a
+            href="https://github.com/Zayeer-S"
+            target="_blank"
+            className={`${styles.window.content.accent} hover:underline`}
+          >
             GitHub Profile
           </a>
         </div>

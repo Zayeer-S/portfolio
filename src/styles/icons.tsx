@@ -9,15 +9,15 @@ export interface IconProps {
   theme?: Theme;
 }
 
-const ThemedReactIcon = ({ 
-  IconComponent, 
-  size = 18, 
+const ThemedReactIcon = ({
+  IconComponent,
+  size = 18,
   className,
-  theme 
-}: { 
-  IconComponent: IconType; 
-  size?: number; 
-  className?: string; 
+  theme,
+}: {
+  IconComponent: IconType;
+  size?: number;
+  className?: string;
   theme?: Theme;
 }) => {
   const getIconColor = () => {
@@ -25,31 +25,25 @@ const ThemedReactIcon = ({
     return '#000000';
   };
 
-  return (
-    <IconComponent 
-      size={size}
-      className={className}
-      style={{ color: getIconColor() }}
-    />
-  );
+  return <IconComponent size={size} className={className} style={{ color: getIconColor() }} />;
 };
 
-const PngIcon = ({ 
-  src, 
-  alt, 
-  size = 18, 
-  className 
-}: { 
-  src: string; 
-  alt: string; 
-  size?: number; 
-  className?: string; 
+const PngIcon = ({
+  src,
+  alt,
+  size = 18,
+  className,
+}: {
+  src: string;
+  alt: string;
+  size?: number;
+  className?: string;
 }) => (
-  <Image 
-    src={src} 
-    alt={alt} 
-    width={size} 
-    height={size} 
+  <Image
+    src={src}
+    alt={alt}
+    width={size}
+    height={size}
     className={className}
     style={{ width: size, height: size }}
   />
@@ -81,11 +75,16 @@ export const AppIcons = {
     <PngIcon src="/cv-modern.png" alt="CV" size={size} className={className} />
   ),
   startMenu: ({ size = 18, className }: IconProps) => (
-    <PngIcon src="/start-menu-symbol-modern.png" alt="Start Menu" size={size} className={className} />
+    <PngIcon
+      src="/start-menu-symbol-modern.png"
+      alt="Start Menu"
+      size={size}
+      className={className}
+    />
   ),
   credits: ({ size = 18, className }: IconProps) => (
     <PngIcon src="/closed-folder-modern.png" alt="Credits" size={size} className={className} />
-  ),  // React icons ahead
+  ), // React icons ahead
   power: ({ size = 18, className, theme }: IconProps) => (
     <ThemedReactIcon IconComponent={FaPowerOff} size={size} className={className} theme={theme} />
   ),

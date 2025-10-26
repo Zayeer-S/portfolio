@@ -16,18 +16,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>('modern-light');
 
   const getSystemTheme = (): Theme => {
-    if (typeof window != "undefined") {
-      return window.matchMedia("(prefers-color-scheme: dark").matches
-      ? "modern-dark"
-      : "modern-light";
+    if (typeof window != 'undefined') {
+      return window.matchMedia('(prefers-color-scheme: dark').matches
+        ? 'modern-dark'
+        : 'modern-light';
     }
-    return "modern-light"; // SSR fallback
-  }
+    return 'modern-light'; // SSR fallback
+  };
 
   // Load theme from localStorage on mount
   useEffect(() => {
     const savedTheme = localStorage.getItem('desktop-theme') as Theme;
-    if (savedTheme && (savedTheme === 'modern-light' || savedTheme === 'modern-dark' || savedTheme === 'classic')) {
+    if (
+      savedTheme &&
+      (savedTheme === 'modern-light' || savedTheme === 'modern-dark' || savedTheme === 'classic')
+    ) {
       setTheme(savedTheme);
     } else {
       const systemTheme = getSystemTheme();
@@ -37,7 +40,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   // Listens for system theme changes
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark");
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark');
 
     const handleChange = (e: MediaQueryListEvent) => {
       const savedTheme = localStorage.getItem('desktop-theme');

@@ -6,9 +6,13 @@ export default function SettingsWindow() {
   const styles = getThemeClasses(theme);
 
   const themes = [
-    { value: 'modern-light', label: 'Modern Light', description: 'Clean and bright Windows 11 style' },
+    {
+      value: 'modern-light',
+      label: 'Modern Light',
+      description: 'Clean and bright Windows 11 style',
+    },
     { value: 'modern-dark', label: 'Modern Dark', description: 'Sleek dark Windows 11 style' },
-    { value: 'classic', label: 'Classic', description: 'Nostalgic Windows 7 style' }
+    { value: 'classic', label: 'Classic', description: 'Nostalgic Windows 7 style' },
   ] as const;
 
   return (
@@ -19,7 +23,7 @@ export default function SettingsWindow() {
 
       <div>
         <div className="space-y-3">
-          {themes.map((themeOption) => (
+          {themes.map(themeOption => (
             <div
               key={themeOption.value}
               className={`border rounded-lg p-3 cursor-pointer transition-all ${
@@ -31,14 +35,20 @@ export default function SettingsWindow() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <div className={`font-medium ${styles.window.content.text}`}>{themeOption.label}</div>
-                  <div className={`text-sm ${styles.window.content.textSecondary}`}>{themeOption.description}</div>
+                  <div className={`font-medium ${styles.window.content.text}`}>
+                    {themeOption.label}
+                  </div>
+                  <div className={`text-sm ${styles.window.content.textSecondary}`}>
+                    {themeOption.description}
+                  </div>
                 </div>
-                <div className={`w-4 h-4 rounded-full border-2 ${
-                  theme === themeOption.value
-                    ? 'border-blue-500 bg-blue-500'
-                    : styles.window.content.border
-                }`}>
+                <div
+                  className={`w-4 h-4 rounded-full border-2 ${
+                    theme === themeOption.value
+                      ? 'border-blue-500 bg-blue-500'
+                      : styles.window.content.border
+                  }`}
+                >
                   {theme === themeOption.value && (
                     <div className="w-full h-full rounded-full bg-white transform scale-50"></div>
                   )}

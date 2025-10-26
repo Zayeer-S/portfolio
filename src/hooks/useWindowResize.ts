@@ -9,7 +9,7 @@ interface UseWindowResizeProps {
   initialPosition: { x: number; y: number };
   initialSize: { width: number; height: number };
   isMaximized: boolean;
-  minSize?: {width: number, height: number};
+  minSize?: { width: number; height: number };
   onFocus: () => void;
 }
 
@@ -17,7 +17,7 @@ export function useWindowResize({
   initialPosition,
   initialSize,
   isMaximized,
-  onFocus
+  onFocus,
 }: UseWindowResizeProps) {
   const constrainToViewport = (x: number, y: number, width: number, height: number) => {
     const maxX = window.innerWidth - width;
@@ -30,33 +30,49 @@ export function useWindowResize({
 
   const getConstrainedInitialPosition = () => {
     if (typeof window === 'undefined') return initialPosition;
-    return constrainToViewport(initialPosition.x, initialPosition.y, initialSize.width, initialSize.height);
+    return constrainToViewport(
+      initialPosition.x,
+      initialPosition.y,
+      initialSize.width,
+      initialSize.height
+    );
   };
-  
+
   const [position, setPosition] = useState(getConstrainedInitialPosition);
   const [size, setSize] = useState(initialSize);
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeDirection, setResizeDirection] = useState<ResizeDirection | null>(null);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [resizeStart, setResizeStart] = useState({ 
-    x: 0, 
-    y: 0, 
-    width: 0, 
-    height: 0, 
-    posX: 0, 
-    posY: 0 
+  const [resizeStart, setResizeStart] = useState({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    posX: 0,
+    posY: 0,
   });
 
-  const initialDimensions = useMemo(() => ({
-    position: initialPosition,
-    size: initialSize
-  }), [initialPosition, initialSize]);
+  const initialDimensions = useMemo(
+    () => ({
+      position: initialPosition,
+      size: initialSize,
+    }),
+    [initialPosition, initialSize]
+  );
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const constrained = constrainToViewport(initialDimensions.position.x, initialDimensions.position.y, initialDimensions.size.width, initialDimensions.size.height);
-      if (constrained.x !== initialDimensions.position.x || constrained.y !== initialDimensions.position.y) {
+      const constrained = constrainToViewport(
+        initialDimensions.position.x,
+        initialDimensions.position.y,
+        initialDimensions.size.width,
+        initialDimensions.size.height
+      );
+      if (
+        constrained.x !== initialDimensions.position.x ||
+        constrained.y !== initialDimensions.position.y
+      ) {
         setPosition(constrained);
       }
     }
@@ -119,11 +135,11 @@ export function useWindowResize({
         const constrained = constrainToViewport(newX, newY, size.width, size.height);
         setPosition(constrained);
       }
-      
+
       if (isResizing && !isMaximized && resizeDirection) {
         const deltaX = e.clientX - resizeStart.x;
         const deltaY = e.clientY - resizeStart.y;
-        
+
         let newWidth = resizeStart.width;
         let newHeight = resizeStart.height;
         let newX = resizeStart.posX;
@@ -152,7 +168,7 @@ export function useWindowResize({
         }
 
         const constrained = constrainToViewport(newX, newY, newWidth, newHeight);
-        
+
         setSize({ width: newWidth, height: newHeight });
         setPosition(constrained);
       }
@@ -166,7 +182,7 @@ export function useWindowResize({
         const constrained = constrainToViewport(newX, newY, size.width, size.height);
         setPosition(constrained);
       }
-      
+
       if (isDragging) {
         e.preventDefault(); // to avoid scrolling while dragging
       }
@@ -214,13 +230,13 @@ export function useWindowResize({
   }, [position, size, isMaximized]);
 
   const getWindowStyle = () => {
-    return isMaximized 
+    return isMaximized
       ? { left: 0, top: 0, width: '100vw', height: '100vh' }
-      : { 
-          left: position.x, 
-          top: position.y, 
-          width: size.width, 
-          height: size.height 
+      : {
+          left: position.x,
+          top: position.y,
+          width: size.width,
+          height: size.height,
         };
   };
 
@@ -232,6 +248,6 @@ export function useWindowResize({
     handleMouseDown,
     handleTouchStart,
     handleResizeMouseDown,
-    getWindowStyle
+    getWindowStyle,
   };
 }

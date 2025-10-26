@@ -10,62 +10,64 @@ export default function CreditsWindow() {
       name: 'Email Icon',
       filename: 'mail-modern.png',
       author: 'justicon',
-      link: 'https://www.flaticon.com/free-icons/email'
+      link: 'https://www.flaticon.com/free-icons/email',
     },
     {
       name: 'Calculator Icon',
       filename: 'calculator-modern.png',
       author: 'Freepik',
-      link: 'https://www.flaticon.com/free-icons/calculator'
+      link: 'https://www.flaticon.com/free-icons/calculator',
     },
     {
       name: 'Folder Icon (Closed)',
       filename: 'closed-folder-modern.png',
       author: 'kmg design',
-      link: 'https://www.flaticon.com/free-icons/folder'
+      link: 'https://www.flaticon.com/free-icons/folder',
     },
     {
       name: 'Open Folder Icon',
       filename: 'open-folder-modern.png',
       author: 'NajmunNahar',
-      link: 'https://www.flaticon.com/free-icons/open-folder'
+      link: 'https://www.flaticon.com/free-icons/open-folder',
     },
     {
       name: 'Digital Transformation Icon',
       filename: 'technologies-modern.png',
       author: 'Dewi Sari',
-      link: 'https://www.flaticon.com/free-icons/digital-transformation'
+      link: 'https://www.flaticon.com/free-icons/digital-transformation',
     },
     {
       name: 'Notepad Icon',
       filename: 'notepad-modern.png',
       author: 'Flat Icons',
-      link: 'https://www.flaticon.com/free-icons/notepad'
+      link: 'https://www.flaticon.com/free-icons/notepad',
     },
     {
       name: 'CV Icon',
       filename: 'cv-modern.png',
       author: 'Freepik',
-      link: 'https://www.flaticon.com/free-icons/cv'
+      link: 'https://www.flaticon.com/free-icons/cv',
     },
     {
       name: 'Settings Icon',
       filename: 'settings-modern.png',
       author: 'Freepik',
-      link: 'https://www.flaticon.com/free-icons/settings'
+      link: 'https://www.flaticon.com/free-icons/settings',
     },
     {
       name: 'Letter Z Icon',
       filename: 'start-menu-symbol-modern.png',
       author: 'popo2021',
-      link: 'https://www.flaticon.com/free-icons/letter-z'
-    }
+      link: 'https://www.flaticon.com/free-icons/letter-z',
+    },
   ];
 
   return (
     <div className="space-y-6">
       <div className={`border-b pb-4 ${styles.window.content.border}`}>
-        <h2 className={`text-xl font-semibold ${styles.window.content.text}`}>Credits & Attributions</h2>
+        <h2 className={`text-xl font-semibold ${styles.window.content.text}`}>
+          Credits & Attributions
+        </h2>
         <p className={`text-sm ${styles.window.content.textSecondary} mt-2`}>
           Icons used in this portfolio are from flaticon.com
         </p>
@@ -76,18 +78,18 @@ export default function CreditsWindow() {
           <h3 className={`font-semibold ${styles.window.content.text} mb-2`}>Flaticon License</h3>
           <p className={`text-sm ${styles.window.content.textSecondary} leading-relaxed`}>
             Icons made by various authors from{' '}
-            <a 
-              href="https://www.flaticon.com" 
-              target="_blank" 
+            <a
+              href="https://www.flaticon.com"
+              target="_blank"
               rel="noopener noreferrer"
               className={`${styles.window.content.accent} hover:underline`}
             >
               www.flaticon.com
-            </a>
-            {' '}are licensed under{' '}
-            <a 
-              href="https://creativecommons.org/licenses/by/3.0/" 
-              target="_blank" 
+            </a>{' '}
+            are licensed under{' '}
+            <a
+              href="https://creativecommons.org/licenses/by/3.0/"
+              target="_blank"
               rel="noopener noreferrer"
               className={`${styles.window.content.accent} hover:underline`}
             >
@@ -97,10 +99,12 @@ export default function CreditsWindow() {
         </div>
 
         <div>
-          <h3 className={`font-semibold ${styles.window.content.text} mb-3`}>Individual Icon Credits</h3>
+          <h3 className={`font-semibold ${styles.window.content.text} mb-3`}>
+            Individual Icon Credits
+          </h3>
           <div className="space-y-3">
             {iconCredits.map((credit, index) => (
-              <div 
+              <div
                 key={index}
                 className={`p-3 rounded border ${styles.window.content.border} ${styles.window.content.hover} transition-colors`}
               >
@@ -116,9 +120,9 @@ export default function CreditsWindow() {
                       Created by {credit.author}
                     </p>
                   </div>
-                  <a 
-                    href={credit.link} 
-                    target="_blank" 
+                  <a
+                    href={credit.link}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className={`text-xs ${styles.window.content.accent} hover:underline ml-3 flex-shrink-0`}
                   >
@@ -134,15 +138,15 @@ export default function CreditsWindow() {
           <h3 className={`font-semibold ${styles.window.content.text} mb-2`}>React Icons</h3>
           <p className={`text-sm ${styles.window.content.textSecondary} leading-relaxed`}>
             Power and reload icons are from{' '}
-            <a 
-              href="https://react-icons.github.io/react-icons/" 
-              target="_blank" 
+            <a
+              href="https://react-icons.github.io/react-icons/"
+              target="_blank"
               rel="noopener noreferrer"
               className={`${styles.window.content.accent} hover:underline`}
             >
               React Icons
-            </a>
-            {' '}(Font Awesome) - MIT Licensed
+            </a>{' '}
+            (Font Awesome) - MIT Licensed
           </p>
         </div>
       </div>

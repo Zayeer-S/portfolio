@@ -37,64 +37,68 @@ export function useTaskbarDrag(): DragState & DragActions {
   const [isProcessingTouch, setIsProcessingTouch] = useState<boolean>(false);
   const [taskbarRect, setTaskbarRect] = useState<DOMRect | null>(null);
 
-  const startDrag = useCallback((
-    windowId: string, 
-    clientX: number, 
-    clientY: number, 
-    containerRect: DOMRect
-  ) => {
-    setDraggedItem(windowId);
-    setDragStartPosition({ x: clientX, y: clientY });
-    setDragPosition({ x: clientX, y: clientY });
-    setHasDraggedBeyondThreshold(false);
-    setTaskbarRect(containerRect);
-  }, []);
-
-  const updateDrag = useCallback((clientX: number, clientY: number) => {
-    if (!draggedItem) return;
-    
-    const deltaX = Math.abs(clientX - dragStartPosition.x);
-    const deltaY = Math.abs(clientY - dragStartPosition.y);
-    const hasMovedBeyondThreshold = deltaX > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD;
-    
-    if (hasMovedBeyondThreshold && !hasDraggedBeyondThreshold) {
-      setHasDraggedBeyondThreshold(true);
-      setIsDragging(true);
-    }
-    
-    if (hasDraggedBeyondThreshold) {
+  const startDrag = useCallback(
+    (windowId: string, clientX: number, clientY: number, containerRect: DOMRect) => {
+      setDraggedItem(windowId);
+      setDragStartPosition({ x: clientX, y: clientY });
       setDragPosition({ x: clientX, y: clientY });
-    }
-  }, [draggedItem, dragStartPosition, hasDraggedBeyondThreshold]);
+      setHasDraggedBeyondThreshold(false);
+      setTaskbarRect(containerRect);
+    },
+    []
+  );
 
-  const endDrag = useCallback((onMinimize: (windowId: WindowId) => void) => {
-    if (isProcessingTouch) return;
-    
-    if (draggedItem && !hasDraggedBeyondThreshold) {
-      const now = Date.now();
-      
-      if (now - lastMinimizeTime > MINIMIZE_DEBOUNCE) {
-        setIsProcessingTouch(true);
-        setClickedItem(draggedItem);
-        setLastMinimizeTime(now);
-        
-        setTimeout(() => {
-          onMinimize(draggedItem as WindowId);
-          setClickedItem(null);
-          
-          setTimeout(() => {
-            setIsProcessingTouch(false);
-          }, 200);
-        }, 100);
+  const updateDrag = useCallback(
+    (clientX: number, clientY: number) => {
+      if (!draggedItem) return;
+
+      const deltaX = Math.abs(clientX - dragStartPosition.x);
+      const deltaY = Math.abs(clientY - dragStartPosition.y);
+      const hasMovedBeyondThreshold = deltaX > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD;
+
+      if (hasMovedBeyondThreshold && !hasDraggedBeyondThreshold) {
+        setHasDraggedBeyondThreshold(true);
+        setIsDragging(true);
       }
-    }
-    
-    setIsDragging(false);
-    setDraggedItem(null);
-    setInsertionIndex(-1);
-    setHasDraggedBeyondThreshold(false);
-    setTaskbarRect(null);
-  }, [draggedItem, hasDraggedBeyondThreshold, isProcessingTouch, lastMinimizeTime]);
+
+      if (hasDraggedBeyondThreshold) {
+        setDragPosition({ x: clientX, y: clientY });
+      }
+    },
+    [draggedItem, dragStartPosition, hasDraggedBeyondThreshold]
+  );
+
+  const endDrag = useCallback(
+    (onMinimize: (windowId: WindowId) => void) => {
+      if (isProcessingTouch) return;
+
+      if (draggedItem && !hasDraggedBeyondThreshold) {
+        const now = Date.now();
+
+        if (now - lastMinimizeTime > MINIMIZE_DEBOUNCE) {
+          setIsProcessingTouch(true);
+          setClickedItem(draggedItem);
+          setLastMinimizeTime(now);
+
+          setTimeout(() => {
+            onMinimize(draggedItem as WindowId);
+            setClickedItem(null);
+
+            setTimeout(() => {
+              setIsProcessingTouch(false);
+            }, 200);
+          }, 100);
+        }
+      }
+
+      setIsDragging(false);
+      setDraggedItem(null);
+      setInsertionIndex(-1);
+      setHasDraggedBeyondThreshold(false);
+      setTaskbarRect(null);
+    },
+    [draggedItem, hasDraggedBeyondThreshold, isProcessingTouch, lastMinimizeTime]
+  );
 
   return {
     // State

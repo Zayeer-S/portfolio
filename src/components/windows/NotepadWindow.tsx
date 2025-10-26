@@ -7,10 +7,10 @@ export default function NotepadWindow() {
   const [fileName, setFileName] = useState('Untitled.txt');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  
+
   const { theme } = useTheme();
   const styles = getThemeClasses(theme);
-  
+
   const STORAGE_KEY = 'notepad-content';
   const FILENAME_KEY = 'notepad-filename';
 
@@ -19,7 +19,7 @@ export default function NotepadWindow() {
     try {
       const savedContent = localStorage.getItem(STORAGE_KEY);
       const savedFilename = localStorage.getItem(FILENAME_KEY);
-      
+
       if (savedContent) {
         setContent(savedContent);
         setHasUnsavedChanges(false);
@@ -80,11 +80,11 @@ export default function NotepadWindow() {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.txt,.md,.js,.css,.html,.json,.xml';
-    input.onchange = (e) => {
+    input.onchange = e => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = e => {
           const text = e.target?.result as string;
           setContent(text);
           setFileName(file.name);
@@ -110,18 +110,21 @@ export default function NotepadWindow() {
   const textAreaBg = theme === 'modern-dark' ? 'bg-neutral-900' : 'bg-white';
 
   return (
-    <div 
+    <div
       className="h-full flex flex-col"
       style={{ minWidth: '400px', minHeight: '300px' }}
       role="application"
     >
       {/* Menu bar */}
-      <div role="menubar" aria-label='File Menu'
-      className={`flex-shrink-0 ${menuBarBg} border-b ${styles.window.content.border} p-1`}>
+      <div
+        role="menubar"
+        aria-label="File Menu"
+        className={`flex-shrink-0 ${menuBarBg} border-b ${styles.window.content.border} p-1`}
+      >
         <div className="flex space-x-1">
           <button
             onClick={handleNew}
-            aria-label='Create new text file'
+            aria-label="Create new text file"
             className={`px-2 py-1 text-xs ${styles.window.content.hover} rounded ${styles.window.content.text}`}
             title="New (Ctrl+N)"
           >
@@ -129,7 +132,7 @@ export default function NotepadWindow() {
           </button>
           <button
             onClick={handleOpen}
-            aria-label='Open text file'
+            aria-label="Open text file"
             className={`px-2 py-1 text-xs ${styles.window.content.hover} rounded ${styles.window.content.text}`}
             title="Open (Ctrl+O)"
           >
@@ -137,7 +140,7 @@ export default function NotepadWindow() {
           </button>
           <button
             onClick={handleSave}
-            aria-label='Save text file'
+            aria-label="Save text file"
             className={`px-2 py-1 text-xs ${styles.window.content.hover} rounded ${styles.window.content.text}`}
             title="Save (Ctrl+S)"
           >
@@ -147,17 +150,20 @@ export default function NotepadWindow() {
       </div>
 
       {/* File name and status */}
-      <div role="status" aria-label='Document'
-      className={`flex-shrink-0 ${statusBarBg} border-b ${styles.window.content.border} px-3 py-1 flex items-center justify-between text-xs`}>
+      <div
+        role="status"
+        aria-label="Document"
+        className={`flex-shrink-0 ${statusBarBg} border-b ${styles.window.content.border} px-3 py-1 flex items-center justify-between text-xs`}
+      >
         <div className="flex items-center space-x-2">
           <input
             type="text"
             value={fileName}
-            onChange={(e) => {
+            onChange={e => {
               setFileName(e.target.value);
               setHasUnsavedChanges(true);
             }}
-            aria-label='File name'
+            aria-label="File name"
             className={`bg-transparent border-none outline-none font-medium ${styles.window.content.text}`}
             style={{ width: `${fileName.length + 1}ch` }}
           />
@@ -174,13 +180,13 @@ export default function NotepadWindow() {
         value={content}
         onChange={handleContentChange}
         placeholder="Start typing..."
-        aria-label='Typing area'
+        aria-label="Typing area"
         className={`flex-1 p-3 border-none outline-none resize-none font-mono text-sm leading-relaxed ${textAreaBg} ${styles.window.content.text}`}
         style={{
           fontFamily: 'Consolas, "Courier New", monospace',
           tabSize: 4,
         }}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if (e.ctrlKey || e.metaKey) {
             switch (e.key) {
               case 'n':

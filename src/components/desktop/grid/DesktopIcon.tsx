@@ -9,15 +9,15 @@ interface DesktopIconProps {
   iconId: string;
 }
 
-export default function DesktopIcon({ 
-  icon, 
-  label, 
-  onClick, 
-  hoverClass, 
+export default function DesktopIcon({
+  icon,
+  label,
+  onClick,
+  hoverClass,
   useReactIcon = false,
-  iconId 
+  iconId,
 }: DesktopIconProps) {
-  const [isTouchDevice, setIsTouchDevice] = useState(false)
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
     const checkTouchDevice = () => {
@@ -26,8 +26,8 @@ export default function DesktopIcon({
 
     checkTouchDevice();
 
-    window.addEventListener('resize', checkTouchDevice)
-    
+    window.addEventListener('resize', checkTouchDevice);
+
     return () => window.removeEventListener('resize', checkTouchDevice);
   }, []);
 
@@ -57,15 +57,14 @@ export default function DesktopIcon({
       onDoubleClick={isTouchDevice ? undefined : onClick}
       aria-label={`${label} icon`}
     >
-      <div className="w-12 h-14 sm:w-16 sm:h-16 mb-1 flex items-center justify-center pointer-events-none" aria-hidden="true">
+      <div
+        className="w-12 h-14 sm:w-16 sm:h-16 mb-1 flex items-center justify-center pointer-events-none"
+        aria-hidden="true"
+      >
         {useReactIcon ? (
-          <div className="flex items-center justify-center">
-            {icon}
-          </div>
+          <div className="flex items-center justify-center">{icon}</div>
         ) : (
-          <span className="text-4xl sm:text-5xl pointer-events-none">
-            {icon}
-          </span>
+          <span className="text-4xl sm:text-5xl pointer-events-none">{icon}</span>
         )}
       </div>
       <span className="text-white text-xs sm:text-xs text-center group-hover rounded pointer-events-none leading-tight">

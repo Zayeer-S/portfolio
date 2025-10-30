@@ -1,95 +1,176 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
+import { env } from '@/config/env';
+
+interface EvaluateRequest {
+  expression: string;
+  variables?: Record<string, number>;
+}
+
+interface EvaluateResponse {
+  value: number;
+  displayValue: string;
+  isBooleanExpression: boolean;
+  variables: Record<string, number>;
+  expression: string;
+  postfixNotation?: string;
+}
+
+interface ErrorResponse {
+  error: string;
+  message: string;
+  expression?: string;
+  statusCode: number;
+}
+
+interface CacheEntry {
+  expression: string;
+  variables: Record<string, number>;
+  result: string;
+}
 
 export default function CalculatorWindow() {
+  const [expression, setExpression] = useState('');
   const [display, setDisplay] = useState('0');
-  const [previousValue, setPreviousValue] = useState<number | null>(null);
-  const [operation, setOperation] = useState<string | null>(null);
-  const [waitingForOperand, setWaitingForOperand] = useState(false);
   const [previousDisplay, setPreviousDisplay] = useState('');
+  const [waitingForNewInput, setWaitingForNewInput] = useState(false);
+  const [lastResult, setLastResult] = useState<string | null>(null);
+  const [calculationCache, setCalculationCache] = useState<CacheEntry[]>([]);
 
   const { theme } = useTheme();
   const styles = getThemeClasses(theme);
 
+  const evaluateExpression = useCallback(
+    async (expr: string): Promise<string> => {
+      try {
+        const cacheKey = JSON.stringify({ expression: expr, variables: {} });
+        const cached = calculationCache.find(
+          entry =>
+            JSON.stringify({ expression: entry.expression, variables: entry.variables }) ===
+            cacheKey
+        );
+
+        if (cached) {
+          return cached.result;
+        }
+
+        const requestBody: EvaluateRequest = {
+          expression: expr,
+          variables: {},
+        };
+
+        const response = await fetch(`${env.NEXT_PUBLIC_EVALR_API_URL}/evaluate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (!response.ok) {
+          const errorData: ErrorResponse = await response.json();
+          throw new Error(errorData.message || 'API request failed');
+        }
+
+        const data: EvaluateResponse = await response.json();
+
+        // gotta reduce api calls somehow; aws expensive yo
+        setCalculationCache(prev => [
+          ...prev.slice(-9),
+          { expression: expr, variables: {}, result: data.displayValue },
+        ]);
+
+        return data.displayValue;
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new Error(`API Error: ${error.message}`);
+        }
+        throw new Error('Unknown error occurred');
+      }
+    },
+    [calculationCache]
+  );
+
   const inputNumber = useCallback(
     (num: string) => {
-      if (waitingForOperand) {
+      if (waitingForNewInput) {
+        setExpression(num);
         setDisplay(num);
-        setWaitingForOperand(false);
+        setWaitingForNewInput(false);
+        setPreviousDisplay('');
       } else {
+        const newExpression = expression === '' || display === '0' ? num : expression + num;
+        setExpression(newExpression);
         setDisplay(display === '0' ? num : display + num);
       }
     },
-    [display, waitingForOperand]
+    [expression, display, waitingForNewInput]
   );
 
   const inputDecimal = useCallback(() => {
-    if (waitingForOperand) {
+    if (waitingForNewInput) {
+      setExpression('0.');
       setDisplay('0.');
-      setWaitingForOperand(false);
-    } else if (display.indexOf('.') === -1) {
+      setWaitingForNewInput(false);
+      setPreviousDisplay('');
+    } else if (!display.includes('.')) {
+      const newExpression = expression + '.';
+      setExpression(newExpression);
       setDisplay(display + '.');
     }
-  }, [display, waitingForOperand]);
+  }, [expression, display, waitingForNewInput]);
 
   const clear = useCallback(() => {
+    setExpression('');
     setDisplay('0');
-    setPreviousValue(null);
-    setOperation(null);
-    setWaitingForOperand(false);
-  }, []);
-
-  const calculate = useCallback((firstValue: number, secondValue: number, operation: string) => {
-    switch (operation) {
-      case '+':
-        return firstValue + secondValue;
-      case '-':
-        return firstValue - secondValue;
-      case '×':
-        return firstValue * secondValue;
-      case '÷':
-        return firstValue / secondValue;
-      case '=':
-        return secondValue;
-      default:
-        return secondValue;
-    }
+    setPreviousDisplay('');
+    setWaitingForNewInput(false);
+    setLastResult(null);
   }, []);
 
   const performOperation = useCallback(
-    (nextOperation: string) => {
-      const inputValue = parseFloat(display);
-
-      if (previousValue === null) {
-        setPreviousValue(inputValue);
-        setPreviousDisplay(display + ' ' + nextOperation);
-      } else if (operation) {
-        const currentValue = previousValue || 0;
-        const newValue = calculate(currentValue, inputValue, operation);
-
-        setDisplay(String(newValue));
-        setPreviousValue(newValue);
-        setPreviousDisplay(String(newValue) + ' ' + nextOperation);
+    (operation: string) => {
+      if (waitingForNewInput && lastResult !== null) {
+        const newExpression = lastResult + ' ' + operation + ' ';
+        setExpression(newExpression);
+        setPreviousDisplay(newExpression);
+        setDisplay('');
+        setWaitingForNewInput(false);
+      } else if (expression !== '' && display !== '') {
+        const newExpression = expression + ' ' + operation + ' ';
+        setExpression(newExpression);
+        setPreviousDisplay(newExpression);
+        setDisplay('');
       }
-
-      setWaitingForOperand(true);
-      setOperation(nextOperation);
     },
-    [display, previousValue, operation, calculate]
+    [expression, display, waitingForNewInput, lastResult]
   );
 
-  const handleEquals = useCallback(() => {
-    const inputValue = parseFloat(display);
-
-    if (previousValue !== null && operation) {
-      const newValue = calculate(previousValue, inputValue, operation);
-      setDisplay(String(newValue));
-      setPreviousValue(null);
-      setOperation(null);
-      setWaitingForOperand(true);
+  const handleEquals = useCallback(async () => {
+    if (expression === '' || expression.trim() === '') {
+      return;
     }
-  }, [display, previousValue, operation, calculate]);
+
+    try {
+      const result = await evaluateExpression(expression);
+      setDisplay(result);
+      setLastResult(result);
+      setPreviousDisplay(expression + ' =');
+      setExpression('');
+      setWaitingForNewInput(true);
+    } catch (error) {
+      if (error instanceof Error) {
+        setDisplay('Error');
+        setPreviousDisplay(error.message);
+      } else {
+        setDisplay('Error');
+        setPreviousDisplay('Unknown error occurred');
+      }
+      setExpression('');
+      setWaitingForNewInput(true);
+    }
+  }, [expression, evaluateExpression]);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -102,10 +183,10 @@ export default function CalculatorWindow() {
       } else if (e.key === '-') {
         performOperation('-');
       } else if (e.key === '*') {
-        performOperation('×');
+        performOperation('*');
       } else if (e.key === '/') {
         e.preventDefault();
-        performOperation('÷');
+        performOperation('/');
       } else if (e.key === 'Enter' || e.key === '=') {
         handleEquals();
       } else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
@@ -218,7 +299,7 @@ export default function CalculatorWindow() {
           %
         </Button>
         <Button
-          onClick={() => performOperation('÷')}
+          onClick={() => performOperation('/')}
           className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-800"
           ariaLabel="Divide"
         >
@@ -235,7 +316,7 @@ export default function CalculatorWindow() {
           9
         </Button>
         <Button
-          onClick={() => performOperation('×')}
+          onClick={() => performOperation('*')}
           className="bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-800"
           ariaLabel="Multiply"
         >

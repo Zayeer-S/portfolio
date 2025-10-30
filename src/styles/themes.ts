@@ -42,6 +42,31 @@ export const themeStyles = {
       text: 'text-neutral-800',
     },
     typewriter: 'text-neutral-800',
+    calculator: {
+      display: {
+        background: 'bg-white',
+        text: 'text-neutral-800',
+        textMuted: 'text-neutral-500',
+        border: 'border-neutral-300',
+      },
+      button: {
+        default:
+          'bg-gradient-to-b from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 border-gray-400',
+        operation:
+          'bg-gradient-to-b from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-800',
+        clear:
+          'bg-gradient-to-b from-red-200 to-red-300 hover:from-red-300 hover:to-red-400 text-red-800',
+        equals:
+          'bg-gradient-to-b from-green-200 to-green-300 hover:from-green-300 hover:to-green-400 text-green-800',
+        disabled: 'text-neutral-400 cursor-not-allowed',
+      },
+      sidebar: {
+        background: 'bg-white/95 backdrop-blur-md border-r border-neutral-300',
+        hamburger: 'hover:bg-neutral-100 text-neutral-800',
+        modeItem: 'hover:bg-neutral-100 text-neutral-800',
+        modeItemActive: 'bg-blue-100 text-blue-800',
+      },
+    },
   },
   'modern-dark': {
     desktop: {
@@ -84,6 +109,27 @@ export const themeStyles = {
       text: 'text-neutral-100',
     },
     typewriter: 'text-white',
+    calculator: {
+      display: {
+        background: 'bg-black',
+        text: 'text-white',
+        textMuted: 'text-neutral-400',
+        border: 'border-neutral-700',
+      },
+      button: {
+        default: 'bg-neutral-700 hover:bg-neutral-600 border-neutral-600',
+        operation: 'bg-blue-700 hover:bg-blue-600 text-blue-100',
+        clear: 'bg-red-700 hover:bg-red-600 text-red-100',
+        equals: 'bg-green-700 hover:bg-green-600 text-green-100',
+        disabled: 'text-neutral-500 cursor-not-allowed',
+      },
+      sidebar: {
+        background: 'bg-neutral-900/95 backdrop-blur-md border-r border-neutral-700',
+        hamburger: 'hover:bg-neutral-800 text-neutral-100',
+        modeItem: 'hover:bg-neutral-700 text-neutral-100',
+        modeItemActive: 'bg-blue-700 text-blue-100',
+      },
+    },
   },
   classic: {
     desktop: {
@@ -130,6 +176,31 @@ export const themeStyles = {
       text: 'text-neutral-800',
     },
     typewriter: 'text-white',
+    calculator: {
+      display: {
+        background: 'bg-white',
+        text: 'text-neutral-800',
+        textMuted: 'text-neutral-500',
+        border: 'border-neutral-400',
+      },
+      button: {
+        default:
+          'bg-gradient-to-b from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 border-gray-400',
+        operation:
+          'bg-gradient-to-b from-blue-300 to-blue-400 hover:from-blue-400 hover:to-blue-500 text-blue-900',
+        clear:
+          'bg-gradient-to-b from-red-300 to-red-400 hover:from-red-400 hover:to-red-500 text-red-900',
+        equals:
+          'bg-gradient-to-b from-green-300 to-green-400 hover:from-green-400 hover:to-green-500 text-green-900',
+        disabled: 'text-neutral-400 cursor-not-allowed',
+      },
+      sidebar: {
+        background: 'bg-neutral-200/95 backdrop-blur-md border-r border-neutral-400',
+        hamburger: 'hover:bg-neutral-300 text-neutral-800',
+        modeItem: 'hover:bg-blue-100 text-neutral-800',
+        modeItemActive: 'bg-blue-200 text-blue-900',
+      },
+    },
   },
 };
 

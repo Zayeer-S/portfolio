@@ -15,7 +15,7 @@ export default function CalculatorDisplay({
 
   return (
     <div
-      className={`${styles.calculator.display.background} border-2 border-inset ${styles.calculator.display.border} p-3 flex flex-col justify-end text-right font-mono flex-shrink-0 min-h-16`}
+      className={`${styles.calculator.display.background} border-2 rounded border-inset ${styles.calculator.display.border} p-3 flex flex-col justify-end text-right font-mono flex-shrink-0 mt-8 min-h-24`}
       role="status"
       aria-live="polite"
       aria-atomic="true"
@@ -23,13 +23,13 @@ export default function CalculatorDisplay({
     >
       {/* Previous expression - hidden from screen readers */}
       <div
-        className={`text-xs ${styles.calculator.display.textMuted} h-4 overflow-hidden`}
+        className={`text-base ${styles.calculator.display.textMuted} h- overflow-hidden`}
         aria-hidden="true"
       >
         {previousDisplay}
       </div>
       {/* Current display */}
-      <div className={`text-xl font-bold ${styles.calculator.display.text}`}>{display}</div>
+      <div className={`text-5xl font-bold ${styles.calculator.display.text}`}>{display}</div>
     </div>
   );
 }

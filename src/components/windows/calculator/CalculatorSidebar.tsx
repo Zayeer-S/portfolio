@@ -13,7 +13,6 @@ interface ModeOption {
   id: CalculatorMode;
   label: string;
   icon: string;
-  description: string;
 }
 
 const modeOptions: ModeOption[] = [
@@ -21,19 +20,16 @@ const modeOptions: ModeOption[] = [
     id: 'arithmetic',
     label: 'Arithmetic',
     icon: '🔢',
-    description: 'Basic calculations',
   },
   {
     id: 'algebraic',
     label: 'Algebraic',
     icon: '𝑥',
-    description: 'Variables & equations',
   },
   {
     id: 'boolean',
     label: 'Boolean',
     icon: '⊕',
-    description: 'Logic operations',
   },
 ];
 
@@ -48,8 +44,8 @@ export default function CalculatorSidebar({
 
   return (
     <>
-      {/* Hamburger button - always visible */}
-      <div className="absolute top-3 left-3 z-20">
+      {/* Hamburger button */}
+      <div className="absolute -top-3 -left-3 z-20 flex flex-row items-center gap-2">
         <button
           onClick={onToggle}
           className={`${styles.calculator.sidebar.hamburger} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
@@ -58,27 +54,32 @@ export default function CalculatorSidebar({
           aria-label={isOpen ? 'Close calculator mode menu' : 'Open calculator mode menu'}
           aria-expanded={isOpen}
         >
-          <span className="text-lg select-none">☰</span>
+          <span className="text-base select-none">☰</span>
         </button>
+        <span
+          className={`text-sm font-medium ${styles.calculator.display.textMuted} whitespace-nowrap`}
+        >
+          {modeOptions.find(option => option.id === currentMode)?.label}
+        </span>
       </div>
 
       {/* Sidebar */}
       <div
-        className={`absolute top-0 left-0 bottom-0 ${styles.calculator.sidebar.background} shadow-lg z-10 transition-all duration-300 ease-out ${
+        className={`absolute -top-4 -left-4 -bottom-4 ${styles.calculator.sidebar.background} bg-opacity-80 shadow-lg z-0 rounded-lg transition-all duration-300 ease-out ${
           isOpen ? 'w-48 opacity-100' : 'w-0 opacity-0 pointer-events-none'
         }`}
         role="navigation"
         aria-label="Calculator modes"
       >
-        <div className="pt-14 px-3 space-y-2">
-          <div className={`text-xs font-semibold ${styles.calculator.display.textMuted} mb-3 px-2`}>
-            CALCULATOR MODE
+        <div className="pt-12 px-3">
+          <div className={`text-xs font-semibold ${styles.calculator.display.textMuted} mb-2 px-2`}>
+            Calculator Modes
           </div>
           {modeOptions.map(option => (
             <button
               key={option.id}
               onClick={() => onModeChange(option.id)}
-              className={`w-full p-3 rounded cursor-pointer transition-all duration-150 hover:scale-105 flex flex-col items-start space-y-1 ${
+              className={`w-full p-3 rounded cursor-pointer transition-all duration-150 hover:scale-105 flex flex-col items-start ${
                 currentMode === option.id
                   ? styles.calculator.sidebar.modeItemActive
                   : styles.calculator.sidebar.modeItem
@@ -90,7 +91,6 @@ export default function CalculatorSidebar({
                 <span className="text-lg">{option.icon}</span>
                 <span className="text-sm font-medium">{option.label}</span>
               </div>
-              <span className="text-xs opacity-75 pl-7">{option.description}</span>
             </button>
           ))}
         </div>

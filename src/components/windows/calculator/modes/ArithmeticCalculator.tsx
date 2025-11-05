@@ -91,7 +91,6 @@ export default function ArithmeticCalculator({ evaluateExpression }: CalculatorM
     }
   }, [expression, evaluateExpression]);
 
-  // Use the shared keyboard hook
   useCalculatorKeyboard({
     mode: 'arithmetic',
     handlers: {

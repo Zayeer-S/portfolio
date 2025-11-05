@@ -112,7 +112,6 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
     }
   }, [expression, evaluateExpression]);
 
-  // Use the shared keyboard hook
   useCalculatorKeyboard({
     mode: 'boolean',
     handlers: {

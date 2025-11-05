@@ -49,7 +49,7 @@ export default function Button({
       aria-label={ariaLabel}
       disabled={isDisabled}
       className={`
-        min-h-8 text-sm font-medium border ${getVariantStyles()}
+        min-h-6 rounded text-sm font-medium border ${getVariantStyles()}
         ${isDisabled ? '' : 'active:transform active:scale-95'}
         transition-all duration-75 select-none
         ${styles.window.content.text}

@@ -118,7 +118,6 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
     }
   }, [currentVariable, variableValue]);
 
-  // Use the shared keyboard hook (disabled when typing in variable input)
   useCalculatorKeyboard({
     mode: 'algebraic',
     handlers: {

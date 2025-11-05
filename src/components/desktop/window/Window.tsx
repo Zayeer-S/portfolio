@@ -379,7 +379,7 @@ export default function Window({
               }}
               className={`w-6 h-5 ${styles.window.titleBar.buttons.minimize} text-xs mr-1`}
             >
-              _
+              –
             </button>
             <button
               aria-label="Maximise the window"

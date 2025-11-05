@@ -98,14 +98,15 @@ export default function CalculatorWindow() {
       role="application"
       aria-label="Calculator"
     >
-      <CalculatorSidebar
-        isOpen={isSidebarOpen}
-        currentMode={mode}
-        onModeChange={handleModeChange}
-        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-      />
-
-      <div className="flex-1 flex flex-col p-3 space-y-3">{renderCalculatorMode()}</div>
+      <div className="-top-3 -left-3">
+        <CalculatorSidebar
+          isOpen={isSidebarOpen}
+          currentMode={mode}
+          onModeChange={handleModeChange}
+          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+        />
+      </div>
+      <div className="flex-1 flex flex-col space-y-3">{renderCalculatorMode()}</div>
     </div>
   );
 }

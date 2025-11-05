@@ -11,7 +11,7 @@ import Taskbar from '@/components/desktop/taskbar/Taskbar';
 import TypewriterIntro from '@/components/desktop/TypewriterIntro';
 
 import SettingsWindow from '@/components/windows/SettingsWindow';
-import CalculatorWindow from '@/components/windows/CalculatorWindow';
+import CalculatorWindow from '@/components/windows/calculator/CalculatorWindow';
 import NotepadWindow from '@/components/windows/NotepadWindow';
 import ProjectsWindow from '@/components/windows/ProjectsWindow';
 import TechnologiesWindow from '@/components/windows/TechnologiesWindow';

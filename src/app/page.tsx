@@ -160,6 +160,8 @@ export default function Home() {
         onMaximize={() => maximizeWindow('calculator')}
         zIndex={getWindowZIndex('calculator')}
         onFocus={() => focusWindow('calculator')}
+        minWidth={320}
+        minHeight={495}
         theme={theme}
       >
         <CalculatorWindow />

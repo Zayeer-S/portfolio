@@ -107,6 +107,8 @@ export default function Window({
   minWidth,
   minHeight,
 }: WindowPropsWithTheme) {
+  const [isFocused, setIsFocused] = useState(false);
+
   const windowRef = useRef<HTMLDivElement>(null);
   const initialDimensions = getInitialDimensions(id);
 
@@ -133,6 +135,19 @@ export default function Window({
       return () => clearTimeout(timer);
     }
   }, [isOpen, shouldRender]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (windowRef.current && !windowRef.current.contains(e.target as Node)) {
+        setIsFocused(false);
+      }
+    };
+
+    if (isFocused) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     const wasMinimized = prevMinimizedRef.current;
@@ -214,28 +229,7 @@ export default function Window({
     }
   }, [isOpen, shouldRender, isAnimating]);
 
-  const styles = theme
-    ? getThemeClasses(theme)
-    : {
-        window: {
-          background: 'bg-white',
-          border: 'border border-gray-400',
-          shadow: 'shadow-lg',
-          borderRadius: 'rounded-lg',
-          titleBar: {
-            background: 'bg-gradient-to-b from-blue-500 to-blue-600',
-            text: 'text-white',
-            buttons: {
-              minimize:
-                'bg-gradient-to-b from-gray-200 to-gray-300 hover:from-gray-100 hover:to-gray-200 border border-gray-400 text-black',
-              maximize:
-                'bg-gradient-to-b from-gray-200 to-gray-300 hover:from-gray-100 hover:to-gray-200 border border-gray-400 text-black',
-              close:
-                'bg-gradient-to-b from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 border border-gray-400 text-white',
-            },
-          },
-        },
-      };
+  const styles = getThemeClasses(theme || 'modern-light');
 
   const {
     handleMouseDown,
@@ -343,7 +337,7 @@ export default function Window({
         aria-hidden={isMinimized}
         className={`fixed ${styles.window.background} ${styles.window.border} ${styles.window.shadow} ${styles.window.borderRadius} flex flex-col ${
           isMinimized && !isAnimating ? 'hidden' : ''
-        } ${isMaximized ? 'rounded-none' : ''}`}
+        } ${isMaximized ? 'rounded-none' : ''} ${isFocused ? styles.window.glow : styles.window.shadow}`}
         style={{
           ...getWindowStyle(),
           ...getAnimationStyle(),
@@ -353,7 +347,10 @@ export default function Window({
           minHeight: `${minHeight ?? LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
           willChange: isDragging || isResizing || isAnimating ? 'transform' : 'auto',
         }}
-        onMouseDown={onFocus}
+        onMouseDown={() => {
+          setIsFocused(true);
+          onFocus();
+        }}
       >
         {/* Title Bar */}
         <div

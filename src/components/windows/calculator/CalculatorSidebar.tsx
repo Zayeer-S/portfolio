@@ -1,6 +1,7 @@
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
 import { CalculatorMode } from './shared/types';
+import { HiBars3 } from 'react-icons/hi2';
 
 interface CalculatorSidebarProps {
   isOpen: boolean;
@@ -50,11 +51,11 @@ export default function CalculatorSidebar({
           onClick={onToggle}
           className={`${styles.calculator.sidebar.hamburger} p-2 z-20 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
           title={isOpen ? 'Close menu' : 'Open menu'}
-          style={{ width: '36px', height: '36px' }}
+          style={{ width: '36px', height: '32px' }}
           aria-label={isOpen ? 'Close calculator mode menu' : 'Open calculator mode menu'}
           aria-expanded={isOpen}
         >
-          <span className="text-base select-none">☰</span>
+          <HiBars3 className="text-base select-none w-8 h-8"></HiBars3>
         </button>
         <span
           className={`text-sm font-medium ${styles.calculator.display.textMuted} whitespace-nowrap`}

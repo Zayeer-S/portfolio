@@ -7,6 +7,7 @@ import { getThemeClasses } from '@/styles/themes';
 import { useWindowResize } from '@/hooks/useWindowResize';
 import { LAYOUT_CONSTANTS } from '@/constants/layout';
 import ResizeHandles from './ResizeHandles';
+import { VscChromeMinimize, VscChromeMaximize, VscChromeClose } from 'react-icons/vsc';
 
 interface WindowPropsWithTheme extends Omit<WindowProps, 'theme'> {
   theme?: Theme;
@@ -381,9 +382,9 @@ export default function Window({
                 e.stopPropagation();
                 onMinimize();
               }}
-              className={`w-6 h-5 ${styles.window.titleBar.buttons.minimize} text-xs mr-1`}
+              className={`w-6 h-5 ${styles.window.titleBar.buttons.minimize} flex items-center justify-center text-xs mr-1`}
             >
-              –
+              <VscChromeMinimize className="w-3 h-3" />
             </button>
             <button
               aria-label="Maximise the window"
@@ -392,9 +393,9 @@ export default function Window({
                 e.stopPropagation();
                 handleMaximize();
               }}
-              className={`w-6 h-5 ${styles.window.titleBar.buttons.maximize} text-xs mr-1`}
+              className={`w-6 h-5 ${styles.window.titleBar.buttons.maximize} flex items-center justify-center text-xs mr-1`}
             >
-              □
+              <VscChromeMaximize className="w-3 h-3" />
             </button>
             <button
               aria-label="Close the window"
@@ -403,9 +404,9 @@ export default function Window({
                 e.preventDefault();
                 handleClose();
               }}
-              className={`w-6 h-5 ${styles.window.titleBar.buttons.close} text-xs`}
+              className={`w-6 h-5 ${styles.window.titleBar.buttons.close} flex items-center justify-center text-xs`}
             >
-              ×
+              <VscChromeClose className="w-3 h-3" />
             </button>
           </div>
         </div>

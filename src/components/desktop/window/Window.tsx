@@ -10,6 +10,8 @@ import ResizeHandles from './ResizeHandles';
 
 interface WindowPropsWithTheme extends Omit<WindowProps, 'theme'> {
   theme?: Theme;
+  minWidth?: number;
+  minHeight?: number;
 }
 
 const getInitialDimensions = (windowId?: string) => {
@@ -101,6 +103,8 @@ export default function Window({
   zIndex,
   onFocus,
   theme,
+  minWidth,
+  minHeight,
 }: WindowPropsWithTheme) {
   const windowRef = useRef<HTMLDivElement>(null);
   const initialDimensions = getInitialDimensions(id);
@@ -344,8 +348,8 @@ export default function Window({
           ...getAnimationStyle(),
           zIndex: zIndex,
           pointerEvents: 'auto',
-          minWidth: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
-          minHeight: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
+          minWidth: `${minWidth ?? LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
+          minHeight: `${minHeight ?? LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
           willChange: isDragging || isResizing || isAnimating ? 'transform' : 'auto',
         }}
         onMouseDown={onFocus}

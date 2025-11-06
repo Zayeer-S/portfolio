@@ -7,7 +7,6 @@ import { useCalculatorKeyboard } from '../hooks/useCalculatorKeyboard';
 export default function BooleanCalculator({ evaluateExpression }: CalculatorModeProps) {
   const [expression, setExpression] = useState('');
   const [display, setDisplay] = useState('0');
-  const [previousDisplay, setPreviousDisplay] = useState('');
   const [waitingForNewInput, setWaitingForNewInput] = useState(false);
   const [lastResult, setLastResult] = useState<string | null>(null);
 
@@ -17,14 +16,13 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
         setExpression(value);
         setDisplay(value);
         setWaitingForNewInput(false);
-        setPreviousDisplay('');
       } else {
         const newExpression = expression === '' || display === '0' ? value : expression + value;
         setExpression(newExpression);
         setDisplay(display === '0' ? value : display + value);
       }
     },
-    [expression, display, waitingForNewInput]
+    [expression, waitingForNewInput]
   );
 
   const inputNumber = useCallback(
@@ -33,20 +31,18 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
         setExpression(num);
         setDisplay(num);
         setWaitingForNewInput(false);
-        setPreviousDisplay('');
       } else {
         const newExpression = expression === '' || display === '0' ? num : expression + num;
         setExpression(newExpression);
         setDisplay(display === '0' ? num : display + num);
       }
     },
-    [expression, display, waitingForNewInput]
+    [expression, waitingForNewInput]
   );
 
   const clear = useCallback(() => {
     setExpression('');
     setDisplay('0');
-    setPreviousDisplay('');
     setWaitingForNewInput(false);
     setLastResult(null);
   }, []);
@@ -56,17 +52,16 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
       if (waitingForNewInput && lastResult !== null) {
         const newExpression = lastResult + ' ' + operation + ' ';
         setExpression(newExpression);
-        setPreviousDisplay(newExpression);
-        setDisplay('');
+        setDisplay(newExpression);
         setWaitingForNewInput(false);
-      } else if (expression !== '' && display !== '') {
+      } else {
         const newExpression = expression + ' ' + operation + ' ';
         setExpression(newExpression);
-        setPreviousDisplay(newExpression);
-        setDisplay('');
+        setDisplay(newExpression);
+        setWaitingForNewInput(false);
       }
     },
-    [expression, display, waitingForNewInput, lastResult]
+    [expression, waitingForNewInput, lastResult]
   );
 
   const performUnaryOperation = useCallback(
@@ -74,17 +69,16 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
       if (waitingForNewInput && lastResult !== null) {
         const newExpression = operation + ' ' + lastResult;
         setExpression(newExpression);
-        setPreviousDisplay(newExpression);
-        setDisplay('');
+        setDisplay(newExpression);
         setWaitingForNewInput(false);
-      } else if (expression !== '' && display !== '') {
+      } else {
         const newExpression = operation + ' ' + expression;
         setExpression(newExpression);
-        setPreviousDisplay(newExpression);
-        setDisplay('');
+        setDisplay(newExpression);
+        setWaitingForNewInput(false);
       }
     },
-    [expression, display, waitingForNewInput, lastResult]
+    [expression, waitingForNewInput, lastResult]
   );
 
   const handleEquals = useCallback(async () => {
@@ -96,16 +90,13 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
       const result = await evaluateExpression(expression);
       setDisplay(result);
       setLastResult(result);
-      setPreviousDisplay(expression + ' =');
       setExpression('');
       setWaitingForNewInput(true);
     } catch (error) {
       if (error instanceof Error) {
         setDisplay('Error');
-        setPreviousDisplay(error.message);
       } else {
         setDisplay('Error');
-        setPreviousDisplay('Unknown error occurred');
       }
       setExpression('');
       setWaitingForNewInput(true);
@@ -126,7 +117,7 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
 
   return (
     <>
-      <CalculatorDisplay display={display} previousDisplay={previousDisplay} />
+      <CalculatorDisplay display={display} />
 
       <div
         className="grid grid-cols-4 gap-1 flex-1"

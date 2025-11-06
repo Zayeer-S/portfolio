@@ -9,7 +9,6 @@ import { getThemeClasses } from '@/styles/themes';
 export default function AlgebraicCalculator({ evaluateExpression }: CalculatorModeProps) {
   const [expression, setExpression] = useState('');
   const [display, setDisplay] = useState('0');
-  const [previousDisplay, setPreviousDisplay] = useState('');
   const [waitingForNewInput, setWaitingForNewInput] = useState(false);
   const [lastResult, setLastResult] = useState<string | null>(null);
   const [variables, setVariables] = useState<Record<string, number>>({});
@@ -26,14 +25,13 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
         setExpression(char);
         setDisplay(char);
         setWaitingForNewInput(false);
-        setPreviousDisplay('');
       } else {
         const newExpression = expression === '' || display === '0' ? char : expression + char;
         setExpression(newExpression);
         setDisplay(display === '0' ? char : display + char);
       }
     },
-    [expression, display, waitingForNewInput]
+    [expression, waitingForNewInput]
   );
 
   const inputDecimal = useCallback(() => {
@@ -41,7 +39,6 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
       setExpression('0.');
       setDisplay('0.');
       setWaitingForNewInput(false);
-      setPreviousDisplay('');
     } else if (!display.includes('.')) {
       const newExpression = expression + '.';
       setExpression(newExpression);
@@ -52,14 +49,12 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
   const clear = useCallback(() => {
     setExpression('');
     setDisplay('0');
-    setPreviousDisplay('');
     setWaitingForNewInput(false);
     setLastResult(null);
   }, []);
 
   const clearVariables = useCallback(() => {
     setVariables({});
-    setPreviousDisplay('Variables cleared');
   }, []);
 
   const performOperation = useCallback(
@@ -67,17 +62,16 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
       if (waitingForNewInput && lastResult !== null) {
         const newExpression = lastResult + ' ' + operation + ' ';
         setExpression(newExpression);
-        setPreviousDisplay(newExpression);
-        setDisplay('');
+        setDisplay(newExpression);
         setWaitingForNewInput(false);
-      } else if (expression !== '' && display !== '') {
+      } else {
         const newExpression = expression + ' ' + operation + ' ';
         setExpression(newExpression);
-        setPreviousDisplay(newExpression);
-        setDisplay('');
+        setDisplay(newExpression);
+        setWaitingForNewInput(false);
       }
     },
-    [expression, display, waitingForNewInput, lastResult]
+    [expression, waitingForNewInput, lastResult]
   );
 
   const handleEquals = useCallback(async () => {
@@ -89,16 +83,13 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
       const result = await evaluateExpression(expression, variables);
       setDisplay(result);
       setLastResult(result);
-      setPreviousDisplay(expression + ' =');
       setExpression('');
       setWaitingForNewInput(true);
     } catch (error) {
       if (error instanceof Error) {
         setDisplay('Error');
-        setPreviousDisplay(error.message);
       } else {
         setDisplay('Error');
-        setPreviousDisplay('Unknown error occurred');
       }
       setExpression('');
       setWaitingForNewInput(true);
@@ -110,7 +101,6 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
       const value = parseFloat(variableValue);
       if (!isNaN(value)) {
         setVariables(prev => ({ ...prev, [currentVariable]: value }));
-        setPreviousDisplay(`${currentVariable} = ${value}`);
         setCurrentVariable('');
         setVariableValue('');
         setShowVariableInput(false);
@@ -132,7 +122,7 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
 
   return (
     <>
-      <CalculatorDisplay display={display} previousDisplay={previousDisplay} />
+      <CalculatorDisplay display={display} />
 
       {/* Variables display */}
       {Object.keys(variables).length > 0 && (
@@ -160,7 +150,7 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
               type="text"
               placeholder="var"
               value={currentVariable}
-              onChange={e => setCurrentVariable(e.target.value.toLowerCase())}
+              onChange={e => setCurrentVariable(e.target.value)}
               maxLength={10}
               className={`flex-1 px-2 py-1 border ${styles.calculator.display.border} ${styles.calculator.display.background} ${styles.calculator.display.text} text-sm font-mono rounded`}
               autoFocus

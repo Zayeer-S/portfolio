@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { CalculatorModeProps } from '../shared/types';
 import CalculatorDisplay from '../CalculatorDisplay';
 import Button from '../shared/Button';
-import { useCalculatorKeyboard } from '../shared/useCalculatorKeyboard';
+import { useCalculatorKeyboard } from '../hooks/useCalculatorKeyboard';
 
 export default function ArithmeticCalculator({ evaluateExpression }: CalculatorModeProps) {
   const [expression, setExpression] = useState('');

@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { CalculatorModeProps } from '../shared/types';
 import CalculatorDisplay from '../CalculatorDisplay';
 import Button from '../shared/Button';
-import { useCalculatorKeyboard } from '../shared/useCalculatorKeyboard';
+import { useCalculatorKeyboard } from '../hooks/useCalculatorKeyboard';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
 

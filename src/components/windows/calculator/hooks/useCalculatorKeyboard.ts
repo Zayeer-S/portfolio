@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { CalculatorMode } from './types';
+import { CalculatorMode } from '../shared/types';
 
 interface CalculatorKeyboardHandlers {
   inputNumber?: (num: string) => void;

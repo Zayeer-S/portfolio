@@ -4,7 +4,7 @@ import { useWindowManager } from '@/hooks/useWindowManager';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
 
-import Window from '@/components/desktop/window/Window';
+import Window from '@/components/ui/window/Window';
 import DesktopGrid from '@/components/desktop/grid/DesktopGrid';
 import StartMenu from '@/components/desktop/menu/StartMenu';
 import Taskbar from '@/components/desktop/taskbar/Taskbar';

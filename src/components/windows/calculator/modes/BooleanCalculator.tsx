@@ -3,12 +3,24 @@ import { CalculatorModeProps } from '../shared/types';
 import CalculatorDisplay from '../CalculatorDisplay';
 import Button from '../shared/Button';
 import { useCalculatorKeyboard } from '../hooks/useCalculatorKeyboard';
+import { useCalculatorCallbacks } from '../hooks/useCalculatorCallbacks';
 
 export default function BooleanCalculator({ evaluateExpression }: CalculatorModeProps) {
   const [expression, setExpression] = useState('');
   const [display, setDisplay] = useState('0');
   const [waitingForNewInput, setWaitingForNewInput] = useState(false);
   const [lastResult, setLastResult] = useState<string | null>(null);
+
+  const { clear, backspace, handleEquals } = useCalculatorCallbacks({
+    expression,
+    display,
+    waitingForNewInput,
+    setExpression,
+    setDisplay,
+    setWaitingForNewInput,
+    setLastResult,
+    evaluateExpression,
+  });
 
   const inputValue = useCallback(
     (value: string) => {
@@ -17,9 +29,9 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
         setDisplay(value);
         setWaitingForNewInput(false);
       } else {
-        const newExpression = expression === '' || display === '0' ? value : expression + value;
+        const newExpression = expression + value;
         setExpression(newExpression);
-        setDisplay(display === '0' ? value : display + value);
+        setDisplay(newExpression);
       }
     },
     [expression, waitingForNewInput]
@@ -32,30 +44,23 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
         setDisplay(num);
         setWaitingForNewInput(false);
       } else {
-        const newExpression = expression === '' || display === '0' ? num : expression + num;
+        const newExpression = expression + num;
         setExpression(newExpression);
-        setDisplay(display === '0' ? num : display + num);
+        setDisplay(newExpression);
       }
     },
     [expression, waitingForNewInput]
   );
 
-  const clear = useCallback(() => {
-    setExpression('');
-    setDisplay('0');
-    setWaitingForNewInput(false);
-    setLastResult(null);
-  }, []);
-
   const performOperation = useCallback(
     (operation: string) => {
       if (waitingForNewInput && lastResult !== null) {
-        const newExpression = lastResult + ' ' + operation + ' ';
+        const newExpression = lastResult + operation;
         setExpression(newExpression);
         setDisplay(newExpression);
         setWaitingForNewInput(false);
       } else {
-        const newExpression = expression + ' ' + operation + ' ';
+        const newExpression = expression + operation;
         setExpression(newExpression);
         setDisplay(newExpression);
         setWaitingForNewInput(false);
@@ -67,12 +72,12 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
   const performUnaryOperation = useCallback(
     (operation: string) => {
       if (waitingForNewInput && lastResult !== null) {
-        const newExpression = operation + ' ' + lastResult;
+        const newExpression = operation + lastResult;
         setExpression(newExpression);
         setDisplay(newExpression);
         setWaitingForNewInput(false);
       } else {
-        const newExpression = operation + ' ' + expression;
+        const newExpression = operation + expression;
         setExpression(newExpression);
         setDisplay(newExpression);
         setWaitingForNewInput(false);
@@ -80,28 +85,6 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
     },
     [expression, waitingForNewInput, lastResult]
   );
-
-  const handleEquals = useCallback(async () => {
-    if (expression === '' || expression.trim() === '') {
-      return;
-    }
-
-    try {
-      const result = await evaluateExpression(expression);
-      setDisplay(result);
-      setLastResult(result);
-      setExpression('');
-      setWaitingForNewInput(true);
-    } catch (error) {
-      if (error instanceof Error) {
-        setDisplay('Error');
-      } else {
-        setDisplay('Error');
-      }
-      setExpression('');
-      setWaitingForNewInput(true);
-    }
-  }, [expression, evaluateExpression]);
 
   useCalculatorKeyboard({
     mode: 'boolean',
@@ -112,6 +95,7 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
       performUnaryOperation,
       handleEquals,
       clear,
+      backspace,
     },
   });
 

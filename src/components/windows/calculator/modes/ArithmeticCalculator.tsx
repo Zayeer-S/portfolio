@@ -3,6 +3,7 @@ import { CalculatorModeProps } from '../shared/types';
 import CalculatorDisplay from '../CalculatorDisplay';
 import Button from '../shared/Button';
 import { useCalculatorKeyboard } from '../hooks/useCalculatorKeyboard';
+import { useCalculatorCallbacks } from '../hooks/useCalculatorCallbacks';
 
 export default function ArithmeticCalculator({ evaluateExpression }: CalculatorModeProps) {
   const [expression, setExpression] = useState('');
@@ -10,6 +11,18 @@ export default function ArithmeticCalculator({ evaluateExpression }: CalculatorM
   const [previousDisplay, setPreviousDisplay] = useState('');
   const [waitingForNewInput, setWaitingForNewInput] = useState(false);
   const [lastResult, setLastResult] = useState<string | null>(null);
+
+  const { clear, backspace, handleEquals } = useCalculatorCallbacks({
+    expression,
+    display,
+    waitingForNewInput,
+    setExpression,
+    setDisplay,
+    setWaitingForNewInput,
+    setPreviousDisplay,
+    setLastResult,
+    evaluateExpression,
+  });
 
   const inputNumber = useCallback(
     (num: string) => {
@@ -40,24 +53,16 @@ export default function ArithmeticCalculator({ evaluateExpression }: CalculatorM
     }
   }, [expression, display, waitingForNewInput]);
 
-  const clear = useCallback(() => {
-    setExpression('');
-    setDisplay('0');
-    setPreviousDisplay('');
-    setWaitingForNewInput(false);
-    setLastResult(null);
-  }, []);
-
   const performOperation = useCallback(
     (operation: string) => {
       if (waitingForNewInput && lastResult !== null) {
-        const newExpression = lastResult + ' ' + operation + ' ';
+        const newExpression = lastResult + operation;
         setExpression(newExpression);
         setPreviousDisplay(newExpression);
         setDisplay('');
         setWaitingForNewInput(false);
       } else if (expression !== '' && display !== '') {
-        const newExpression = expression + ' ' + operation + ' ';
+        const newExpression = expression + operation;
         setExpression(newExpression);
         setPreviousDisplay(newExpression);
         setDisplay('');
@@ -65,31 +70,6 @@ export default function ArithmeticCalculator({ evaluateExpression }: CalculatorM
     },
     [expression, display, waitingForNewInput, lastResult]
   );
-
-  const handleEquals = useCallback(async () => {
-    if (expression === '' || expression.trim() === '') {
-      return;
-    }
-
-    try {
-      const result = await evaluateExpression(expression);
-      setDisplay(result);
-      setLastResult(result);
-      setPreviousDisplay(expression + ' =');
-      setExpression('');
-      setWaitingForNewInput(true);
-    } catch (error) {
-      if (error instanceof Error) {
-        setDisplay('Error');
-        setPreviousDisplay(error.message);
-      } else {
-        setDisplay('Error');
-        setPreviousDisplay('Unknown error occurred');
-      }
-      setExpression('');
-      setWaitingForNewInput(true);
-    }
-  }, [expression, evaluateExpression]);
 
   useCalculatorKeyboard({
     mode: 'arithmetic',
@@ -99,6 +79,7 @@ export default function ArithmeticCalculator({ evaluateExpression }: CalculatorM
       performOperation,
       handleEquals,
       clear,
+      backspace,
     },
   });
 

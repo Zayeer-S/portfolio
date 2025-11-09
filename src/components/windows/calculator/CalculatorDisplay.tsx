@@ -1,5 +1,6 @@
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
+import { formatExpressionForDispaly as formatExpressionForDisplay } from './shared/utils';
 
 interface CalculatorDisplayProps {
   display: string;
@@ -26,10 +27,12 @@ export default function CalculatorDisplay({
         className={`text-base ${styles.calculator.display.textMuted} h- overflow-hidden`}
         aria-hidden="true"
       >
-        {previousDisplay}
+        {formatExpressionForDisplay(previousDisplay)}
       </div>
       {/* Current display */}
-      <div className={`text-5xl font-bold ${styles.calculator.display.text}`}>{display}</div>
+      <div className={`text-5xl font-bold ${styles.calculator.display.text}`}>
+        {formatExpressionForDisplay(display)}
+      </div>
     </div>
   );
 }

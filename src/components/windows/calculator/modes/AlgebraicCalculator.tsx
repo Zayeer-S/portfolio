@@ -3,6 +3,7 @@ import { CalculatorModeProps } from '../shared/types';
 import CalculatorDisplay from '../CalculatorDisplay';
 import Button from '../shared/Button';
 import { useCalculatorKeyboard } from '../hooks/useCalculatorKeyboard';
+import { useCalculatorCallbacks } from '../hooks/useCalculatorCallbacks';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
 
@@ -19,6 +20,18 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
   const { theme } = useTheme();
   const styles = getThemeClasses(theme);
 
+  const { clear, backspace, handleEquals } = useCalculatorCallbacks({
+    expression,
+    display,
+    waitingForNewInput,
+    setExpression,
+    setDisplay,
+    setWaitingForNewInput,
+    setLastResult,
+    evaluateExpression,
+    variables,
+  });
+
   const inputCharacter = useCallback(
     (char: string) => {
       if (waitingForNewInput) {
@@ -26,9 +39,9 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
         setDisplay(char);
         setWaitingForNewInput(false);
       } else {
-        const newExpression = expression === '' || display === '0' ? char : expression + char;
+        const newExpression = expression + char;
         setExpression(newExpression);
-        setDisplay(display === '0' ? char : display + char);
+        setDisplay(newExpression);
       }
     },
     [expression, waitingForNewInput]
@@ -39,19 +52,12 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
       setExpression('0.');
       setDisplay('0.');
       setWaitingForNewInput(false);
-    } else if (!display.includes('.')) {
+    } else {
       const newExpression = expression + '.';
       setExpression(newExpression);
-      setDisplay(display + '.');
+      setDisplay(newExpression);
     }
-  }, [expression, display, waitingForNewInput]);
-
-  const clear = useCallback(() => {
-    setExpression('');
-    setDisplay('0');
-    setWaitingForNewInput(false);
-    setLastResult(null);
-  }, []);
+  }, [expression, waitingForNewInput]);
 
   const clearVariables = useCallback(() => {
     setVariables({});
@@ -60,12 +66,12 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
   const performOperation = useCallback(
     (operation: string) => {
       if (waitingForNewInput && lastResult !== null) {
-        const newExpression = lastResult + ' ' + operation + ' ';
+        const newExpression = lastResult + operation;
         setExpression(newExpression);
         setDisplay(newExpression);
         setWaitingForNewInput(false);
       } else {
-        const newExpression = expression + ' ' + operation + ' ';
+        const newExpression = expression + operation;
         setExpression(newExpression);
         setDisplay(newExpression);
         setWaitingForNewInput(false);
@@ -73,28 +79,6 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
     },
     [expression, waitingForNewInput, lastResult]
   );
-
-  const handleEquals = useCallback(async () => {
-    if (expression === '' || expression.trim() === '') {
-      return;
-    }
-
-    try {
-      const result = await evaluateExpression(expression, variables);
-      setDisplay(result);
-      setLastResult(result);
-      setExpression('');
-      setWaitingForNewInput(true);
-    } catch (error) {
-      if (error instanceof Error) {
-        setDisplay('Error');
-      } else {
-        setDisplay('Error');
-      }
-      setExpression('');
-      setWaitingForNewInput(true);
-    }
-  }, [expression, variables, evaluateExpression]);
 
   const handleSetVariable = useCallback(() => {
     if (currentVariable && variableValue) {
@@ -116,6 +100,7 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
       performOperation,
       handleEquals,
       clear,
+      backspace,
     },
     enabled: !showVariableInput,
   });

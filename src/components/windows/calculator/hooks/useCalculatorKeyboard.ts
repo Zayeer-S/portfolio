@@ -10,6 +10,7 @@ interface CalculatorKeyboardHandlers {
   handleEquals?: () => void;
   clear?: () => void;
   inputValue?: (value: string) => void;
+  backspace?: () => void;
 }
 
 interface UseCalculatorKeyboardOptions {
@@ -27,8 +28,30 @@ export function useCalculatorKeyboard({
     if (!enabled) return;
 
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Numbers (all modes)
+      if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
+        e.preventDefault();
+        handlers.clear?.();
+        return;
+      }
+
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handlers.handleEquals?.();
+        return;
+      }
+
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        handlers.backspace?.();
+        return;
+      }
+
+      if (e.key.length > 1) {
+        return;
+      }
+
       if (e.key >= '0' && e.key <= '9') {
+        e.preventDefault();
         if (mode === 'algebraic' && handlers.inputCharacter) {
           handlers.inputCharacter(e.key);
         } else if (handlers.inputNumber) {
@@ -37,24 +60,27 @@ export function useCalculatorKeyboard({
         return;
       }
 
-      // Decimal point (arithmetic and algebraic)
       if (e.key === '.' && (mode === 'arithmetic' || mode === 'algebraic')) {
+        e.preventDefault();
         handlers.inputDecimal?.();
         return;
       }
 
       // Basic operations (all modes support these in some form)
       if (e.key === '+' && handlers.performOperation) {
+        e.preventDefault();
         handlers.performOperation('+');
         return;
       }
 
       if (e.key === '-' && handlers.performOperation) {
+        e.preventDefault();
         handlers.performOperation('-');
         return;
       }
 
       if (e.key === '*' && handlers.performOperation) {
+        e.preventDefault();
         handlers.performOperation('*');
         return;
       }
@@ -68,16 +94,19 @@ export function useCalculatorKeyboard({
       // Algebraic-specific keys
       if (mode === 'algebraic') {
         if ((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z')) {
-          handlers.inputCharacter?.(e.key.toLowerCase());
+          e.preventDefault();
+          handlers.inputCharacter?.(e.key);
           return;
         }
 
         if (e.key === '^') {
+          e.preventDefault();
           handlers.performOperation?.('^');
           return;
         }
 
         if (e.key === '(' || e.key === ')') {
+          e.preventDefault();
           handlers.inputCharacter?.(e.key);
           return;
         }
@@ -85,50 +114,42 @@ export function useCalculatorKeyboard({
 
       // Boolean-specific keys
       if (mode === 'boolean') {
-        // Boolean operators
         if (e.key === '&' || e.key.toLowerCase() === 'a') {
+          e.preventDefault();
           handlers.performOperation?.('and');
           return;
         }
 
         if (e.key === '|' || e.key.toLowerCase() === 'o') {
+          e.preventDefault();
           handlers.performOperation?.('or');
           return;
         }
 
         if (e.key === '!' || e.key.toLowerCase() === 'n') {
+          e.preventDefault();
           handlers.performUnaryOperation?.('not');
           return;
         }
 
-        // Comparison operators
         if (e.key === '<') {
+          e.preventDefault();
           handlers.performOperation?.('<');
           return;
         }
 
         if (e.key === '>') {
+          e.preventDefault();
           handlers.performOperation?.('>');
           return;
         }
 
         // Parentheses for boolean
         if (e.key === '(' || e.key === ')') {
+          e.preventDefault();
           handlers.inputValue?.(e.key);
           return;
         }
-      }
-
-      // Equals (all modes)
-      if (e.key === 'Enter' || (e.key === '=' && mode !== 'boolean')) {
-        handlers.handleEquals?.();
-        return;
-      }
-
-      // Clear (all modes)
-      if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
-        handlers.clear?.();
-        return;
       }
     };
 

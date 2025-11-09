@@ -7,7 +7,7 @@ interface UseCalculatorCallbacksOptions {
   setExpression: (expr: string) => void;
   setDisplay: (disp: string) => void;
   setWaitingForNewInput: (waiting: boolean) => void;
-  setPreviousDisplay?: (disp: string) => void;
+  setPreviousDisplay: (disp: string) => void;
   setLastResult: (result: string | null) => void;
   evaluateExpression: (expr: string, variables?: Record<string, number>) => Promise<string>;
   variables?: Record<string, number>;
@@ -30,7 +30,7 @@ export function useCalculatorCallbacks({
     setDisplay('0');
     setWaitingForNewInput(false);
     setLastResult(null);
-    setPreviousDisplay?.('');
+    setPreviousDisplay('');
   }, [setExpression, setDisplay, setWaitingForNewInput, setLastResult, setPreviousDisplay]);
 
   const backspace = useCallback(() => {
@@ -64,16 +64,16 @@ export function useCalculatorCallbacks({
       const result = await evaluateExpression(expression, variables);
       setDisplay(result);
       setLastResult(result);
-      setPreviousDisplay?.(expression + ' =');
+      setPreviousDisplay(expression + ' =');
       setExpression('');
       setWaitingForNewInput(true);
     } catch (error) {
       if (error instanceof Error) {
         setDisplay('Error');
-        setPreviousDisplay?.(error.message);
+        setPreviousDisplay(error.message);
       } else {
         setDisplay('Error');
-        setPreviousDisplay?.('Unknown error occurred');
+        setPreviousDisplay('Unknown error occurred');
       }
       setExpression('');
       setWaitingForNewInput(true);

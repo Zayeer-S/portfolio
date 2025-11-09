@@ -8,6 +8,7 @@ import { useCalculatorCallbacks } from '../hooks/useCalculatorCallbacks';
 export default function BooleanCalculator({ evaluateExpression }: CalculatorModeProps) {
   const [expression, setExpression] = useState('');
   const [display, setDisplay] = useState('0');
+  const [previousDisplay, setPreviousDisplay] = useState('');
   const [waitingForNewInput, setWaitingForNewInput] = useState(false);
   const [lastResult, setLastResult] = useState<string | null>(null);
 
@@ -17,6 +18,7 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
     waitingForNewInput,
     setExpression,
     setDisplay,
+    setPreviousDisplay,
     setWaitingForNewInput,
     setLastResult,
     evaluateExpression,
@@ -27,6 +29,7 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
       if (waitingForNewInput) {
         setExpression(value);
         setDisplay(value);
+        setPreviousDisplay('');
         setWaitingForNewInput(false);
       } else {
         const newExpression = expression + value;
@@ -42,6 +45,7 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
       if (waitingForNewInput) {
         setExpression(num);
         setDisplay(num);
+        setPreviousDisplay('');
         setWaitingForNewInput(false);
       } else {
         const newExpression = expression + num;
@@ -58,11 +62,13 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
         const newExpression = lastResult + operation;
         setExpression(newExpression);
         setDisplay(newExpression);
+        setPreviousDisplay('');
         setWaitingForNewInput(false);
       } else {
         const newExpression = expression + operation;
         setExpression(newExpression);
         setDisplay(newExpression);
+        setPreviousDisplay('');
         setWaitingForNewInput(false);
       }
     },
@@ -75,11 +81,13 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
         const newExpression = operation + lastResult;
         setExpression(newExpression);
         setDisplay(newExpression);
+        setPreviousDisplay('');
         setWaitingForNewInput(false);
       } else {
         const newExpression = operation + expression;
         setExpression(newExpression);
         setDisplay(newExpression);
+        setPreviousDisplay('');
         setWaitingForNewInput(false);
       }
     },
@@ -101,7 +109,7 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
 
   return (
     <>
-      <CalculatorDisplay display={display} />
+      <CalculatorDisplay display={display} previousDisplay={previousDisplay} />
 
       <div
         className="grid grid-cols-4 gap-1 flex-1"

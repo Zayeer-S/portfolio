@@ -10,6 +10,7 @@ import { getThemeClasses } from '@/styles/themes';
 export default function AlgebraicCalculator({ evaluateExpression }: CalculatorModeProps) {
   const [expression, setExpression] = useState('');
   const [display, setDisplay] = useState('0');
+  const [previousDisplay, setPreviousDisplay] = useState('');
   const [waitingForNewInput, setWaitingForNewInput] = useState(false);
   const [lastResult, setLastResult] = useState<string | null>(null);
   const [variables, setVariables] = useState<Record<string, number>>({});
@@ -27,6 +28,7 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
     setExpression,
     setDisplay,
     setWaitingForNewInput,
+    setPreviousDisplay,
     setLastResult,
     evaluateExpression,
     variables,
@@ -37,6 +39,7 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
       if (waitingForNewInput) {
         setExpression(char);
         setDisplay(char);
+        setPreviousDisplay('');
         setWaitingForNewInput(false);
       } else {
         const newExpression = expression + char;
@@ -52,6 +55,7 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
       setExpression('0.');
       setDisplay('0.');
       setWaitingForNewInput(false);
+      setPreviousDisplay('');
     } else {
       const newExpression = expression + '.';
       setExpression(newExpression);
@@ -70,11 +74,13 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
         setExpression(newExpression);
         setDisplay(newExpression);
         setWaitingForNewInput(false);
+        setPreviousDisplay('');
       } else {
         const newExpression = expression + operation;
         setExpression(newExpression);
         setDisplay(newExpression);
         setWaitingForNewInput(false);
+        setPreviousDisplay('');
       }
     },
     [expression, waitingForNewInput, lastResult]
@@ -107,7 +113,7 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
 
   return (
     <>
-      <CalculatorDisplay display={display} />
+      <CalculatorDisplay display={display} previousDisplay={previousDisplay} />
 
       {/* Variables display */}
       {Object.keys(variables).length > 0 && (

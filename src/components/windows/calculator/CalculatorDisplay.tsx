@@ -24,7 +24,7 @@ export default function CalculatorDisplay({
     >
       {/* Previous expression - hidden from screen readers */}
       <div
-        className={`text-base ${styles.calculator.display.textMuted} h- overflow-hidden`}
+        className={`text-base ${styles.calculator.display.textMuted} h-6 overflow-hidden`}
         aria-hidden="true"
       >
         {formatExpressionForDisplay(previousDisplay)}

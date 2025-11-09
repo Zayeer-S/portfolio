@@ -4,6 +4,7 @@ import CalculatorDisplay from '../CalculatorDisplay';
 import Button from '../shared/Button';
 import { useCalculatorKeyboard } from '../hooks/useCalculatorKeyboard';
 import { useCalculatorCallbacks } from '../hooks/useCalculatorCallbacks';
+import { useCalculatorOperations } from '../hooks/useCalculatorOperations';
 
 export default function BooleanCalculator({ evaluateExpression }: CalculatorModeProps) {
   const [expression, setExpression] = useState('');
@@ -22,6 +23,16 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
     setWaitingForNewInput,
     setLastResult,
     evaluateExpression,
+  });
+
+  const { performOperation, performUnaryOperation } = useCalculatorOperations({
+    expression,
+    waitingForNewInput,
+    lastResult,
+    setExpression,
+    setDisplay,
+    setWaitingForNewInput,
+    setPreviousDisplay,
   });
 
   const inputValue = useCallback(
@@ -54,44 +65,6 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
       }
     },
     [expression, waitingForNewInput]
-  );
-
-  const performOperation = useCallback(
-    (operation: string) => {
-      if (waitingForNewInput && lastResult !== null) {
-        const newExpression = lastResult + operation;
-        setExpression(newExpression);
-        setDisplay(newExpression);
-        setPreviousDisplay('');
-        setWaitingForNewInput(false);
-      } else {
-        const newExpression = expression + operation;
-        setExpression(newExpression);
-        setDisplay(newExpression);
-        setPreviousDisplay('');
-        setWaitingForNewInput(false);
-      }
-    },
-    [expression, waitingForNewInput, lastResult]
-  );
-
-  const performUnaryOperation = useCallback(
-    (operation: string) => {
-      if (waitingForNewInput && lastResult !== null) {
-        const newExpression = operation + lastResult;
-        setExpression(newExpression);
-        setDisplay(newExpression);
-        setPreviousDisplay('');
-        setWaitingForNewInput(false);
-      } else {
-        const newExpression = operation + expression;
-        setExpression(newExpression);
-        setDisplay(newExpression);
-        setPreviousDisplay('');
-        setWaitingForNewInput(false);
-      }
-    },
-    [expression, waitingForNewInput, lastResult]
   );
 
   useCalculatorKeyboard({

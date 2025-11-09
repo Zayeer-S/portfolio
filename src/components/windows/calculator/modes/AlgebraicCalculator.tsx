@@ -4,6 +4,7 @@ import CalculatorDisplay from '../CalculatorDisplay';
 import Button from '../shared/Button';
 import { useCalculatorKeyboard } from '../hooks/useCalculatorKeyboard';
 import { useCalculatorCallbacks } from '../hooks/useCalculatorCallbacks';
+import { useCalculatorOperations } from '../hooks/useCalculatorOperations';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
 
@@ -32,6 +33,16 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
     setLastResult,
     evaluateExpression,
     variables,
+  });
+
+  const { performOperation } = useCalculatorOperations({
+    expression,
+    waitingForNewInput,
+    lastResult,
+    setExpression,
+    setDisplay,
+    setWaitingForNewInput,
+    setPreviousDisplay,
   });
 
   const inputCharacter = useCallback(
@@ -66,25 +77,6 @@ export default function AlgebraicCalculator({ evaluateExpression }: CalculatorMo
   const clearVariables = useCallback(() => {
     setVariables({});
   }, []);
-
-  const performOperation = useCallback(
-    (operation: string) => {
-      if (waitingForNewInput && lastResult !== null) {
-        const newExpression = lastResult + operation;
-        setExpression(newExpression);
-        setDisplay(newExpression);
-        setWaitingForNewInput(false);
-        setPreviousDisplay('');
-      } else {
-        const newExpression = expression + operation;
-        setExpression(newExpression);
-        setDisplay(newExpression);
-        setWaitingForNewInput(false);
-        setPreviousDisplay('');
-      }
-    },
-    [expression, waitingForNewInput, lastResult]
-  );
 
   const handleSetVariable = useCallback(() => {
     if (currentVariable && variableValue) {

@@ -4,6 +4,7 @@ import CalculatorDisplay from '../CalculatorDisplay';
 import Button from '../shared/Button';
 import { useCalculatorKeyboard } from '../hooks/useCalculatorKeyboard';
 import { useCalculatorCallbacks } from '../hooks/useCalculatorCallbacks';
+import { useCalculatorOperations } from '../hooks/useCalculatorOperations';
 
 export default function ArithmeticCalculator({ evaluateExpression }: CalculatorModeProps) {
   const [expression, setExpression] = useState('');
@@ -22,6 +23,16 @@ export default function ArithmeticCalculator({ evaluateExpression }: CalculatorM
     setPreviousDisplay,
     setLastResult,
     evaluateExpression,
+  });
+
+  const { performOperation } = useCalculatorOperations({
+    expression,
+    waitingForNewInput,
+    lastResult,
+    setExpression,
+    setDisplay,
+    setWaitingForNewInput,
+    setPreviousDisplay,
   });
 
   const inputNumber = useCallback(
@@ -52,24 +63,6 @@ export default function ArithmeticCalculator({ evaluateExpression }: CalculatorM
       setDisplay(display + '.');
     }
   }, [expression, display, waitingForNewInput]);
-
-  const performOperation = useCallback(
-    (operation: string) => {
-      if (waitingForNewInput && lastResult !== null) {
-        const newExpression = lastResult + operation;
-        setExpression(newExpression);
-        setPreviousDisplay('');
-        setDisplay(newExpression);
-        setWaitingForNewInput(false);
-      } else if (expression !== '' && display !== '') {
-        const newExpression = expression + operation;
-        setExpression(newExpression);
-        setPreviousDisplay('');
-        setDisplay(newExpression);
-      }
-    },
-    [expression, display, waitingForNewInput, lastResult]
-  );
 
   useCalculatorKeyboard({
     mode: 'arithmetic',

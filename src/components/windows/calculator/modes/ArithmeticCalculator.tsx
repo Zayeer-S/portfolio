@@ -58,14 +58,14 @@ export default function ArithmeticCalculator({ evaluateExpression }: CalculatorM
       if (waitingForNewInput && lastResult !== null) {
         const newExpression = lastResult + operation;
         setExpression(newExpression);
-        setPreviousDisplay(newExpression);
-        setDisplay('');
+        setPreviousDisplay('');
+        setDisplay(newExpression);
         setWaitingForNewInput(false);
       } else if (expression !== '' && display !== '') {
         const newExpression = expression + operation;
         setExpression(newExpression);
-        setPreviousDisplay(newExpression);
-        setDisplay('');
+        setPreviousDisplay('');
+        setDisplay(newExpression);
       }
     },
     [expression, display, waitingForNewInput, lastResult]

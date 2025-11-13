@@ -1,7 +1,7 @@
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
 import { CalculatorMode } from './shared/types';
-import { HiBars3 } from 'react-icons/hi2';
+import { HiBars3, HiInformationCircle } from 'react-icons/hi2';
 
 interface CalculatorSidebarProps {
   isOpen: boolean;
@@ -46,7 +46,7 @@ export default function CalculatorSidebar({
   return (
     <>
       {/* Hamburger button */}
-      <div className="absolute -top-3 -left-3 flex flex-row items-center gap-2">
+      <div className="absolute -top-3 -left-3 flex flex-row items-center gap-1">
         <button
           onClick={onToggle}
           className={`${styles.calculator.sidebar.hamburger} p-2 z-20 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
@@ -58,10 +58,23 @@ export default function CalculatorSidebar({
           <HiBars3 className="text-base select-none w-8 h-8"></HiBars3>
         </button>
         <span
-          className={`text-sm font-medium ${styles.calculator.display.textMuted} whitespace-nowrap`}
+          className={`text-sm font-medium mb-[3px] ${styles.calculator.display.textMuted} whitespace-nowrap`}
         >
           {modeOptions.find(option => option.id === currentMode)?.label}
         </span>
+        <div className="relative group mb-[2px]">
+          <HiInformationCircle
+            className={`w-4 h-4 ${styles.calculator.display.textMuted} cursor-help`}
+            aria-label="Calculator information"
+          />
+          <div
+            className={`absolute left-0 top-6 w-64 p-3 ${styles.calculator.display.background} ${styles.calculator.display.border} border rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 text-xs z-30`}
+          >
+            <p className={`${styles.calculator.display.text}`}>
+              This calculator is a microservice powered by my own custom built REST API (Evalr)
+            </p>
+          </div>
+        </div>
       </div>
 
       {/*Outer*/}

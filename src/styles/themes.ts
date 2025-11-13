@@ -9,8 +9,8 @@ export const themeStyles = {
     window: {
       background: 'bg-white',
       border: 'border border-neutral-300',
-      shadow: 'shadow-2xl',
-      glow: 'shadow-[0_0_30px_rgba(0,0,0,0.3)]',
+      shadow: 'shadow-[0_0_30px_rgba(0,0,0,0.2)]',
+      glow: 'shadow-[0_0_30px_rgba(0,0,0,0.35)]',
       borderRadius: 'rounded-lg',
       titleBar: {
         background: 'bg-white border-b border-neutral-200',
@@ -77,8 +77,8 @@ export const themeStyles = {
     window: {
       background: 'bg-neutral-900',
       border: 'border border-neutral-700',
-      shadow: 'shadow-2xl',
-      glow: 'shadow-[0_0_30px_rgba(0,0,0,0.3)]',
+      shadow: 'shadow-[0_0_30px_rgba(0,0,0,0.2)]',
+      glow: 'shadow-[0_0_30px_rgba(0,0,0,0.35)]',
       borderRadius: 'rounded-lg',
       titleBar: {
         background: 'bg-black border-b border-neutral-700',
@@ -141,8 +141,8 @@ export const themeStyles = {
     window: {
       background: 'bg-white',
       border: 'border border-neutral-400',
-      shadow: 'shadow-lg',
-      glow: 'shadow-[0_0_30px_rgba(0,0,0,0.3)]',
+      shadow: 'shadow-[0_0_30px_rgba(0,0,0,0.2)]',
+      glow: 'shadow-[0_0_30px_rgba(0,0,0,0.35)]',
       borderRadius: 'rounded-t-lg',
       titleBar: {
         background: 'bg-gradient-to-b from-blue-500 to-blue-600',

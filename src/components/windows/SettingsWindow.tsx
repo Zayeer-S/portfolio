@@ -8,11 +8,10 @@ export default function SettingsWindow() {
   const themes = [
     {
       value: 'modern-light',
-      label: 'Modern Light',
-      description: 'Clean and bright Windows 11 style',
+      label: 'Light Mode',
     },
-    { value: 'modern-dark', label: 'Modern Dark', description: 'Sleek dark Windows 11 style' },
-    { value: 'classic', label: 'Classic', description: 'Nostalgic Windows 7 style' },
+    { value: 'modern-dark', label: 'Dark Mode' },
+    { value: 'classic', label: 'Windows 7' },
   ] as const;
 
   return (
@@ -37,9 +36,6 @@ export default function SettingsWindow() {
                 <div>
                   <div className={`font-medium ${styles.window.content.text}`}>
                     {themeOption.label}
-                  </div>
-                  <div className={`text-sm ${styles.window.content.textSecondary}`}>
-                    {themeOption.description}
                   </div>
                 </div>
                 <div

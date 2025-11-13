@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
 import CalculatorDisplay from './CalculatorDisplay';
@@ -22,6 +22,29 @@ export default function CalculatorWindow() {
 
   const { theme } = useTheme();
   const styles = getThemeClasses(theme);
+
+  useEffect(() => {
+    const warmUpTheApiBaby = async () => {
+      try {
+        const requestBody: EvaluateRequest = {
+          expression: '0+0',
+          variables: {},
+        };
+
+        await fetch(`${env.NEXT_PUBLIC_EVALR_API_URL}/evaluate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+      } catch (error) {
+        console.debug('API Request Failed :( (Enjoy your cold start!):', error);
+      }
+    };
+
+    warmUpTheApiBaby();
+  }, []);
 
   const evaluateExpression = useCallback(
     async (expr: string, variables?: Record<string, number>): Promise<string> => {

@@ -5,6 +5,7 @@ import Button from '../shared/Button';
 import { useCalculatorKeyboard } from '../hooks/useCalculatorKeyboard';
 import { useCalculatorCallbacks } from '../hooks/useCalculatorCallbacks';
 import { useCalculatorOperations } from '../hooks/useCalculatorOperations';
+import { useCalculatorInput } from '../hooks/useCalculatorInput';
 
 export default function BooleanCalculator({ evaluateExpression }: CalculatorModeProps) {
   const [expression, setExpression] = useState('');
@@ -35,37 +36,15 @@ export default function BooleanCalculator({ evaluateExpression }: CalculatorMode
     setPreviousDisplay,
   });
 
-  const inputValue = useCallback(
-    (value: string) => {
-      if (waitingForNewInput) {
-        setExpression(value);
-        setDisplay(value);
-        setPreviousDisplay('');
-        setWaitingForNewInput(false);
-      } else {
-        const newExpression = expression + value;
-        setExpression(newExpression);
-        setDisplay(newExpression);
-      }
-    },
-    [expression, waitingForNewInput]
-  );
-
-  const inputNumber = useCallback(
-    (num: string) => {
-      if (waitingForNewInput) {
-        setExpression(num);
-        setDisplay(num);
-        setPreviousDisplay('');
-        setWaitingForNewInput(false);
-      } else {
-        const newExpression = expression + num;
-        setExpression(newExpression);
-        setDisplay(newExpression);
-      }
-    },
-    [expression, waitingForNewInput]
-  );
+  const { inputNumber, inputValue } = useCalculatorInput({
+    expression,
+    display,
+    waitingForNewInput,
+    setExpression,
+    setDisplay,
+    setWaitingForNewInput,
+    setPreviousDisplay,
+  });
 
   useCalculatorKeyboard({
     mode: 'boolean',

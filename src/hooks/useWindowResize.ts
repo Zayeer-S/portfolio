@@ -147,10 +147,10 @@ export function useWindowResize({
 
         // Handle horizontal resizing
         if (resizeDirection.includes('e')) {
-          newWidth = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH, resizeStart.width + deltaX); // CHANGE HERE: Use constant
+          newWidth = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH, resizeStart.width + deltaX);
         }
         if (resizeDirection.includes('w')) {
-          newWidth = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH, resizeStart.width - deltaX); // CHANGE HERE: Use constant
+          newWidth = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH, resizeStart.width - deltaX);
           if (newWidth > LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH) {
             newX = resizeStart.posX + deltaX;
           }
@@ -158,10 +158,10 @@ export function useWindowResize({
 
         // Handle vertical resizing
         if (resizeDirection.includes('s')) {
-          newHeight = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT, resizeStart.height + deltaY); // CHANGE HERE: Use constant
+          newHeight = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT, resizeStart.height + deltaY);
         }
         if (resizeDirection.includes('n')) {
-          newHeight = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT, resizeStart.height - deltaY); // CHANGE HERE: Use constant
+          newHeight = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT, resizeStart.height - deltaY);
           if (newHeight > LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT) {
             newY = resizeStart.posY + deltaY;
           }
@@ -184,7 +184,7 @@ export function useWindowResize({
       }
 
       if (isDragging) {
-        e.preventDefault(); // to avoid scrolling while dragging
+        e.preventDefault();
       }
     };
 

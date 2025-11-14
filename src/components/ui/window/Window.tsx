@@ -7,9 +7,12 @@ import { getThemeClasses } from '@/styles/themes';
 import { useWindowResize } from '@/hooks/useWindowResize';
 import { LAYOUT_CONSTANTS } from '@/constants/layout';
 import ResizeHandles from './ResizeHandles';
+import { VscChromeMinimize, VscChromeMaximize, VscChromeClose } from 'react-icons/vsc';
 
 interface WindowPropsWithTheme extends Omit<WindowProps, 'theme'> {
   theme?: Theme;
+  minWidth?: number;
+  minHeight?: number;
 }
 
 const getInitialDimensions = (windowId?: string) => {
@@ -101,7 +104,11 @@ export default function Window({
   zIndex,
   onFocus,
   theme,
+  minWidth,
+  minHeight,
 }: WindowPropsWithTheme) {
+  const [isFocused, setIsFocused] = useState(false);
+
   const windowRef = useRef<HTMLDivElement>(null);
   const initialDimensions = getInitialDimensions(id);
 
@@ -128,6 +135,19 @@ export default function Window({
       return () => clearTimeout(timer);
     }
   }, [isOpen, shouldRender]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (windowRef.current && !windowRef.current.contains(e.target as Node)) {
+        setIsFocused(false);
+      }
+    };
+
+    if (isFocused) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     const wasMinimized = prevMinimizedRef.current;
@@ -209,28 +229,7 @@ export default function Window({
     }
   }, [isOpen, shouldRender, isAnimating]);
 
-  const styles = theme
-    ? getThemeClasses(theme)
-    : {
-        window: {
-          background: 'bg-white',
-          border: 'border border-gray-400',
-          shadow: 'shadow-lg',
-          borderRadius: 'rounded-lg',
-          titleBar: {
-            background: 'bg-gradient-to-b from-blue-500 to-blue-600',
-            text: 'text-white',
-            buttons: {
-              minimize:
-                'bg-gradient-to-b from-gray-200 to-gray-300 hover:from-gray-100 hover:to-gray-200 border border-gray-400 text-black',
-              maximize:
-                'bg-gradient-to-b from-gray-200 to-gray-300 hover:from-gray-100 hover:to-gray-200 border border-gray-400 text-black',
-              close:
-                'bg-gradient-to-b from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 border border-gray-400 text-white',
-            },
-          },
-        },
-      };
+  const styles = getThemeClasses(theme || 'modern-light');
 
   const {
     handleMouseDown,
@@ -338,17 +337,20 @@ export default function Window({
         aria-hidden={isMinimized}
         className={`fixed ${styles.window.background} ${styles.window.border} ${styles.window.shadow} ${styles.window.borderRadius} flex flex-col ${
           isMinimized && !isAnimating ? 'hidden' : ''
-        } ${isMaximized ? 'rounded-none' : ''}`}
+        } ${isMaximized ? 'rounded-none' : ''} ${isFocused ? styles.window.glow : styles.window.shadow}`}
         style={{
           ...getWindowStyle(),
           ...getAnimationStyle(),
           zIndex: zIndex,
           pointerEvents: 'auto',
-          minWidth: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
-          minHeight: `${LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
+          minWidth: `${minWidth ?? LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
+          minHeight: `${minHeight ?? LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT}px`,
           willChange: isDragging || isResizing || isAnimating ? 'transform' : 'auto',
         }}
-        onMouseDown={onFocus}
+        onMouseDown={() => {
+          setIsFocused(true);
+          onFocus();
+        }}
       >
         {/* Title Bar */}
         <div
@@ -377,9 +379,9 @@ export default function Window({
                 e.stopPropagation();
                 onMinimize();
               }}
-              className={`w-6 h-5 ${styles.window.titleBar.buttons.minimize} text-xs mr-1`}
+              className={`w-6 h-5 ${styles.window.titleBar.buttons.minimize} flex items-center justify-center text-xs mr-1`}
             >
-              _
+              <VscChromeMinimize className="w-3 h-3" />
             </button>
             <button
               aria-label="Maximise the window"
@@ -388,9 +390,9 @@ export default function Window({
                 e.stopPropagation();
                 handleMaximize();
               }}
-              className={`w-6 h-5 ${styles.window.titleBar.buttons.maximize} text-xs mr-1`}
+              className={`w-6 h-5 ${styles.window.titleBar.buttons.maximize} flex items-center justify-center text-xs mr-1`}
             >
-              □
+              <VscChromeMaximize className="w-3 h-3" />
             </button>
             <button
               aria-label="Close the window"
@@ -399,9 +401,9 @@ export default function Window({
                 e.preventDefault();
                 handleClose();
               }}
-              className={`w-6 h-5 ${styles.window.titleBar.buttons.close} text-xs`}
+              className={`w-6 h-5 ${styles.window.titleBar.buttons.close} flex items-center justify-center text-xs`}
             >
-              ×
+              <VscChromeClose className="w-3 h-3" />
             </button>
           </div>
         </div>

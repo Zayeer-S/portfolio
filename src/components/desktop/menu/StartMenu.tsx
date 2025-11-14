@@ -3,6 +3,7 @@ import { StartMenuProps, WindowId } from '@/types';
 import { getThemeClasses } from '@/styles/themes';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getAppIcon } from '@/styles/icons';
+import { HiBars3 } from 'react-icons/hi2';
 
 export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuProps) {
   const [showPowerMenu, setShowPowerMenu] = useState(false);
@@ -92,7 +93,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
             title={isLeftColumnExpanded ? 'Collapse menu' : 'Expand menu'}
             style={{ width: '40px', height: '40px' }}
           >
-            <span className="text-lg select-none">☰</span>
+            <HiBars3 className="text-xl select-none" />
           </button>
         </div>
 

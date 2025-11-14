@@ -4,14 +4,14 @@ import { useWindowManager } from '@/hooks/useWindowManager';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
 
-import Window from '@/components/desktop/window/Window';
+import Window from '@/components/ui/window/Window';
 import DesktopGrid from '@/components/desktop/grid/DesktopGrid';
 import StartMenu from '@/components/desktop/menu/StartMenu';
 import Taskbar from '@/components/desktop/taskbar/Taskbar';
 import TypewriterIntro from '@/components/desktop/TypewriterIntro';
 
 import SettingsWindow from '@/components/windows/SettingsWindow';
-import CalculatorWindow from '@/components/windows/CalculatorWindow';
+import CalculatorWindow from '@/components/windows/calculator/CalculatorWindow';
 import NotepadWindow from '@/components/windows/NotepadWindow';
 import ProjectsWindow from '@/components/windows/ProjectsWindow';
 import TechnologiesWindow from '@/components/windows/TechnologiesWindow';
@@ -160,6 +160,8 @@ export default function Home() {
         onMaximize={() => maximizeWindow('calculator')}
         zIndex={getWindowZIndex('calculator')}
         onFocus={() => focusWindow('calculator')}
+        minWidth={320}
+        minHeight={495}
         theme={theme}
       >
         <CalculatorWindow />

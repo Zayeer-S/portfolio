@@ -87,7 +87,7 @@ export default function Home() {
 
       <Window
         id="projects"
-        title="Projects - Windows Explorer"
+        title="Projects"
         isOpen={windows.projects.isOpen}
         isMinimized={windows.projects.isMinimized}
         isMaximized={windows.projects.isMaximized}
@@ -103,7 +103,7 @@ export default function Home() {
 
       <Window
         id="technologies"
-        title="Technologies.exe - Control Panel"
+        title="Technologies"
         isOpen={windows.technologies.isOpen}
         isMinimized={windows.technologies.isMinimized}
         isMaximized={windows.technologies.isMaximized}
@@ -119,7 +119,7 @@ export default function Home() {
 
       <Window
         id="contact"
-        title="Contact.exe"
+        title="Contact"
         isOpen={windows.contact.isOpen}
         isMinimized={windows.contact.isMinimized}
         isMaximized={windows.contact.isMaximized}

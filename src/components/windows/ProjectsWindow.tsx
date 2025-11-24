@@ -110,8 +110,8 @@ export default function ProjectsWindow() {
         {projects.map((project, index) => (
           <article
             key={index}
-            className={`border rounded-lg p-4 ${styles.window.content.border} ${styles.window.content.hover} transition-all ${
-              expandedProject === index ? 'shadow-lg' : ''
+            className={`border rounded-lg p-4 ${styles.projects.card.border} ${styles.projects.card.hover} transition-all ${
+              expandedProject === index ? styles.projects.card.shadow : ''
             }`}
             aria-labelledby={`project-${index}-name`}
             aria-describedby={`project-${index}-description`}
@@ -146,7 +146,7 @@ export default function ProjectsWindow() {
                 <span
                   key={tagIndex}
                   role="listitem"
-                  className="text-xs bg-blue-100 dark:bg-blue-900 px-2 py-0.5 rounded text-blue-800 dark:text-blue-200"
+                  className={`text-xs ${styles.projects.tag.background} px-2 py-0.5 rounded ${styles.projects.tag.text}`}
                   aria-label={`Technology: ${tag}`}
                 >
                   {tag}
@@ -156,7 +156,7 @@ export default function ProjectsWindow() {
 
             {expandedProject === index && (
               <div
-                className={`mt-3 pt-3 border-t ${styles.window.content.border} space-y-2`}
+                className={`mt-3 pt-3 border-t ${styles.projects.expandedSection.border} space-y-2`}
                 role="region"
                 aria-label={`Detailed information about ${project.name}`}
               >
@@ -169,7 +169,7 @@ export default function ProjectsWindow() {
                 </div>
                 {project.learned && (
                   <div
-                    className={`mt-3 p-2 rounded bg-blue-50 dark:bg-blue-950 border ${styles.window.content.border}`}
+                    className={`mt-3 p-2 rounded ${styles.projects.expandedSection.background} border ${styles.projects.expandedSection.border}`}
                     role="complementary"
                     aria-label="Key learnings from this project"
                   >
@@ -185,7 +185,7 @@ export default function ProjectsWindow() {
             )}
 
             <div
-              className="flex items-center justify-between mt-3 pt-2 border-t border-gray-200 dark:border-gray-700"
+              className={`flex items-center justify-between mt-3 pt-2 border-t ${styles.projects.footer.border}`}
               role="group"
               aria-label={`Actions for ${project.name}`}
             >
@@ -193,7 +193,7 @@ export default function ProjectsWindow() {
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
+                className={`text-xs ${styles.projects.link.text} ${styles.projects.link.hover}`}
                 onClick={e => e.stopPropagation()}
                 aria-label={`View ${project.name} on GitHub (opens in new tab)`}
               >
@@ -218,7 +218,7 @@ export default function ProjectsWindow() {
       </div>
 
       <footer
-        className={`text-xs ${styles.window.content.textSecondary} text-center pt-2 border-t ${styles.window.content.border}`}
+        className={`text-xs ${styles.window.content.textSecondary} text-center pt-2 border-t ${styles.projects.footer.border}`}
         role="contentinfo"
       >
         View more on{' '}
@@ -226,7 +226,7 @@ export default function ProjectsWindow() {
           href="https://github.com/Zayeer-S"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 dark:text-blue-400 hover:underline"
+          className={`${styles.projects.link.text} ${styles.projects.link.hover}`}
           aria-label="View more projects on GitHub (opens in new tab)"
         >
           GitHub

@@ -68,6 +68,28 @@ export const themeStyles = {
         modeItemActive: 'bg-blue-100 text-blue-800',
       },
     },
+    projects: {
+      card: {
+        border: 'border-neutral-300',
+        hover: 'hover:bg-neutral-50',
+        shadow: 'shadow-lg',
+      },
+      tag: {
+        background: 'bg-blue-100',
+        text: 'text-blue-800',
+      },
+      expandedSection: {
+        border: 'border-neutral-300',
+        background: 'bg-blue-50',
+      },
+      link: {
+        text: 'text-blue-600',
+        hover: 'hover:underline',
+      },
+      footer: {
+        border: 'border-neutral-300',
+      },
+    },
   },
   'modern-dark': {
     desktop: {
@@ -130,6 +152,28 @@ export const themeStyles = {
         hamburger: 'hover:bg-neutral-800 text-neutral-100',
         modeItem: 'hover:bg-neutral-700 text-neutral-100',
         modeItemActive: 'bg-blue-700 text-blue-100',
+      },
+    },
+    projects: {
+      card: {
+        border: 'border-neutral-700',
+        hover: 'hover:bg-neutral-800',
+        shadow: 'shadow-lg',
+      },
+      tag: {
+        background: 'bg-blue-900',
+        text: 'text-blue-200',
+      },
+      expandedSection: {
+        border: 'border-neutral-700',
+        background: 'bg-blue-950',
+      },
+      link: {
+        text: 'text-blue-400',
+        hover: 'hover:underline',
+      },
+      footer: {
+        border: 'border-neutral-700',
       },
     },
   },
@@ -202,6 +246,28 @@ export const themeStyles = {
         hamburger: 'hover:bg-neutral-300 text-neutral-800',
         modeItem: 'hover:bg-blue-100 text-neutral-800',
         modeItemActive: 'bg-blue-200 text-blue-900',
+      },
+    },
+    projects: {
+      card: {
+        border: 'border-neutral-400',
+        hover: 'hover:bg-neutral-50',
+        shadow: 'shadow-lg',
+      },
+      tag: {
+        background: 'bg-blue-200',
+        text: 'text-blue-900',
+      },
+      expandedSection: {
+        border: 'border-neutral-400',
+        background: 'bg-blue-100',
+      },
+      link: {
+        text: 'text-blue-700',
+        hover: 'hover:underline',
+      },
+      footer: {
+        border: 'border-neutral-400',
       },
     },
   },

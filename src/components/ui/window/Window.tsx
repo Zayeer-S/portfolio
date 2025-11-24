@@ -327,6 +327,36 @@ export default function Window({
             transform: scale(1) translateY(0px);
           }
         }
+
+        .window-content {
+          scrollbar-gutter: stable;
+        }
+
+        .window-content::-webkit-scrollbar {
+          width: 12px;
+        }
+
+        .window-content::-webkit-scrollbar-track {
+          background: transparent;
+          border-radius: 0 0 0.5rem 0;
+        }
+
+        .window-content::-webkit-scrollbar-thumb {
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 6px;
+          border: 2px solid transparent;
+          background-clip: padding-box;
+        }
+
+        .window-content::-webkit-scrollbar-thumb:hover {
+          background: rgba(0, 0, 0, 0.5);
+          background-clip: padding-box;
+        }
+
+        .window-content::-webkit-scrollbar-corner {
+          background: transparent;
+          border-radius: 0 0 0.5rem 0;
+        }
       `}</style>
 
       <div
@@ -409,7 +439,11 @@ export default function Window({
         </div>
 
         {/* Window Content */}
-        <div className="p-4 overflow-auto flex-1" role="document" aria-label={`${title} content`}>
+        <div
+          className={`window-content p-4 overflow-auto flex-1 ${isMaximized ? '' : 'rounded-b-lg'}`}
+          role="document"
+          aria-label={`${title} content`}
+        >
           {children}
         </div>
 

@@ -1,4 +1,4 @@
-import { LAYOUT_CONSTANTS } from '@/constants/layout';
+import { LAYOUT_CONSTANTS } from '../constants';
 
 declare global {
   namespace Cypress {

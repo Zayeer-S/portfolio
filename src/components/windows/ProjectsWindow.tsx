@@ -2,25 +2,47 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
 import { useState } from 'react';
 
+interface WriteupSection {
+  heading?: string;
+  paragraph?: string;
+  bullets?: string[];
+}
+
+interface Project {
+  name: string;
+  description: string;
+  details: string;
+  tags: string[];
+  writeup: WriteupSection[];
+  learned: string;
+  link: string;
+}
+
 export default function ProjectsWindow() {
   const { theme } = useTheme();
   const styles = getThemeClasses(theme);
   const [expandedProject, setExpandedProject] = useState<number | null>(null);
 
-  const projects = [
+  const projects: Project[] = [
     {
       name: 'LuckyNest',
       description: 'Full-Stack Hotel and Guest Management System',
       details:
         'Led 5-person team. Integrated Stripe API and 2FA. Selected as best solution by client.',
-      tags: ['PHP', 'MySQL', 'Stripe', '2FA'],
+      tags: ['PHP', 'JavaScript', 'MySQL', 'Stripe', 'Agile'],
       writeup: [
-        'Implemented an Agile delivery model with daily standups and iterative client feedback, using a Kanban-style Trello workflow.',
-        '',
-        'Leadership Highlights:',
-        '• Chose to exclude frameworks to ensure all team members could contribute from day one given varied technical experience.',
-        '• Prevented potential API key exposure by guiding a teammate to apply secure environment configuration via .env.',
-        '• Introduced anonymous peer assessment to ensure fair contribution evaluation and improve accountability.',
+        {
+          paragraph:
+            'Implemented an Agile delivery model with daily standups and iterative client feedback, using a Kanban-style Trello workflow.',
+        },
+        {
+          heading: 'Leadership Highlights',
+          bullets: [
+            'Chose to exclude frameworks to ensure all team members could contribute from day one given varied technical experience.',
+            'Prevented potential API key exposure by guiding a teammate to apply secure environment configuration via .env.',
+            'Introduced anonymous peer assessment to ensure fair contribution evaluation and improve accountability.',
+          ],
+        },
       ],
       learned:
         'Recognised the impact of poor code quality and researched industry standards, leading me to adopt configs, DAOs, Service Layers and CI/CD patterns in later projects such as EpochAI.',
@@ -33,23 +55,34 @@ export default function ProjectsWindow() {
         'Scalable data pipeline processing 1M+ words. XGBoost model with Monte Carlo simulations.',
       tags: ['Python', 'PostgreSQL', 'XGBoost', 'CI/CD'],
       writeup: [
-        'Architected to apply industry-grade development practices at scale, directly informed by lessons from LuckyNest.',
-        '',
-        'Technical Achievements:',
-        '• Config-driven architecture validated via Pydantic, enabling single-point modification of critical variables.',
-        '• Built full CI/CD pipeline using GitHub Actions, Ruff linting, pre-commit hooks, and MyPy for type validation.',
-        '• Designed database layer using Alembic migrations, DAOs and a Service Layer for separation of concerns.',
-        '• Extensive PyTest suite covering both positive and negative test paths.',
-        '• Automated data ingest from CSV and Wikipedia API with rate limits.',
-        '• Selected XGBoost for its performance on structured datasets; extended via Monte Carlo simulations.',
-        '• Pluggable architecture using abstract base classes enabled new data collectors/cleaners to be added in under 1 hour.',
-        '',
-        'Major Issues Solved:',
-        '• Initially implemented dynamic JSON schema generation for storage — identified as unnecessary due to defined fields and refactored to static types to improve performance and complexity.',
-        '• Config occasionally allowed invalid values — introduced Pydantic validation and a constraints config file to guarantee type safety and prevent unreasonable parameters.',
-        '• Reduced code duplication by transitioning from standalone DAOs to a DAO Factory pattern with abstract base class support.',
-        '',
-        'Provided hands-on experience with ML ops, scalable pipelines and enterprise-level code organisation.',
+        {
+          paragraph:
+            'Architected to apply industry-grade development practices at scale, directly informed by lessons from LuckyNest.',
+        },
+        {
+          heading: 'Technical Achievements',
+          bullets: [
+            'Config-driven architecture validated via Pydantic, enabling single-point modification of critical variables.',
+            'Built full CI/CD pipeline using GitHub Actions, Ruff linting, pre-commit hooks, and MyPy for type validation.',
+            'Designed database layer using Alembic migrations, DAOs and a Service Layer for separation of concerns.',
+            'Extensive PyTest suite covering both positive and negative test paths.',
+            'Automated data ingest from CSV and Wikipedia API with rate limits.',
+            'Selected XGBoost for its performance on structured datasets; extended via Monte Carlo simulations.',
+            'Pluggable architecture using abstract base classes enabled new data collectors/cleaners to be added in under 1 hour.',
+          ],
+        },
+        {
+          heading: 'Major Issues Solved',
+          bullets: [
+            'Initially implemented dynamic JSON schema generation for storage — identified as unnecessary due to defined fields and refactored to static types to improve performance and complexity.',
+            'Config occasionally allowed invalid values — introduced Pydantic validation and a constraints config file to guarantee type safety and prevent unreasonable parameters.',
+            'Reduced code duplication by transitioning from standalone DAOs to a DAO Factory pattern with abstract base class support.',
+          ],
+        },
+        {
+          paragraph:
+            'Provided hands-on experience with ML ops, scalable pipelines and enterprise-level code organisation.',
+        },
       ],
       learned:
         'Applied professional engineering practices including OOP, CI/CD, unit testing, configuration management, ML integration and migration runners.',
@@ -59,24 +92,35 @@ export default function ProjectsWindow() {
       name: 'Portfolio Website',
       description: 'Interactive Windows-Inspired Portfolio UI',
       details: 'Draggable windows, custom themes, responsive design. E2E testing with Cypress.',
-      tags: ['React', 'Next.js', 'TypeScript', 'Cypress', 'Husky', 'CI/CD'],
+      tags: ['React', 'Next.js', 'TypeScript', 'Cypress', 'CI/CD'],
       writeup: [
-        'Engineered to showcase my projects using senior-level web development principles through an interactive Windows-style UI.',
-        '',
-        'Technical Achievements:',
-        '• Implemented complex state management through custom React hooks handling window positioning, dragging and resizing.',
-        '• Integrated Evalr REST API as an external microservice, replacing native calculator logic.',
-        '• Ensured WCAG compliance using comprehensive ARIA labelling for screen reader support.',
-        '• Set up Husky for CI/CD pre-commit automation.',
-        '• Validated cross-platform behaviour using port forwarding, iOS/Android emulation and manual touch interaction testing.',
-        '• Optimised layout responsiveness for desktop, tablet and mobile viewports.',
-        '',
-        'Major Issues Solved:',
-        '• Window hydration mismatch caused desktop icon positions to reset — resolved by server-side default grid render followed by hydration-based position loading.',
-        '• Theme switching for light, dark and Windows 7 variants became hard to maintain — consolidated into a dedicated theme file for structured management.',
-        '• On mobile devices, windows initially rendered outside the viewport — fixed via viewport boundary calculations and position constraints.',
-        '',
-        'Showcases full-stack execution, interaction design and accessibility awareness.',
+        {
+          paragraph:
+            'Engineered to showcase my projects using senior-level web development principles through an interactive Windows-style UI.',
+        },
+        {
+          heading: 'Technical Achievements',
+          bullets: [
+            'Implemented complex state management through custom React hooks handling window positioning, dragging and resizing.',
+            'Integrated Evalr REST API as an external microservice, replacing native calculator logic.',
+            'Ensured WCAG compliance using comprehensive ARIA labelling for screen reader support.',
+            'Set up Husky for CI/CD pre-commit automation.',
+            'Validated cross-platform behaviour using port forwarding, iOS/Android emulation and manual touch interaction testing.',
+            'Optimised layout responsiveness for desktop, tablet and mobile viewports.',
+          ],
+        },
+        {
+          heading: 'Major Issues Solved',
+          bullets: [
+            'Window hydration mismatch caused desktop icon positions to reset — resolved by server-side default grid render followed by hydration-based position loading.',
+            'Theme switching for light, dark and Windows 7 variants became hard to maintain — consolidated into a dedicated theme file for structured management.',
+            'On mobile devices, windows initially rendered outside the viewport — fixed via viewport boundary calculations and position constraints.',
+          ],
+        },
+        {
+          paragraph:
+            'Showcases full-stack execution, interaction design and accessibility awareness.',
+        },
       ],
       learned:
         'Gained experience with complex React systems, accessibility-first development, external microservice integration and mobile interaction testing.',
@@ -86,23 +130,34 @@ export default function ProjectsWindow() {
       name: 'Evalr',
       description: 'REST API for Expression Evaluation',
       details: 'API using Shunting Yard algorithm containerized and deployed to AWS Lambda.',
-      tags: ['C#', 'AWS', 'Docker', 'API Gateway', 'Husky', 'CI/CD'],
+      tags: ['C#', 'AWS', 'Docker', 'API Gateway', 'CI/CD'],
       writeup: [
-        'Refactored an academic prototype into a production-grade REST API supporting arithmetic, boolean and algebraic expression evaluation.',
-        '',
-        'Technical Achievements:',
-        '• Implemented the Shunting Yard algorithm for expression parsing.',
-        '• Containerised via Docker to ensure consistent deployment environments.',
-        '• Deployed to AWS Lambda via API Gateway using serverless architecture.',
-        '• Added rate limiting using AWS WAF for protection against abuse.',
-        '• Tested extensively using Postman for API validation.',
-        '• Built CI/CD pipeline using Husky and GitHub Actions.',
-        '',
-        'Major Issues Resolved:',
-        '• Solved image registry access failures from mcr.microsoft.com using VPN-based workarounds.',
-        '• Resolved IAM permission issues through targeted debugging and AWS documentation review.',
-        '',
-        'Integrated as a live microservice within my portfolio site for real-time demonstration.',
+        {
+          paragraph:
+            'Refactored an academic prototype into a production-grade REST API supporting arithmetic, boolean and algebraic expression evaluation.',
+        },
+        {
+          heading: 'Technical Achievements',
+          bullets: [
+            'Implemented the Shunting Yard algorithm for expression parsing.',
+            'Containerised via Docker to ensure consistent deployment environments.',
+            'Deployed to AWS Lambda via API Gateway using serverless architecture.',
+            'Added rate limiting using AWS WAF for protection against abuse.',
+            'Tested extensively using Postman for API validation.',
+            'Built CI/CD pipeline using Husky and GitHub Actions.',
+          ],
+        },
+        {
+          heading: 'Major Issues Resolved',
+          bullets: [
+            'Solved image registry access failures from mcr.microsoft.com using VPN-based workarounds.',
+            'Resolved IAM permission issues through targeted debugging and AWS documentation review.',
+          ],
+        },
+        {
+          paragraph:
+            'Integrated as a live microservice within my portfolio site for real-time demonstration.',
+        },
       ],
       learned:
         'Developed cloud-ready architecture, containerisation for deployment consistency and problem-solving experience with IAM/network debugging.',
@@ -112,7 +167,7 @@ export default function ProjectsWindow() {
 
   return (
     <div className="space-y-4" role="main" aria-label="Projects list">
-      <div className="space-y-3 pr-2">
+      <div className="space-y-3">
         {projects.map((project, index) => (
           <article
             key={index}
@@ -162,15 +217,33 @@ export default function ProjectsWindow() {
 
             {expandedProject === index && (
               <div
-                className={`mt-3 pt-3 border-t ${styles.projects.expandedSection.border} space-y-2`}
+                className={`mt-3 pt-3 border-t ${styles.projects.expandedSection.border} space-y-3`}
                 role="region"
                 aria-label={`Detailed information about ${project.name}`}
               >
-                <div className={`text-xs ${styles.window.content.text} leading-relaxed space-y-2`}>
-                  {project.writeup.map((paragraph, pIndex) => (
-                    <p key={pIndex} className={paragraph === '' ? 'h-2' : ''}>
-                      {paragraph}
-                    </p>
+                <div className={`text-xs ${styles.window.content.text} leading-relaxed space-y-3`}>
+                  {project.writeup.map((section, sectionIndex) => (
+                    <div key={sectionIndex}>
+                      {section.heading && (
+                        <h4 className={`font-semibold ${styles.window.content.text} mb-1.5`}>
+                          {section.heading}:
+                        </h4>
+                      )}
+                      {section.paragraph && (
+                        <p className={styles.window.content.textSecondary}>{section.paragraph}</p>
+                      )}
+                      {section.bullets && (
+                        <ul
+                          className={`list-disc list-inside space-y-1 ${styles.window.content.textSecondary}`}
+                        >
+                          {section.bullets.map((bullet, bulletIndex) => (
+                            <li key={bulletIndex} className="leading-relaxed">
+                              {bullet}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                   ))}
                 </div>
                 {project.learned && (

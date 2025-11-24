@@ -96,6 +96,8 @@ export default function Home() {
         onMaximize={() => maximizeWindow('projects')}
         zIndex={getWindowZIndex('projects')}
         onFocus={() => focusWindow('projects')}
+        minWidth={425}
+        minHeight={350}
         theme={theme}
       >
         <ProjectsWindow />

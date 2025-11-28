@@ -75,7 +75,7 @@ export default function ProjectsWindow() {
           heading: 'Major Issues Solved',
           bullets: [
             'Initially implemented dynamic JSON schema generation for storage — identified as unnecessary due to defined fields and refactored to static types to improve performance and complexity.',
-            'Config occasionally allowed invalid values — introduced Pydantic validation and a constraints config file to guarantee type safety and prevent unreasonable parameters.',
+            'Config allowed invalid types due to lack of type validation — introduced Pydantic validation and a constraints config file to guarantee type safety and prevent unreasonable parameters.',
             'Reduced code duplication by transitioning from standalone DAOs to a DAO Factory pattern with abstract base class support.',
           ],
         },

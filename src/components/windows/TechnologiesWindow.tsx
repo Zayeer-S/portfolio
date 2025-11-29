@@ -49,6 +49,11 @@ export default function TechnologiesWindow() {
     setHasAttemptedQuiz(true);
   };
 
+  const handleRetryQuiz = () => {
+    setIsQuizActive(true);
+    setHasAttemptedQuiz(true);
+  };
+
   const handleRejectQuiz = () => {
     setShowQuizPrompt(false);
     setIsFlickering(true);
@@ -229,7 +234,7 @@ export default function TechnologiesWindow() {
 
       <div className={`mt-4 pt-4 border-t ${styles.window.content.border}`}>
         <button
-          onClick={() => setShowQuizPrompt(true)}
+          onClick={() => handleRetryQuiz()}
           className={`text-sm ${styles.window.content.accent} hover:underline`}
         >
           {hasAttemptedQuiz ? 'Quiz again?' : 'Want to try the quiz?'}

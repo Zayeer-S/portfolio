@@ -20,6 +20,7 @@ export default function TechnologiesWindow() {
 
   const [showQuizPrompt, setShowQuizPrompt] = useState(true);
   const [isQuizActive, setIsQuizActive] = useState(false);
+  const [hasAttemptedQuiz, setHasAttemptedQuiz] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -45,6 +46,7 @@ export default function TechnologiesWindow() {
   const handleAcceptQuiz = () => {
     setShowQuizPrompt(false);
     setIsQuizActive(true);
+    setHasAttemptedQuiz(true);
   };
 
   const handleRejectQuiz = () => {
@@ -230,7 +232,7 @@ export default function TechnologiesWindow() {
           onClick={() => setShowQuizPrompt(true)}
           className={`text-sm ${styles.window.content.accent} hover:underline`}
         >
-          Restart quiz
+          {hasAttemptedQuiz ? 'Quiz again?' : 'Want to try the quiz?'}
         </button>
       </div>
     </div>

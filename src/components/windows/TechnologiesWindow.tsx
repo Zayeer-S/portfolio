@@ -76,7 +76,7 @@ export default function TechnologiesWindow() {
     setSelectedAnswer(null);
     setShowResult(false);
     setIsQuizActive(false);
-    setShowQuizPrompt(true);
+    setShowQuizPrompt(false);
   };
 
   // I see push and all I can think of is jikstra's shunting yard 😭

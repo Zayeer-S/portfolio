@@ -90,6 +90,31 @@ export const themeStyles = {
         border: 'border-neutral-300',
       },
     },
+    technologies: {
+      card: {
+        border: 'border-neutral-300',
+        background: 'bg-white',
+      },
+      tag: {
+        background: 'bg-blue-100',
+        text: 'text-blue-800',
+      },
+      quiz: {
+        prompt: {
+          background: 'bg-white',
+          border: 'border-neutral-300',
+        },
+        button: {
+          primary: 'bg-blue-500 hover:bg-blue-600 text-white',
+          secondary: 'border-neutral-300 hover:bg-neutral-50',
+        },
+        answer: {
+          default: 'border-neutral-300 hover:bg-neutral-50',
+          correct: 'bg-green-100 border-green-500 text-green-800',
+          incorrect: 'bg-red-100 border-red-500 text-red-800',
+        },
+      },
+    },
   },
   'modern-dark': {
     desktop: {
@@ -174,6 +199,31 @@ export const themeStyles = {
       },
       footer: {
         border: 'border-neutral-700',
+      },
+    },
+    technologies: {
+      card: {
+        border: 'border-neutral-700',
+        background: 'bg-neutral-900',
+      },
+      tag: {
+        background: 'bg-blue-900',
+        text: 'text-blue-200',
+      },
+      quiz: {
+        prompt: {
+          background: 'bg-neutral-900',
+          border: 'border-neutral-700',
+        },
+        button: {
+          primary: 'bg-blue-700 hover:bg-blue-600 text-white',
+          secondary: 'border-neutral-700 hover:bg-neutral-800',
+        },
+        answer: {
+          default: 'border-neutral-700 hover:bg-neutral-800',
+          correct: 'bg-green-900 border-green-700 text-green-200',
+          incorrect: 'bg-red-900 border-red-700 text-red-200',
+        },
       },
     },
   },
@@ -268,6 +318,32 @@ export const themeStyles = {
       },
       footer: {
         border: 'border-neutral-400',
+      },
+    },
+    technologies: {
+      card: {
+        border: 'border-neutral-400',
+        background: 'bg-white',
+      },
+      tag: {
+        background: 'bg-blue-200',
+        text: 'text-blue-900',
+      },
+      quiz: {
+        prompt: {
+          background: 'bg-white',
+          border: 'border-neutral-400',
+        },
+        button: {
+          primary:
+            'bg-gradient-to-b from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white',
+          secondary: 'border-neutral-400 hover:bg-neutral-50',
+        },
+        answer: {
+          default: 'border-neutral-400 hover:bg-neutral-50',
+          correct: 'bg-green-100 border-green-500 text-green-800',
+          incorrect: 'bg-red-100 border-red-500 text-red-800',
+        },
       },
     },
   },

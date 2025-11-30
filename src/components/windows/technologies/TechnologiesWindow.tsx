@@ -103,7 +103,7 @@ export default function TechnologiesWindow() {
     setShowQuizPrompt(true);
     setIsQuizActive(false);
     setHasAttemptedQuiz(false);
-    setHasFinishedQuiz(true);
+    setHasFinishedQuiz(false);
     setHasSkippedQuiz(false);
     setVisibleTechs(new Set());
     setCorrectlyAnsweredTechs(new Set());
@@ -133,11 +133,13 @@ export default function TechnologiesWindow() {
     setHasSkippedQuiz(false);
     setHasFinishedQuiz(true);
 
-    const incorrectTechs = technologies
-      .filter(tech => !correctlyAnsweredTechs.has(tech.name))
+    const askedTechs = new Set(quizQuestions.map(q => q.technology));
+
+    const unansweredTechs = technologies
+      .filter(tech => !askedTechs.has(tech.name))
       .map(tech => tech.name);
 
-    incorrectTechs.forEach((tech, index) => {
+    unansweredTechs.forEach((tech, index) => {
       flickerInTechnologies(tech, 1000 + index * 100);
     });
   };

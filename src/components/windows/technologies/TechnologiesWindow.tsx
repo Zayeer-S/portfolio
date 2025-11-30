@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import QuizPrompt from './QuizPrompt';
 import Quiz from './Quiz';
 import TechnologiesList from './TechnologiesList';
+import { fa } from 'zod/locales';
+import { number } from 'zod';
 
 interface Technology {
   name: string;
@@ -16,6 +18,15 @@ interface QuizQuestion {
   technology: string;
 }
 
+interface QuizState {
+  hasFinishedQuiz: boolean;
+  hasSkippedQuiz: boolean;
+  score: number;
+  correctlyAnsweredTechs: string[];
+  incorrectlyAnsweredTechs: string[];
+  visibleTechs: string[];
+}
+
 export default function TechnologiesWindow() {
   const { theme } = useTheme();
 
@@ -23,12 +34,15 @@ export default function TechnologiesWindow() {
   const [isQuizActive, setIsQuizActive] = useState(false);
   const [hasAttemptedQuiz, setHasAttemptedQuiz] = useState(false);
   const [hasFinishedQuiz, setHasFinishedQuiz] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
   const [hasSkippedQuiz, setHasSkippedQuiz] = useState(false);
   const [isFlickering, setIsFlickering] = useState(false);
   const [visibleTechs, setVisibleTechs] = useState<Set<string>>(new Set());
   const [flickeringTechs, setFlickeringTechs] = useState<Set<string>>(new Set());
   const [correctlyAnsweredTechs, setCorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
   const [incorrectlyAnsweredTechs, setIncorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
+
+  const QUIZ_STATE_KEY = 'technologies-quiz-state';
 
   const technologies: Technology[] = [
     { name: 'Python', category: 'Languages' },
@@ -91,6 +105,25 @@ export default function TechnologiesWindow() {
     }
   }, [isFlickering]);
 
+  useEffect(() => {
+    const savedState = localStorage.getItem(QUIZ_STATE_KEY);
+    if (savedState) {
+      try {
+        const parsed: QuizState = JSON.parse(savedState);
+        setHasFinishedQuiz(parsed.hasFinishedQuiz);
+        setHasSkippedQuiz(parsed.hasSkippedQuiz);
+        setCorrectlyAnsweredTechs(new Set(parsed.correctlyAnsweredTechs));
+        setIncorrectlyAnsweredTechs(new Set(parsed.incorrectlyAnsweredTechs));
+        setVisibleTechs(new Set(parsed.visibleTechs));
+        setHasAttemptedQuiz(parsed.hasFinishedQuiz || parsed.hasSkippedQuiz);
+
+        if (parsed.hasFinishedQuiz || parsed.hasSkippedQuiz) setShowQuizPrompt(false);
+      } catch (error) {
+        console.error('Failed to load quiz state:', error);
+      }
+    }
+  }, []);
+
   const handleAcceptQuiz = () => {
     setShowQuizPrompt(false);
     setIsQuizActive(true);
@@ -108,6 +141,8 @@ export default function TechnologiesWindow() {
     setVisibleTechs(new Set());
     setCorrectlyAnsweredTechs(new Set());
     setIncorrectlyAnsweredTechs(new Set());
+
+    localStorage.removeItem(QUIZ_STATE_KEY);
   };
 
   const handleRejectQuiz = () => {
@@ -115,7 +150,20 @@ export default function TechnologiesWindow() {
     setHasAttemptedQuiz(true);
     setHasSkippedQuiz(true);
     setIsFlickering(true);
-    setTimeout(() => setIsFlickering(false), 1000);
+
+    setTimeout(() => {
+      setIsFlickering(false);
+
+      const stateToSave: QuizState = {
+        hasFinishedQuiz: false,
+        hasSkippedQuiz: true,
+        score: 0,
+        correctlyAnsweredTechs: [],
+        incorrectlyAnsweredTechs: [],
+        visibleTechs: technologies.map(t => t.name),
+      };
+      localStorage.setItem(QUIZ_STATE_KEY, JSON.stringify(stateToSave));
+    }, 1000);
   };
 
   const handleAnswerCorrect = (technology: string, isCorrect: boolean) => {
@@ -142,6 +190,24 @@ export default function TechnologiesWindow() {
     unansweredTechs.forEach((tech, index) => {
       flickerInTechnologies(tech, 1000 + index * 100);
     });
+
+    setTimeout(() => {
+      const stateToSave: QuizState = {
+        hasFinishedQuiz: true,
+        hasSkippedQuiz: false,
+        score: score,
+        correctlyAnsweredTechs: Array.from(correctlyAnsweredTechs),
+        incorrectlyAnsweredTechs: Array.from(incorrectlyAnsweredTechs),
+        visibleTechs: Array.from(
+          new Set([
+            ...Array.from(correctlyAnsweredTechs),
+            ...Array.from(incorrectlyAnsweredTechs),
+            ...unansweredTechs,
+          ])
+        ),
+      };
+      localStorage.setItem(QUIZ_STATE_KEY, JSON.stringify(stateToSave));
+    }, 3000);
   };
 
   return (

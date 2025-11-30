@@ -14,7 +14,7 @@ import SettingsWindow from '@/components/windows/SettingsWindow';
 import CalculatorWindow from '@/components/windows/calculator/CalculatorWindow';
 import NotepadWindow from '@/components/windows/NotepadWindow';
 import ProjectsWindow from '@/components/windows/ProjectsWindow';
-import TechnologiesWindow from '@/components/windows/TechnologiesWindow';
+import TechnologiesWindow from '@/components/windows/technologies/TechnologiesWindow';
 import ContactWindow from '@/components/windows/ContactWindow';
 import CreditsWindow from '@/components/windows/CreditsWindow';
 

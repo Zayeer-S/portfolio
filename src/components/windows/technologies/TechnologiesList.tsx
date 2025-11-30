@@ -10,6 +10,7 @@ interface TechnologiesListProps {
   theme: Theme;
   technologies: Technology[];
   hasAttemptedQuiz: boolean;
+  hasFinishedQuiz: boolean;
   hasSkippedQuiz: boolean;
   visibleTechs: Set<string>;
   flickeringTechs: Set<string>;
@@ -22,6 +23,7 @@ export default function TechnologiesList({
   theme,
   technologies,
   hasAttemptedQuiz,
+  hasFinishedQuiz,
   hasSkippedQuiz,
   visibleTechs,
   flickeringTechs,
@@ -84,14 +86,16 @@ export default function TechnologiesList({
         ))}
       </div>
 
-      <div className={`mt-4 pt-4 border-t ${styles.window.content.border}`}>
-        <button
-          onClick={onRetryQuiz}
-          className={`text-sm ${styles.window.content.accent} hover:underline`}
-        >
-          {hasSkippedQuiz ? 'Wanna try it now?' : 'Retry quiz?'}
-        </button>
-      </div>
+      {(hasFinishedQuiz || hasSkippedQuiz) && (
+        <div className={`mt-4 pt-4 border-t ${styles.window.content.border}`}>
+          <button
+            onClick={onRetryQuiz}
+            className={`text-sm ${styles.window.content.accent} hover:underline`}
+          >
+            {hasSkippedQuiz ? 'Wanna try it now?' : 'Retry quiz?'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

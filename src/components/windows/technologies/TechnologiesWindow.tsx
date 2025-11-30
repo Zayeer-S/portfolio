@@ -22,6 +22,7 @@ export default function TechnologiesWindow() {
   const [showQuizPrompt, setShowQuizPrompt] = useState(true);
   const [isQuizActive, setIsQuizActive] = useState(false);
   const [hasAttemptedQuiz, setHasAttemptedQuiz] = useState(false);
+  const [hasFinishedQuiz, setHasFinishedQuiz] = useState(false);
   const [hasSkippedQuiz, setHasSkippedQuiz] = useState(false);
   const [isFlickering, setIsFlickering] = useState(false);
   const [visibleTechs, setVisibleTechs] = useState<Set<string>>(new Set());
@@ -102,6 +103,7 @@ export default function TechnologiesWindow() {
     setShowQuizPrompt(true);
     setIsQuizActive(false);
     setHasAttemptedQuiz(false);
+    setHasFinishedQuiz(true);
     setHasSkippedQuiz(false);
     setVisibleTechs(new Set());
     setCorrectlyAnsweredTechs(new Set());
@@ -129,6 +131,7 @@ export default function TechnologiesWindow() {
     setIsQuizActive(false);
     setShowQuizPrompt(false);
     setHasSkippedQuiz(false);
+    setHasFinishedQuiz(true);
 
     const incorrectTechs = technologies
       .filter(tech => !correctlyAnsweredTechs.has(tech.name))
@@ -158,6 +161,7 @@ export default function TechnologiesWindow() {
         theme={theme}
         technologies={technologies}
         hasAttemptedQuiz={hasAttemptedQuiz}
+        hasFinishedQuiz={hasFinishedQuiz}
         hasSkippedQuiz={hasSkippedQuiz}
         visibleTechs={visibleTechs}
         flickeringTechs={flickeringTechs}

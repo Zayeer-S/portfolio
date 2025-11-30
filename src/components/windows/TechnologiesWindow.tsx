@@ -1,6 +1,7 @@
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { fa } from 'zod/locales';
 
 interface Technology {
   name: string;
@@ -26,6 +27,8 @@ export default function TechnologiesWindow() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [isFlickering, setIsFlickering] = useState(false);
+  const [visibleTechs, setVisibleTechs] = useState<Set<string>>(new Set());
+  const [flickeringTechs, setFlickeringTechs] = useState<Set<string>>(new Set());
 
   const technologies: Technology[] = [
     { name: 'Python', category: 'Languages' },
@@ -43,15 +46,62 @@ export default function TechnologiesWindow() {
     },
   ];
 
+  const flickerInTechnologies = (techName: string, delay: number = 0) => {
+    setTimeout(() => {
+      setFlickeringTechs(prev => new Set(prev).add(techName));
+
+      const flickerPattern = [
+        { time: 0, visible: false },
+        { time: 25, visible: true },
+        { time: 50, visible: false },
+        { time: 75, visible: true },
+        { time: 100, visible: false },
+        { time: 150, visible: true },
+      ];
+
+      flickerPattern.forEach(({ time, visible }) => {
+        setTimeout(() => {
+          if (visible) {
+            setVisibleTechs(prev => new Set(prev).add(techName));
+          } else {
+            setVisibleTechs(prev => {
+              const newSet = new Set(prev);
+              newSet.delete(techName);
+              return newSet;
+            });
+          }
+        }, time);
+      });
+
+      setTimeout(() => {
+        setFlickeringTechs(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(techName);
+          return newSet;
+        });
+      }, 500);
+    }, delay);
+  };
+
+  useEffect(() => {
+    if (isFlickering) {
+      technologies.forEach((tech, index) => {
+        flickerInTechnologies(tech.name, index * 100);
+      });
+    }
+  }, [isFlickering]);
+
   const handleAcceptQuiz = () => {
     setShowQuizPrompt(false);
     setIsQuizActive(true);
     setHasAttemptedQuiz(true);
+    setVisibleTechs(new Set());
   };
 
   const handleRetryQuiz = () => {
     setIsQuizActive(true);
     setHasAttemptedQuiz(true);
+    setVisibleTechs(new Set());
   };
 
   const handleRejectQuiz = () => {
@@ -84,9 +134,23 @@ export default function TechnologiesWindow() {
     setShowResult(false);
     setIsQuizActive(false);
     setShowQuizPrompt(false);
+
+    const correctTechs = quizQuestions.filter((_, idx) => idx < score).map(q => q.technology);
+
+    correctTechs.forEach((tech, index) => {
+      flickerInTechnologies(tech, index * 100);
+    });
+
+    const incorrectTechs = technologies
+      .filter(tech => !correctTechs.includes(tech.name))
+      .map(tech => tech.name);
+
+    incorrectTechs.forEach((tech, index) => {
+      flickerInTechnologies(tech, 3000 + index * 100);
+    });
   };
 
-  // I see push and all I can think of is jikstra's shunting yard 😭
+  // I see push and all I can think of is dj jikstra's shunting yard 😭
   const groupedTechnologies = technologies.reduce(
     (acc, tech) => {
       if (!acc[tech.category]) {
@@ -218,16 +282,26 @@ export default function TechnologiesWindow() {
         <div key={category} className="space-y-2">
           <h3 className={`font-semibold ${styles.window.content.text} text-sm`}>{category}</h3>
           <div className="flex flex-wrap gap-2">
-            {techs.map((tech, index) => (
-              <div
-                key={index}
-                className={`px-3 py-1.5 rounded ${styles.technologies.tag.background} ${styles.technologies.tag.text} ${
-                  isFlickering ? 'opacity-50' : 'opacity-100'
-                } transition-opacity duration-100`}
-              >
-                {tech.name}
-              </div>
-            ))}
+            {techs.map((tech, index) => {
+              const isVisible = !hasAttemptedQuiz || visibleTechs.has(tech.name);
+              const isCurrentlyFlickering = flickeringTechs.has(tech.name);
+
+              return (
+                <div
+                  key={index}
+                  className={`px-3 py-1.5 rounded ${styles.technologies.tag.background} ${styles.technologies.tag.text} transition-opacity duration-100 ${
+                    isVisible ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  style={{
+                    transition: isCurrentlyFlickering
+                      ? 'opacity 50ms ease-in-out'
+                      : 'opacity 100ms ease-in-out',
+                  }}
+                >
+                  {tech.name}
+                </div>
+              );
+            })}
           </div>
         </div>
       ))}

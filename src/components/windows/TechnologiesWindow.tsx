@@ -234,7 +234,7 @@ export default function TechnologiesWindow() {
           <h3 className={`text-lg font-semibold mb-4 ${styles.window.content.text}`}>
             {question.question}
           </h3>
-          <div className="space-y-2">
+          <div className="grid grid-cols-3 gap-2">
             {question.options.map((option, index) => {
               const isCorrect = index === question.correctAns;
               const isSelected = selectedAnswer === index;

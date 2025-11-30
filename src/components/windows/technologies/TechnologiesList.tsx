@@ -10,8 +10,11 @@ interface TechnologiesListProps {
   theme: Theme;
   technologies: Technology[];
   hasAttemptedQuiz: boolean;
+  hasSkippedQuiz: boolean;
   visibleTechs: Set<string>;
   flickeringTechs: Set<string>;
+  correctlyAnsweredTechs: Set<string>;
+  incorrectlyAnsweredTechs: Set<string>;
   onRetryQuiz: () => void;
 }
 
@@ -19,13 +22,16 @@ export default function TechnologiesList({
   theme,
   technologies,
   hasAttemptedQuiz,
+  hasSkippedQuiz,
   visibleTechs,
   flickeringTechs,
+  correctlyAnsweredTechs,
+  incorrectlyAnsweredTechs,
   onRetryQuiz,
 }: TechnologiesListProps) {
   const styles = getThemeClasses(theme);
 
-  // Group technologies by category
+  // i see push and just think about dj jikstra's shunting yard -- this isnt even a stack 😭
   const groupedTechnologies = technologies.reduce(
     (acc, tech) => {
       if (!acc[tech.category]) {
@@ -39,46 +45,51 @@ export default function TechnologiesList({
 
   return (
     <div className="" role="main" aria-label="Technologies List">
-      <div className={`border-b pb-3 ${styles.window.content.border}`}>
-        <h2 className={`text-xl font-semibold ${styles.window.content.text}`}>
-          Technologies Ive Used
-        </h2>
-      </div>
+      <div className={`pt-2`}>
+        {Object.entries(groupedTechnologies).map(([category, techs]) => (
+          <div key={category} className="space-y-1">
+            <h3 className={`font-semibold ${styles.window.content.text} text-sm`}>{category}</h3>
+            <div className="flex flex-wrap gap-2 pb-3">
+              {techs.map((tech, index) => {
+                const isVisible = hasAttemptedQuiz && visibleTechs.has(tech.name);
+                const isCurrentlyFlickering = flickeringTechs.has(tech.name);
+                const wasCorrect = correctlyAnsweredTechs.has(tech.name);
+                const wasIncorrect = incorrectlyAnsweredTechs.has(tech.name);
 
-      {Object.entries(groupedTechnologies).map(([category, techs]) => (
-        <div key={category} className="space-y-2">
-          <h3 className={`font-semibold ${styles.window.content.text} text-sm`}>{category}</h3>
-          <div className="flex flex-wrap gap-2">
-            {techs.map((tech, index) => {
-              const isVisible = !hasAttemptedQuiz || visibleTechs.has(tech.name);
-              const isCurrentlyFlickering = flickeringTechs.has(tech.name);
+                let outlineClass = '';
+                if (wasCorrect) {
+                  outlineClass = styles.technologies.tag.outlineCorrect;
+                } else if (wasIncorrect) {
+                  outlineClass = styles.technologies.tag.outlineIncorrect;
+                }
 
-              return (
-                <div
-                  key={index}
-                  className={`px-3 py-1.5 rounded ${styles.technologies.tag.background} ${styles.technologies.tag.text} transition-opacity duration-100 ${
-                    isVisible ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  style={{
-                    transition: isCurrentlyFlickering
-                      ? 'opacity 50ms ease-in-out'
-                      : 'opacity 100ms ease-in-out',
-                  }}
-                >
-                  {tech.name}
-                </div>
-              );
-            })}
+                return (
+                  <div
+                    key={index}
+                    className={`px-3 py-1 rounded ${styles.technologies.tag.background} ${styles.technologies.tag.text} ${outlineClass} transition-opacity duration-100 ${
+                      isVisible ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    style={{
+                      transition: isCurrentlyFlickering
+                        ? 'opacity 50ms ease-in-out'
+                        : 'opacity 100ms ease-in-out',
+                    }}
+                  >
+                    {tech.name}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       <div className={`mt-4 pt-4 border-t ${styles.window.content.border}`}>
         <button
           onClick={onRetryQuiz}
           className={`text-sm ${styles.window.content.accent} hover:underline`}
         >
-          {hasAttemptedQuiz ? 'Quiz again?' : 'Want to try the quiz?'}
+          {hasSkippedQuiz ? 'Wanna try it now?' : 'Retry quiz?'}
         </button>
       </div>
     </div>

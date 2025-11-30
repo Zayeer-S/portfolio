@@ -1,8 +1,8 @@
 import { useTheme } from '@/contexts/ThemeContext';
 import { useEffect, useState } from 'react';
+import QuizPrompt from './QuizPrompt';
 import Quiz from './Quiz';
 import TechnologiesList from './TechnologiesList';
-import QuizPrompt from './QuizPrompt';
 
 interface Technology {
   name: string;
@@ -22,9 +22,12 @@ export default function TechnologiesWindow() {
   const [showQuizPrompt, setShowQuizPrompt] = useState(true);
   const [isQuizActive, setIsQuizActive] = useState(false);
   const [hasAttemptedQuiz, setHasAttemptedQuiz] = useState(false);
+  const [hasSkippedQuiz, setHasSkippedQuiz] = useState(false);
   const [isFlickering, setIsFlickering] = useState(false);
   const [visibleTechs, setVisibleTechs] = useState<Set<string>>(new Set());
   const [flickeringTechs, setFlickeringTechs] = useState<Set<string>>(new Set());
+  const [correctlyAnsweredTechs, setCorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
+  const [incorrectlyAnsweredTechs, setIncorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
 
   const technologies: Technology[] = [
     { name: 'Python', category: 'Languages' },
@@ -92,62 +95,76 @@ export default function TechnologiesWindow() {
     setIsQuizActive(true);
     setHasAttemptedQuiz(true);
     setVisibleTechs(new Set());
+    setCorrectlyAnsweredTechs(new Set());
   };
 
   const handleRetryQuiz = () => {
-    setIsQuizActive(true);
-    setHasAttemptedQuiz(true);
+    setShowQuizPrompt(true);
+    setIsQuizActive(false);
+    setHasAttemptedQuiz(false);
+    setHasSkippedQuiz(false);
     setVisibleTechs(new Set());
+    setCorrectlyAnsweredTechs(new Set());
+    setIncorrectlyAnsweredTechs(new Set());
   };
 
   const handleRejectQuiz = () => {
     setShowQuizPrompt(false);
+    setHasAttemptedQuiz(true);
+    setHasSkippedQuiz(true);
     setIsFlickering(true);
     setTimeout(() => setIsFlickering(false), 1000);
+  };
+
+  const handleAnswerCorrect = (technology: string, isCorrect: boolean) => {
+    if (isCorrect) {
+      setCorrectlyAnsweredTechs(prev => new Set(prev).add(technology));
+    } else {
+      setIncorrectlyAnsweredTechs(prev => new Set(prev).add(technology));
+    }
+    flickerInTechnologies(technology, 0);
   };
 
   const handleQuizComplete = (score: number) => {
     setIsQuizActive(false);
     setShowQuizPrompt(false);
-
-    const correctTechs = quizQuestions.filter((_, idx) => idx < score).map(q => q.technology);
-
-    correctTechs.forEach((tech, index) => {
-      flickerInTechnologies(tech, index * 100);
-    });
+    setHasSkippedQuiz(false);
 
     const incorrectTechs = technologies
-      .filter(tech => !correctTechs.includes(tech.name))
+      .filter(tech => !correctlyAnsweredTechs.has(tech.name))
       .map(tech => tech.name);
 
     incorrectTechs.forEach((tech, index) => {
-      flickerInTechnologies(tech, 3000 + index * 100);
+      flickerInTechnologies(tech, 1000 + index * 100);
     });
   };
 
-  if (showQuizPrompt) {
-    return <QuizPrompt theme={theme} onAccept={handleAcceptQuiz} onReject={handleRejectQuiz} />;
-  }
-
-  if (isQuizActive) {
-    return (
-      <Quiz
-        theme={theme}
-        quizQuestions={quizQuestions}
-        onComplete={handleQuizComplete}
-        onCancel={() => setIsQuizActive(false)}
-      />
-    );
-  }
-
   return (
-    <TechnologiesList
-      theme={theme}
-      technologies={technologies}
-      hasAttemptedQuiz={hasAttemptedQuiz}
-      visibleTechs={visibleTechs}
-      flickeringTechs={flickeringTechs}
-      onRetryQuiz={handleRetryQuiz}
-    />
+    <div className="space-y-4">
+      {showQuizPrompt && (
+        <QuizPrompt theme={theme} onAccept={handleAcceptQuiz} onReject={handleRejectQuiz} />
+      )}
+
+      {isQuizActive && (
+        <Quiz
+          theme={theme}
+          quizQuestions={quizQuestions}
+          onComplete={handleQuizComplete}
+          onAnswerCorrect={handleAnswerCorrect}
+        />
+      )}
+
+      <TechnologiesList
+        theme={theme}
+        technologies={technologies}
+        hasAttemptedQuiz={hasAttemptedQuiz}
+        hasSkippedQuiz={hasSkippedQuiz}
+        visibleTechs={visibleTechs}
+        flickeringTechs={flickeringTechs}
+        correctlyAnsweredTechs={correctlyAnsweredTechs}
+        incorrectlyAnsweredTechs={incorrectlyAnsweredTechs}
+        onRetryQuiz={handleRetryQuiz}
+      />
+    </div>
   );
 }

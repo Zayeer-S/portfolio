@@ -98,6 +98,8 @@ export const themeStyles = {
       tag: {
         background: 'bg-blue-100',
         text: 'text-blue-800',
+        outlineCorrect: 'outline outline-2 outline-blue-700',
+        outlineIncorrect: 'outline outline-2 outline-dashed outline-blue-700',
       },
       quiz: {
         prompt: {
@@ -209,6 +211,8 @@ export const themeStyles = {
       tag: {
         background: 'bg-blue-900',
         text: 'text-blue-200',
+        outlineCorrect: 'outline outline-2 outline-blue-400',
+        outlineIncorrect: 'outline outline-2 outline-dashed outline-blue-400',
       },
       quiz: {
         prompt: {
@@ -328,6 +332,8 @@ export const themeStyles = {
       tag: {
         background: 'bg-blue-200',
         text: 'text-blue-900',
+        outlineCorrect: 'outline outline-2 outline-blue-700',
+        outlineIncorrect: 'outline outline-2 outline-dashed outline-blue-700',
       },
       quiz: {
         prompt: {

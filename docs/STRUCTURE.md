@@ -8,6 +8,20 @@ portfolio/
 │       ├── pre-commit
 │       └── pre-push
 │
+├── cypress/
+│   ├── e2e
+│   │   ├── under_development
+│   └── support
+│       ├── commands/
+│       │   ├── calculator.ts
+│       │   ├── desktop.ts
+│       │   ├── startMenu.ts
+│       │   ├── taskbar.ts
+│       │   └── window.ts
+│       ├── commands.ts
+│       ├── contants.ts
+│       └── e2e.ts
+│
 ├── docs/
 │   ├── DEV_DIARY.md
 │   └── STRUCTURE.md
@@ -51,15 +65,29 @@ portfolio/
 │       │                                          
 │       ├── windows/                                  
 │       │   ├── calculator/                                       
+│       │   │   ├── hooks/       
+│       │   │   │    ├── useCalculatorCallbacks.ts                                 
+│       │   │   │    ├── useCalculatorInput.ts                                     
+│       │   │   │    ├── useCalculatorKeyboard.ts                                    
+│       │   │   │    └── useCalculatorOperations.ts                                
 │       │   │   ├── modes/       
 │       │   │   │    ├── AlgebraicCalculator.tsx                                       
 │       │   │   │    ├── ArithmeticCalculator.tsx                                       
 │       │   │   │    └── BooleanCalculator.tsx                                       
 │       │   │   ├── shared/                                       
 │       │   │   │    ├── Button.tsx                                       
-│       │   │   │    └── types.tsx                                      
+│       │   │   │    ├── types.tsx                                      
+│       │   │   │    └── utils.ts                                      
 │       │   │   ├── CalculatorDisplay.tsx                               
 │       │   │   ├── CalculatorSidebar.tsx                               
+│       │   │   └── CalculatorWindow.tsx                   
+│       │   ├── technologies/     
+│       │   │   ├── data/       
+│       │   │   │    ├── quizStorage.ts                                       
+│       │   │   │    └── technologyData.ts       
+│       │   │   ├── hooks/       
+│       │   │   │    └── useFlickerAnimation.ts 
+│       │   │   ├── CalculatorDisplay.tsx                               
 │       │   │   └── CalculatorWindow.tsx                   
 │       │   ├── ContactWindow.tsx                   # Contact info                  
 │       │   ├── CreditsWindow.tsx                   # Attributions for icons from flaticon.com                  

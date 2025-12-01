@@ -4,15 +4,7 @@ import QuizPrompt from './QuizPrompt';
 import Quiz from './Quiz';
 import TechnologiesList from './TechnologiesList';
 import { technologies, quizQuestions } from './TechnologyData';
-
-interface QuizState {
-  hasFinishedQuiz: boolean;
-  hasSkippedQuiz: boolean;
-  score: number;
-  correctlyAnsweredTechs: string[];
-  incorrectlyAnsweredTechs: string[];
-  visibleTechs: string[];
-}
+import { QuizState, clearQuizState, loadQuizState, saveQuizState } from './quizStorage';
 
 export default function TechnologiesWindow() {
   const { theme } = useTheme();
@@ -28,8 +20,6 @@ export default function TechnologiesWindow() {
   const [flickeringTechs, setFlickeringTechs] = useState<Set<string>>(new Set());
   const [correctlyAnsweredTechs, setCorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
   const [incorrectlyAnsweredTechs, setIncorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
-
-  const QUIZ_STATE_KEY = 'technologies-quiz-state';
 
   const flickerInTechnologies = useCallback((techName: string, delay: number = 0) => {
     setTimeout(() => {
@@ -77,10 +67,9 @@ export default function TechnologiesWindow() {
   }, [isFlickering, flickerInTechnologies]);
 
   useEffect(() => {
-    const savedState = localStorage.getItem(QUIZ_STATE_KEY);
-    if (savedState) {
+    const parsed = loadQuizState();
+    if (parsed) {
       try {
-        const parsed: QuizState = JSON.parse(savedState);
         setHasFinishedQuiz(parsed.hasFinishedQuiz);
         setHasSkippedQuiz(parsed.hasSkippedQuiz);
         setQuizScore(parsed.score);
@@ -124,7 +113,7 @@ export default function TechnologiesWindow() {
           ])
         ),
       };
-      localStorage.setItem(QUIZ_STATE_KEY, JSON.stringify(stateToSave));
+      saveQuizState(stateToSave);
     }
   }, [hasFinishedQuiz, isQuizActive, quizScore, correctlyAnsweredTechs, incorrectlyAnsweredTechs]);
 
@@ -147,7 +136,7 @@ export default function TechnologiesWindow() {
     setCorrectlyAnsweredTechs(new Set());
     setIncorrectlyAnsweredTechs(new Set());
 
-    localStorage.removeItem(QUIZ_STATE_KEY);
+    clearQuizState();
   };
 
   const handleRejectQuiz = () => {
@@ -167,7 +156,7 @@ export default function TechnologiesWindow() {
         incorrectlyAnsweredTechs: [],
         visibleTechs: technologies.map(t => t.name),
       };
-      localStorage.setItem(QUIZ_STATE_KEY, JSON.stringify(stateToSave));
+      saveQuizState(stateToSave);
     }, 1000);
   };
 

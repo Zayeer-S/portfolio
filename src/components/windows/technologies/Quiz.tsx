@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { LuTimer } from 'react-icons/lu';
 import { getThemeClasses } from '@/styles/themes';
 import { Theme } from '@/contexts/ThemeContext';
 
@@ -39,8 +40,52 @@ export default function Quiz({
   quizScore,
 }: QuizProps) {
   const styles = getThemeClasses(theme);
+  const timeLimit = 10;
+
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState(timeLimit);
+
+  useEffect(() => {
+    setTimeLeft(timeLimit);
+
+    if (!isActive) return;
+
+    let hasTimedOut = false;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        const newTime = prev - 1;
+
+        if (newTime <= 0 && !hasTimedOut) {
+          hasTimedOut = true;
+
+          onAnswerCorrect(quizQuestions[currentQuestion].technology, false);
+
+          setTimeout(() => {
+            if (currentQuestion < quizQuestions.length - 1) {
+              setCurrentQuestion(currentQuestion + 1);
+              setSelectedAnswer(null);
+            } else {
+              onComplete();
+            }
+          }, 1000);
+
+          return 0;
+        }
+
+        return newTime;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [currentQuestion, isActive]);
+
+  useEffect(() => {
+    // Empty since cleanup happens in main effect
+  }, [selectedAnswer]);
 
   const handleAnswerSelect = (index: number) => {
     if (selectedAnswer === null) {
@@ -53,6 +98,7 @@ export default function Quiz({
         if (currentQuestion < quizQuestions.length - 1) {
           setCurrentQuestion(currentQuestion + 1);
           setSelectedAnswer(null);
+          setTimeLeft(timeLimit);
         } else {
           onComplete();
         }
@@ -92,7 +138,6 @@ export default function Quiz({
     );
   }
 
-  // Quiz Complete State
   if (hasFinished && !isActive) {
     let message;
     quizScore === quizQuestions.length
@@ -163,12 +208,21 @@ export default function Quiz({
         aria-label="Quiz question"
         aria-live="polite"
       >
-        <h3
-          className={`text-base sm:text-lg font-semibold mb-2 sm:mb-3 ${styles.window.content.text}`}
-        >
-          <span className="sr-only">Question </span>
-          {currentQuestion + 1}/{quizQuestions.length}. {question.question}
-        </h3>
+        <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
+          <h3
+            className={`text-base sm:text-lg font-semibold mb-2 sm:mb-3 ${styles.window.content.text}`}
+          >
+            <span className="sr-only">Question </span>
+            {currentQuestion + 1}/{quizQuestions.length}. {question.question}
+          </h3>
+          <div
+            className={`flex items-center gap-1 text-base sm:text-lg font-bold ${timeLeft <= 3 ? 'text-red-500' : styles.window.content.text}`}
+            aria-label={`Time remaining: ${timeLeft} seconds`}
+          >
+            <LuTimer className="w-4 h-4 sm:w-5 sm:h-5" />
+            {timeLeft}
+          </div>
+        </div>
         <div
           className="grid text-sm sm:text-base grid-cols-3 gap-2 sm:gap-2"
           role="group"

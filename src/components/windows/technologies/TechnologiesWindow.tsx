@@ -3,18 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 import QuizPrompt from './QuizPrompt';
 import Quiz from './Quiz';
 import TechnologiesList from './TechnologiesList';
-
-interface Technology {
-  name: string;
-  category: string;
-}
-
-interface QuizQuestion {
-  question: string;
-  options: string[];
-  correctAns: number;
-  technology: string;
-}
+import { technologies, quizQuestions } from './TechnologyData';
 
 interface QuizState {
   hasFinishedQuiz: boolean;
@@ -41,22 +30,6 @@ export default function TechnologiesWindow() {
   const [incorrectlyAnsweredTechs, setIncorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
 
   const QUIZ_STATE_KEY = 'technologies-quiz-state';
-
-  const technologies: Technology[] = [
-    { name: 'Python', category: 'Languages' },
-    { name: 'TypeScript', category: 'Languages' },
-    { name: 'React', category: 'Frameworks' },
-    { name: 'C#', category: 'Languages' },
-  ];
-
-  const quizQuestions: QuizQuestion[] = [
-    {
-      question: 'What framework powers this portfolio website?',
-      options: ['Vue.js', 'Angular', 'Laravel', 'Svelte', 'React'],
-      correctAns: 4,
-      technology: 'React',
-    },
-  ];
 
   const flickerInTechnologies = useCallback((techName: string, delay: number = 0) => {
     setTimeout(() => {

@@ -5,6 +5,7 @@ import Quiz from './Quiz';
 import TechnologiesList from './TechnologiesList';
 import { technologies, quizQuestions } from './TechnologyData';
 import { QuizState, clearQuizState, loadQuizState, saveQuizState } from './quizStorage';
+import { UseFlickerAnimation } from './UseFlickerAnimation';
 
 export default function TechnologiesWindow() {
   const { theme } = useTheme();
@@ -16,55 +17,25 @@ export default function TechnologiesWindow() {
   const [quizScore, setQuizScore] = useState(0);
   const [hasSkippedQuiz, setHasSkippedQuiz] = useState(false);
   const [isFlickering, setIsFlickering] = useState(false);
-  const [visibleTechs, setVisibleTechs] = useState<Set<string>>(new Set());
-  const [flickeringTechs, setFlickeringTechs] = useState<Set<string>>(new Set());
   const [correctlyAnsweredTechs, setCorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
   const [incorrectlyAnsweredTechs, setIncorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
 
-  const flickerInTechnologies = useCallback((techName: string, delay: number = 0) => {
-    setTimeout(() => {
-      setFlickeringTechs(prev => new Set(prev).add(techName));
-
-      const flickerPattern = [
-        { time: 0, visible: false },
-        { time: 25, visible: true },
-        { time: 50, visible: false },
-        { time: 75, visible: true },
-        { time: 100, visible: false },
-        { time: 150, visible: true },
-      ];
-
-      flickerPattern.forEach(({ time, visible }) => {
-        setTimeout(() => {
-          if (visible) {
-            setVisibleTechs(prev => new Set(prev).add(techName));
-          } else {
-            setVisibleTechs(prev => {
-              const newSet = new Set(prev);
-              newSet.delete(techName);
-              return newSet;
-            });
-          }
-        }, time);
-      });
-
-      setTimeout(() => {
-        setFlickeringTechs(prev => {
-          const newSet = new Set(prev);
-          newSet.delete(techName);
-          return newSet;
-        });
-      }, 500);
-    }, delay);
-  }, []);
+  const {
+    visibleTechs,
+    flickeringTechs,
+    flickerInTechnology,
+    flickerInMultipleTechnologies,
+    resetFlicker,
+  } = UseFlickerAnimation();
 
   useEffect(() => {
     if (isFlickering) {
-      technologies.forEach((tech, index) => {
-        flickerInTechnologies(tech.name, index * 100);
-      });
+      flickerInMultipleTechnologies(
+        technologies.map(t => t.name),
+        100
+      );
     }
-  }, [isFlickering, flickerInTechnologies]);
+  }, [isFlickering, flickerInMultipleTechnologies]);
 
   useEffect(() => {
     const parsed = loadQuizState();
@@ -82,7 +53,7 @@ export default function TechnologiesWindow() {
 
           setTimeout(() => {
             parsed.visibleTechs.forEach((techName, index) => {
-              flickerInTechnologies(techName, index * 100);
+              flickerInTechnology(techName, index * 100);
             });
           }, 50);
         }
@@ -90,7 +61,7 @@ export default function TechnologiesWindow() {
         console.error('Failed to load quiz state:', error);
       }
     }
-  }, [flickerInTechnologies]);
+  }, [flickerInTechnology]);
 
   useEffect(() => {
     if (hasFinishedQuiz && !isQuizActive) {
@@ -121,7 +92,7 @@ export default function TechnologiesWindow() {
     setShowQuizPrompt(false);
     setIsQuizActive(true);
     setHasAttemptedQuiz(true);
-    setVisibleTechs(new Set());
+    resetFlicker();
     setCorrectlyAnsweredTechs(new Set());
     setIncorrectlyAnsweredTechs(new Set());
   };
@@ -132,7 +103,7 @@ export default function TechnologiesWindow() {
     setHasAttemptedQuiz(false);
     setHasFinishedQuiz(false);
     setHasSkippedQuiz(false);
-    setVisibleTechs(new Set());
+    resetFlicker();
     setCorrectlyAnsweredTechs(new Set());
     setIncorrectlyAnsweredTechs(new Set());
 
@@ -167,7 +138,7 @@ export default function TechnologiesWindow() {
     } else {
       setIncorrectlyAnsweredTechs(prev => new Set(prev).add(technology));
     }
-    flickerInTechnologies(technology, 0);
+    flickerInTechnology(technology, 0);
   };
 
   const handleQuizComplete = () => {
@@ -183,7 +154,7 @@ export default function TechnologiesWindow() {
       .map(tech => tech.name);
 
     unansweredTechs.forEach((tech, index) => {
-      flickerInTechnologies(tech, 1000 + index * 100);
+      flickerInTechnology(tech, 1000 + index * 100);
     });
   };
 

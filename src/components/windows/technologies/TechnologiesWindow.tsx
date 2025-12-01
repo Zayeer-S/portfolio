@@ -1,6 +1,5 @@
 import { useTheme } from '@/contexts/ThemeContext';
-import { useEffect, useState, useCallback } from 'react';
-import QuizPrompt from './QuizPrompt';
+import { useEffect, useState } from 'react';
 import Quiz from './Quiz';
 import TechnologiesList from './TechnologiesList';
 import { technologies, quizQuestions } from './TechnologyData';
@@ -175,23 +174,20 @@ export default function TechnologiesWindow() {
       role="application"
       aria-label="Technologies quiz application"
     >
-      {showQuizPrompt && (
-        <QuizPrompt theme={theme} onAccept={handleAcceptQuiz} onReject={handleRejectQuiz} />
-      )}
-
-      {!showQuizPrompt && (
-        <Quiz
-          theme={theme}
-          quizQuestions={quizQuestions}
-          onComplete={handleQuizComplete}
-          onAnswerCorrect={handleAnswerCorrect}
-          onRetryQuiz={handleRetryQuiz}
-          isActive={isQuizActive}
-          hasFinished={hasFinishedQuiz}
-          hasSkipped={hasSkippedQuiz}
-          quizScore={quizScore}
-        />
-      )}
+      <Quiz
+        theme={theme}
+        quizQuestions={quizQuestions}
+        onComplete={handleQuizComplete}
+        onAnswerCorrect={handleAnswerCorrect}
+        onRetryQuiz={handleRetryQuiz}
+        onAcceptQuiz={handleAcceptQuiz}
+        onRejectQuiz={handleRejectQuiz}
+        showPrompt={showQuizPrompt}
+        isActive={isQuizActive}
+        hasFinished={hasFinishedQuiz}
+        hasSkipped={hasSkippedQuiz}
+        quizScore={quizScore}
+      />
 
       <TechnologiesList
         theme={theme}

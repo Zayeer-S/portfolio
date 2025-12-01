@@ -15,6 +15,9 @@ interface QuizProps {
   onComplete: () => void;
   onAnswerCorrect: (technology: string, isCorrect: boolean) => void;
   onRetryQuiz: () => void;
+  onAcceptQuiz: () => void;
+  onRejectQuiz: () => void;
+  showPrompt: boolean;
   isActive: boolean;
   hasFinished: boolean;
   hasSkipped: boolean;
@@ -27,6 +30,9 @@ export default function Quiz({
   onComplete,
   onAnswerCorrect,
   onRetryQuiz,
+  onAcceptQuiz,
+  onRejectQuiz,
+  showPrompt,
   isActive,
   hasFinished,
   hasSkipped,
@@ -54,6 +60,39 @@ export default function Quiz({
     }
   };
 
+  if (showPrompt) {
+    return (
+      <section
+        className={`p-2 rounded-lg border mb-[14px] ${styles.window.content.border} min-h-[165px] flex items-center`}
+        role="region"
+        aria-label="Quiz prompt"
+      >
+        <div className="flex flex-col sm:flex-row items-center justify-center w-full gap-4">
+          <div className={`flex-1 text-center ${styles.window.content.text}`}>
+            <h3 className="font-semibold text-xl sm:text-2xl md:text-3xl">Quiz?</h3>
+          </div>
+          <div className="flex gap-2 sm:gap-3">
+            <button
+              onClick={onAcceptQuiz}
+              className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded ${styles.technologies.quiz.button.primary}`}
+              aria-label="Start quiz"
+            >
+              Start
+            </button>
+            <button
+              onClick={onRejectQuiz}
+              className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded border ${styles.technologies.quiz.button.secondary} ${styles.window.content.text}`}
+              aria-label="Skip quiz"
+            >
+              Skip
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Quiz Complete State
   if (hasFinished && !isActive) {
     let message;
     quizScore === quizQuestions.length
@@ -62,14 +101,14 @@ export default function Quiz({
 
     return (
       <section
-        className={`p-1 sm:p-2 rounded-lg border ${styles.window.content.border}`}
+        className={`p-2 rounded-lg border ${styles.window.content.border} min-h-[165px] mb-[14px] flex items-center justify-center`}
         role="status"
         aria-live="polite"
         aria-label="Quiz results"
       >
         <div className={`text-center ${styles.window.content.text}`}>
           <h3
-            className={`text-center font-bold text-[19px] sm:text-[20px] m${styles.window.content.text}`}
+            className={`text-center font-bold text-[19px] sm:text-[20px] ${styles.window.content.text}`}
           >
             Quiz Complete! (Score: {quizScore}/{quizQuestions.length})
           </h3>
@@ -91,13 +130,13 @@ export default function Quiz({
   if (hasSkipped) {
     return (
       <section
-        className={`p-2 sm:p-3 rounded-lg border ${styles.window.content.border}`}
+        className={`p-2 rounded-lg border ${styles.window.content.border}  mb-[14px] min-h-[165px] flex items-center justify-center`}
         role="status"
         aria-live="polite"
         aria-label="Quiz skipped message"
       >
         <div className={`text-center ${styles.window.content.text}`}>
-          <h3 className={`text-center text-[18px] sm:text-[19px]   ${styles.window.content.text}`}>
+          <h3 className={`text-center text-[18px] sm:text-[19px] ${styles.window.content.text}`}>
             Quiz Skipped!
           </h3>
           <p className={`text-[13px] sm:text-[14px] ${styles.window.content.text}`}>
@@ -119,7 +158,7 @@ export default function Quiz({
     const question = quizQuestions[currentQuestion];
     return (
       <section
-        className={`p-2 sm:p-3 rounded-lg border ${styles.window.content.border}`}
+        className={`p-2 rounded-lg border ${styles.window.content.border} min-h-[165px]`}
         role="region"
         aria-label="Quiz question"
         aria-live="polite"
@@ -170,4 +209,6 @@ export default function Quiz({
       </section>
     );
   }
+
+  return null;
 }

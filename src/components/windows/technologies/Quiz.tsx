@@ -55,21 +55,23 @@ export default function Quiz({
   };
 
   if (hasFinished && !isActive) {
+    let message;
+    quizScore === quizQuestions.length
+      ? (message = 'Wow 100%? You stalking me 👀?')
+      : (message = 'Nice try!');
+
     return (
       <div className={`p-2 rounded-lg border ${styles.window.content.border}`}>
         <div className={`text-center ${styles.window.content.text}`}>
-          <h3 className={`text-center text-[19px] ${styles.window.content.text}`}>
+          <h3 className={`text-center text-[20px] ${styles.window.content.text}`}>
             Quiz Complete! (Score: {quizScore}/{quizQuestions.length})
           </h3>
+          <p className={`text-[14px] ${styles.window.content.text}`}>{message}</p>
           <button
             onClick={onRetryQuiz}
-            className={`text-[13px] ${styles.window.content.accent} hover:underline`}
+            className={`text-[12px] ${styles.window.content.accent} hover:underline`}
           >
-            {hasSkipped
-              ? 'Just in case you change your mind'
-              : quizScore === quizQuestions.length
-                ? 'Ego satisfied or again?'
-                : 'Retry quiz?'}
+            {quizScore === quizQuestions.length ? 'Ego satisfied or again?' : 'Retry quiz?'}
           </button>
         </div>
       </div>
@@ -80,9 +82,10 @@ export default function Quiz({
     return (
       <div className={`p-2 rounded-lg border ${styles.window.content.border}`}>
         <div className={`text-center ${styles.window.content.text}`}>
-          <h3 className={`text-center text-[19px] ${styles.window.content.text}`}>
-            Quiz Skipped! 😭
-          </h3>
+          <h3 className={`text-center text-[19px] ${styles.window.content.text}`}>Quiz Skipped!</h3>
+          <p className={`text-[14px] ${styles.window.content.text}`}>
+            I spent so much time on it 😭
+          </p>
           <button
             onClick={onRetryQuiz}
             className={`text-[13px] ${styles.window.content.accent} hover:underline`}

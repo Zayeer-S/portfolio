@@ -12,25 +12,19 @@ interface QuizQuestion {
 interface QuizProps {
   theme: Theme;
   quizQuestions: QuizQuestion[];
-  onComplete: (score: number) => void;
+  onComplete: () => void;
   onAnswerCorrect: (technology: string, isCorrect: boolean) => void;
 }
 
 export default function Quiz({ theme, quizQuestions, onComplete, onAnswerCorrect }: QuizProps) {
   const styles = getThemeClasses(theme);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
   const handleAnswerSelect = (index: number) => {
     if (selectedAnswer === null) {
       setSelectedAnswer(index);
       const isCorrect = index === quizQuestions[currentQuestion].correctAns;
-      const newScore = isCorrect ? score + 1 : score;
-
-      if (isCorrect) {
-        setScore(newScore);
-      }
 
       onAnswerCorrect(quizQuestions[currentQuestion].technology, isCorrect);
 
@@ -39,7 +33,7 @@ export default function Quiz({ theme, quizQuestions, onComplete, onAnswerCorrect
           setCurrentQuestion(currentQuestion + 1);
           setSelectedAnswer(null);
         } else {
-          onComplete(newScore);
+          onComplete();
         }
       }, 1000);
     }

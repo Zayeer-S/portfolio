@@ -16,6 +16,8 @@ interface TechnologiesListProps {
   flickeringTechs: Set<string>;
   correctlyAnsweredTechs: Set<string>;
   incorrectlyAnsweredTechs: Set<string>;
+  quizScore: number;
+  totalQuestions: number;
   onRetryQuiz: () => void;
 }
 
@@ -29,6 +31,8 @@ export default function TechnologiesList({
   flickeringTechs,
   correctlyAnsweredTechs,
   incorrectlyAnsweredTechs,
+  quizScore,
+  totalQuestions,
   onRetryQuiz,
 }: TechnologiesListProps) {
   const styles = getThemeClasses(theme);
@@ -88,6 +92,11 @@ export default function TechnologiesList({
 
       {(hasFinishedQuiz || hasSkippedQuiz) && (
         <div className={`mt-4 pt-4 border-t ${styles.window.content.border}`}>
+          {hasFinishedQuiz && (
+            <p className={`text-sm mb-2 ${styles.window.content.text}`}>
+              Score: {quizScore}/{totalQuestions}
+            </p>
+          )}
           <button
             onClick={onRetryQuiz}
             className={`text-sm ${styles.window.content.accent} hover:underline`}

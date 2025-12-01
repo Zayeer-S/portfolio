@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import QuizPrompt from './QuizPrompt';
 import Quiz from './Quiz';
 import TechnologiesList from './TechnologiesList';
-import { fa } from 'zod/locales';
-import { number } from 'zod';
 
 interface Technology {
   name: string;
@@ -41,6 +39,7 @@ export default function TechnologiesWindow() {
   const [flickeringTechs, setFlickeringTechs] = useState<Set<string>>(new Set());
   const [correctlyAnsweredTechs, setCorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
   const [incorrectlyAnsweredTechs, setIncorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
+  const [alreadyFlickeredTechs, setAlreadyFlickeredTechs] = useState<Set<string>>(new Set());
 
   const QUIZ_STATE_KEY = 'technologies-quiz-state';
 
@@ -112,12 +111,19 @@ export default function TechnologiesWindow() {
         const parsed: QuizState = JSON.parse(savedState);
         setHasFinishedQuiz(parsed.hasFinishedQuiz);
         setHasSkippedQuiz(parsed.hasSkippedQuiz);
+        setQuizScore(parsed.score);
         setCorrectlyAnsweredTechs(new Set(parsed.correctlyAnsweredTechs));
         setIncorrectlyAnsweredTechs(new Set(parsed.incorrectlyAnsweredTechs));
         setVisibleTechs(new Set(parsed.visibleTechs));
         setHasAttemptedQuiz(parsed.hasFinishedQuiz || parsed.hasSkippedQuiz);
 
-        if (parsed.hasFinishedQuiz || parsed.hasSkippedQuiz) setShowQuizPrompt(false);
+        if (parsed.hasFinishedQuiz || parsed.hasSkippedQuiz) {
+          setShowQuizPrompt(false);
+
+          parsed.visibleTechs.forEach((techName, index) => {
+            flickerInTechnologies(techName, index * 100);
+          });
+        }
       } catch (error) {
         console.error('Failed to load quiz state:', error);
       }
@@ -169,13 +175,14 @@ export default function TechnologiesWindow() {
   const handleAnswerCorrect = (technology: string, isCorrect: boolean) => {
     if (isCorrect) {
       setCorrectlyAnsweredTechs(prev => new Set(prev).add(technology));
+      setQuizScore(prev => prev + 1);
     } else {
       setIncorrectlyAnsweredTechs(prev => new Set(prev).add(technology));
     }
     flickerInTechnologies(technology, 0);
   };
 
-  const handleQuizComplete = (score: number) => {
+  const handleQuizComplete = () => {
     setIsQuizActive(false);
     setShowQuizPrompt(false);
     setHasSkippedQuiz(false);
@@ -195,7 +202,7 @@ export default function TechnologiesWindow() {
       const stateToSave: QuizState = {
         hasFinishedQuiz: true,
         hasSkippedQuiz: false,
-        score: score,
+        score: quizScore,
         correctlyAnsweredTechs: Array.from(correctlyAnsweredTechs),
         incorrectlyAnsweredTechs: Array.from(incorrectlyAnsweredTechs),
         visibleTechs: Array.from(
@@ -235,6 +242,8 @@ export default function TechnologiesWindow() {
         flickeringTechs={flickeringTechs}
         correctlyAnsweredTechs={correctlyAnsweredTechs}
         incorrectlyAnsweredTechs={incorrectlyAnsweredTechs}
+        quizScore={quizScore}
+        totalQuestions={quizQuestions.length}
         onRetryQuiz={handleRetryQuiz}
       />
     </div>

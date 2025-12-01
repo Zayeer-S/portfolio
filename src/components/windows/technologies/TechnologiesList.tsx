@@ -42,12 +42,18 @@ export default function TechnologiesList({
   );
 
   return (
-    <div className="" role="main" aria-label="Technologies List">
-      <div className={`pt-2`}>
+    <section className="" role="main" aria-label="Technologies List">
+      <div className={`pt-2 sm:pt-3`}>
         {Object.entries(groupedTechnologies).map(([category, techs]) => (
-          <div key={category} className="space-y-1">
-            <h3 className={`font-semibold ${styles.window.content.text} text-sm`}>{category}</h3>
-            <div className="flex flex-wrap gap-2 pb-3">
+          <article key={category} className="space-y-1 sm:space-y-2">
+            <h3 className={`font-semibold ${styles.window.content.text} text-sm sm:text-base`}>
+              {category}
+            </h3>
+            <ul
+              className="flex flex-wrap gap-2 sm:gap-3 pb-3 sm:pb-4"
+              role="list"
+              aria-label={`${category} technologies`}
+            >
               {techs.map((tech, index) => {
                 const isVisible = hasAttemptedQuiz && visibleTechs.has(tech.name);
                 const isCurrentlyFlickering = flickeringTechs.has(tech.name);
@@ -62,9 +68,9 @@ export default function TechnologiesList({
                 }
 
                 return (
-                  <div
+                  <li
                     key={index}
-                    className={`px-3 py-1 rounded ${styles.technologies.tag.background} ${styles.technologies.tag.text} ${outlineClass} ${
+                    className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded ${styles.technologies.tag.background} ${styles.technologies.tag.text} ${outlineClass} ${
                       isVisible ? 'opacity-100' : 'opacity-0'
                     }`}
                     style={{
@@ -74,15 +80,17 @@ export default function TechnologiesList({
                           ? 'opacity 50ms ease-in-out'
                           : 'opacity 100ms ease-in-out',
                     }}
+                    role="listitem"
+                    aria-label={`${tech.name}${wasCorrect ? ' - answered correctly' : wasIncorrect ? ' - answered incorrectly' : ''}`}
                   >
                     {tech.name}
-                  </div>
+                  </li>
                 );
               })}
-            </div>
-          </div>
+            </ul>
+          </article>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

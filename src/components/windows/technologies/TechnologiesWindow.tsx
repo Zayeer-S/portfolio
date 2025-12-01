@@ -170,7 +170,11 @@ export default function TechnologiesWindow() {
   };
 
   return (
-    <div className="space-y-4">
+    <main
+      className="space-y-4 sm:space-y-5"
+      role="application"
+      aria-label="Technologies quiz application"
+    >
       {showQuizPrompt && (
         <QuizPrompt theme={theme} onAccept={handleAcceptQuiz} onReject={handleRejectQuiz} />
       )}
@@ -199,6 +203,6 @@ export default function TechnologiesWindow() {
         incorrectlyAnsweredTechs={incorrectlyAnsweredTechs}
         isResetting={isResetting}
       />
-    </div>
+    </main>
   );
 }

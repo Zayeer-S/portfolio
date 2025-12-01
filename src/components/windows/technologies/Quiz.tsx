@@ -61,57 +61,87 @@ export default function Quiz({
       : (message = 'Nice try!');
 
     return (
-      <div className={`p-2 rounded-lg border ${styles.window.content.border}`}>
+      <section
+        className={`p-1 sm:p-2 rounded-lg border ${styles.window.content.border}`}
+        role="status"
+        aria-live="polite"
+        aria-label="Quiz results"
+      >
         <div className={`text-center ${styles.window.content.text}`}>
-          <h3 className={`text-center text-[20px] ${styles.window.content.text}`}>
+          <h3
+            className={`text-center font-bold text-[19px] sm:text-[20px] m${styles.window.content.text}`}
+          >
             Quiz Complete! (Score: {quizScore}/{quizQuestions.length})
           </h3>
-          <p className={`text-[14px] ${styles.window.content.text}`}>{message}</p>
+          <p className={`text-[14px] sm:text-[15px] font-semibold ${styles.window.content.text}`}>
+            {message}
+          </p>
           <button
             onClick={onRetryQuiz}
-            className={`text-[12px] ${styles.window.content.accent} hover:underline`}
+            className={`text-[12px] sm:text-[12px] ${styles.window.content.accent} hover:underline`}
+            aria-label="Retry quiz"
           >
             {quizScore === quizQuestions.length ? 'Ego satisfied or again?' : 'Retry quiz?'}
           </button>
         </div>
-      </div>
+      </section>
     );
   }
 
   if (hasSkipped) {
     return (
-      <div className={`p-2 rounded-lg border ${styles.window.content.border}`}>
+      <section
+        className={`p-2 sm:p-3 rounded-lg border ${styles.window.content.border}`}
+        role="status"
+        aria-live="polite"
+        aria-label="Quiz skipped message"
+      >
         <div className={`text-center ${styles.window.content.text}`}>
-          <h3 className={`text-center text-[19px] ${styles.window.content.text}`}>Quiz Skipped!</h3>
-          <p className={`text-[14px] ${styles.window.content.text}`}>
+          <h3 className={`text-center text-[18px] sm:text-[19px]   ${styles.window.content.text}`}>
+            Quiz Skipped!
+          </h3>
+          <p className={`text-[13px] sm:text-[14px] ${styles.window.content.text}`}>
             I spent so much time on it 😭
           </p>
           <button
             onClick={onRetryQuiz}
-            className={`text-[13px] ${styles.window.content.accent} hover:underline`}
+            className={`text-[12px] sm:text-[13px] ${styles.window.content.accent} hover:underline`}
+            aria-label="Start quiz"
           >
             Just in case you change your mind
           </button>
         </div>
-      </div>
+      </section>
     );
   }
 
   if (isActive) {
     const question = quizQuestions[currentQuestion];
     return (
-      <div className={`p-2 rounded-lg border ${styles.window.content.border}`}>
-        <h3 className={`text-base font-semibold mb-2 ${styles.window.content.text}`}>
-          {currentQuestion + 1}/{quizQuestions.length} {question.question}
+      <section
+        className={`p-2 sm:p-3 rounded-lg border ${styles.window.content.border}`}
+        role="region"
+        aria-label="Quiz question"
+        aria-live="polite"
+      >
+        <h3
+          className={`text-base sm:text-lg font-semibold mb-2 sm:mb-3 ${styles.window.content.text}`}
+        >
+          <span className="sr-only">Question </span>
+          {currentQuestion + 1}/{quizQuestions.length}. {question.question}
         </h3>
-        <div className="grid text-sm grid-cols-3 gap-2">
+        <div
+          className="grid text-sm sm:text-base grid-cols-3 gap-2 sm:gap-2"
+          role="group"
+          aria-label="Answer options"
+        >
           {question.options.map((option, index) => {
             const isCorrect = index === question.correctAns;
             const isSelected = selectedAnswer === index;
             const showCorrect = selectedAnswer !== null && isCorrect;
             const showIncorrect = selectedAnswer !== null && isSelected && !isCorrect;
 
-            let buttonClasses = `w-full p-2 rounded text-center transition-all border ${styles.window.content.text}`;
+            let buttonClasses = `w-full p-1 text-sm font-semibold rounded text-center transition-all border ${styles.window.content.text}`;
 
             if (selectedAnswer === null) {
               buttonClasses = `${buttonClasses} ${styles.technologies.quiz.answer.default}`;
@@ -129,13 +159,15 @@ export default function Quiz({
                 onClick={() => handleAnswerSelect(index)}
                 disabled={selectedAnswer !== null}
                 className={buttonClasses}
+                aria-label={`Answer option: ${option}`}
+                aria-pressed={isSelected}
               >
                 {option}
               </button>
             );
           })}
         </div>
-      </div>
+      </section>
     );
   }
 }

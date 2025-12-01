@@ -103,6 +103,7 @@ export default function TechnologiesWindow() {
     setHasAttemptedQuiz(false);
     setHasFinishedQuiz(false);
     setHasSkippedQuiz(false);
+    setQuizScore(0);
     resetFlicker();
     setCorrectlyAnsweredTechs(new Set());
     setIncorrectlyAnsweredTechs(new Set());

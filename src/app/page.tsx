@@ -114,6 +114,8 @@ export default function Home() {
         onMaximize={() => maximizeWindow('technologies')}
         zIndex={getWindowZIndex('technologies')}
         onFocus={() => focusWindow('technologies')}
+        minWidth={340}
+        minHeight={585}
         theme={theme}
       >
         <TechnologiesWindow />

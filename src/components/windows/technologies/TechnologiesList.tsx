@@ -10,15 +10,10 @@ interface TechnologiesListProps {
   theme: Theme;
   technologies: Technology[];
   hasAttemptedQuiz: boolean;
-  hasFinishedQuiz: boolean;
-  hasSkippedQuiz: boolean;
   visibleTechs: Set<string>;
   flickeringTechs: Set<string>;
   correctlyAnsweredTechs: Set<string>;
   incorrectlyAnsweredTechs: Set<string>;
-  quizScore: number;
-  totalQuestions: number;
-  onRetryQuiz: () => void;
   isResetting: boolean;
 }
 
@@ -26,15 +21,10 @@ export default function TechnologiesList({
   theme,
   technologies,
   hasAttemptedQuiz,
-  hasFinishedQuiz,
-  hasSkippedQuiz,
   visibleTechs,
   flickeringTechs,
   correctlyAnsweredTechs,
   incorrectlyAnsweredTechs,
-  quizScore,
-  totalQuestions,
-  onRetryQuiz,
   isResetting,
 }: TechnologiesListProps) {
   const styles = getThemeClasses(theme);
@@ -93,26 +83,6 @@ export default function TechnologiesList({
           </div>
         ))}
       </div>
-
-      {(hasFinishedQuiz || hasSkippedQuiz) && (
-        <div className={`mt-4 pt-4 border-t ${styles.window.content.border}`}>
-          {hasFinishedQuiz && (
-            <p className={`text-sm mb-2 ${styles.window.content.text}`}>
-              Score: {quizScore}/{totalQuestions}
-            </p>
-          )}
-          <button
-            onClick={onRetryQuiz}
-            className={`text-sm ${styles.window.content.accent} hover:underline`}
-          >
-            {hasSkippedQuiz
-              ? 'Wanna try it now?'
-              : quizScore === totalQuestions
-                ? 'Ego satisfied or again?'
-                : 'Retry quiz?'}
-          </button>
-        </div>
-      )}
     </div>
   );
 }

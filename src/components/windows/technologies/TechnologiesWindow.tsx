@@ -175,12 +175,17 @@ export default function TechnologiesWindow() {
         <QuizPrompt theme={theme} onAccept={handleAcceptQuiz} onReject={handleRejectQuiz} />
       )}
 
-      {isQuizActive && (
+      {!showQuizPrompt && (
         <Quiz
           theme={theme}
           quizQuestions={quizQuestions}
           onComplete={handleQuizComplete}
           onAnswerCorrect={handleAnswerCorrect}
+          onRetryQuiz={handleRetryQuiz}
+          isActive={isQuizActive}
+          hasFinished={hasFinishedQuiz}
+          hasSkipped={hasSkippedQuiz}
+          quizScore={quizScore}
         />
       )}
 
@@ -188,15 +193,10 @@ export default function TechnologiesWindow() {
         theme={theme}
         technologies={technologies}
         hasAttemptedQuiz={hasAttemptedQuiz}
-        hasFinishedQuiz={hasFinishedQuiz}
-        hasSkippedQuiz={hasSkippedQuiz}
         visibleTechs={visibleTechs}
         flickeringTechs={flickeringTechs}
         correctlyAnsweredTechs={correctlyAnsweredTechs}
         incorrectlyAnsweredTechs={incorrectlyAnsweredTechs}
-        quizScore={quizScore}
-        totalQuestions={quizQuestions.length}
-        onRetryQuiz={handleRetryQuiz}
         isResetting={isResetting}
       />
     </div>

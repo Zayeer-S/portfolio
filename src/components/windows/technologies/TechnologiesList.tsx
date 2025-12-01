@@ -19,6 +19,7 @@ interface TechnologiesListProps {
   quizScore: number;
   totalQuestions: number;
   onRetryQuiz: () => void;
+  isResetting: boolean;
 }
 
 export default function TechnologiesList({
@@ -34,6 +35,7 @@ export default function TechnologiesList({
   quizScore,
   totalQuestions,
   onRetryQuiz,
+  isResetting,
 }: TechnologiesListProps) {
   const styles = getThemeClasses(theme);
 
@@ -72,13 +74,15 @@ export default function TechnologiesList({
                 return (
                   <div
                     key={index}
-                    className={`px-3 py-1 rounded ${styles.technologies.tag.background} ${styles.technologies.tag.text} ${outlineClass} transition-opacity duration-100 ${
+                    className={`px-3 py-1 rounded ${styles.technologies.tag.background} ${styles.technologies.tag.text} ${outlineClass} ${
                       isVisible ? 'opacity-100' : 'opacity-0'
                     }`}
                     style={{
-                      transition: isCurrentlyFlickering
-                        ? 'opacity 50ms ease-in-out'
-                        : 'opacity 100ms ease-in-out',
+                      transition: isResetting
+                        ? 'none' //
+                        : isCurrentlyFlickering
+                          ? 'opacity 50ms ease-in-out'
+                          : 'opacity 100ms ease-in-out',
                     }}
                   >
                     {tech.name}

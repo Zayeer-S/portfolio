@@ -19,6 +19,7 @@ export default function TechnologiesWindow() {
   const [isFlickering, setIsFlickering] = useState(false);
   const [correctlyAnsweredTechs, setCorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
   const [incorrectlyAnsweredTechs, setIncorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
+  const [isResetting, setIsResetting] = useState(false);
 
   const {
     visibleTechs,
@@ -38,6 +39,8 @@ export default function TechnologiesWindow() {
   }, [isFlickering, flickerInMultipleTechnologies]);
 
   useEffect(() => {
+    if (isResetting) return;
+
     const parsed = loadQuizState();
     if (parsed) {
       try {
@@ -98,6 +101,7 @@ export default function TechnologiesWindow() {
   };
 
   const handleRetryQuiz = () => {
+    setIsResetting(true);
     setShowQuizPrompt(true);
     setIsQuizActive(false);
     setHasAttemptedQuiz(false);
@@ -109,6 +113,12 @@ export default function TechnologiesWindow() {
     setIncorrectlyAnsweredTechs(new Set());
 
     clearQuizState();
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setIsResetting(false);
+      });
+    });
   };
 
   const handleRejectQuiz = () => {
@@ -187,6 +197,7 @@ export default function TechnologiesWindow() {
         quizScore={quizScore}
         totalQuestions={quizQuestions.length}
         onRetryQuiz={handleRetryQuiz}
+        isResetting={isResetting}
       />
     </div>
   );

@@ -101,7 +101,11 @@ export default function TechnologiesList({
             onClick={onRetryQuiz}
             className={`text-sm ${styles.window.content.accent} hover:underline`}
           >
-            {hasSkippedQuiz ? 'Wanna try it now?' : 'Retry quiz?'}
+            {hasSkippedQuiz
+              ? 'Wanna try it now?'
+              : quizScore === totalQuestions
+                ? 'Ego satisfied or again?'
+                : 'Retry quiz?'}
           </button>
         </div>
       )}

@@ -49,21 +49,21 @@ export const quizQuestions: QuizQuestion[] = [
 
   {
     question: 'Which of these tools is part of my automated CI/CD setup?',
-    options: ['Husky', 'Terraform', 'CircleCI', 'Azure DevOps'],
+    options: ['Husky', 'Terraform', 'CircleCI'],
     correctAns: 0,
     technology: 'Husky',
   },
 
   {
     question: 'EpochAI uses which ML model for prediction?',
-    options: ['Random Forest', 'LSTM', 'XGBoost', 'Naive Bayes'],
+    options: ['Random Forest', 'LSTM', 'XGBoost'],
     correctAns: 2,
     technology: 'XGBoost',
   },
 
   {
     question: 'Which database system does EpochAI use?',
-    options: ['MongoDB', 'PostgreSQL', 'Redis', 'MySQL', 'Excel Spreadsheets'],
+    options: ['MongoDB', 'PostgreSQL', 'Excel Spreadsheets'],
     correctAns: 1,
     technology: 'PostgreSQL',
   },

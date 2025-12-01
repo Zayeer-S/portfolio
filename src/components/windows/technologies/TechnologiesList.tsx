@@ -43,14 +43,14 @@ export default function TechnologiesList({
 
   return (
     <section className="" role="main" aria-label="Technologies List">
-      <div className={`pt-2 sm:pt-3`}>
+      <div className={``}>
         {Object.entries(groupedTechnologies).map(([category, techs]) => (
           <article key={category} className="space-y-1 sm:space-y-2">
             <h3 className={`font-semibold ${styles.window.content.text} text-sm sm:text-base`}>
               {category}
             </h3>
             <ul
-              className="flex flex-wrap gap-2 sm:gap-3 pb-3 sm:pb-4"
+              className="flex flex-wrap gap-2 pb-2"
               role="list"
               aria-label={`${category} technologies`}
             >

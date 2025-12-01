@@ -1,5 +1,5 @@
 import { useTheme } from '@/contexts/ThemeContext';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import QuizPrompt from './QuizPrompt';
 import Quiz from './Quiz';
 import TechnologiesList from './TechnologiesList';
@@ -39,7 +39,6 @@ export default function TechnologiesWindow() {
   const [flickeringTechs, setFlickeringTechs] = useState<Set<string>>(new Set());
   const [correctlyAnsweredTechs, setCorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
   const [incorrectlyAnsweredTechs, setIncorrectlyAnsweredTechs] = useState<Set<string>>(new Set());
-  const [alreadyFlickeredTechs, setAlreadyFlickeredTechs] = useState<Set<string>>(new Set());
 
   const QUIZ_STATE_KEY = 'technologies-quiz-state';
 
@@ -59,7 +58,7 @@ export default function TechnologiesWindow() {
     },
   ];
 
-  const flickerInTechnologies = (techName: string, delay: number = 0) => {
+  const flickerInTechnologies = useCallback((techName: string, delay: number = 0) => {
     setTimeout(() => {
       setFlickeringTechs(prev => new Set(prev).add(techName));
 
@@ -94,7 +93,7 @@ export default function TechnologiesWindow() {
         });
       }, 500);
     }, delay);
-  };
+  }, []);
 
   useEffect(() => {
     if (isFlickering) {
@@ -102,7 +101,7 @@ export default function TechnologiesWindow() {
         flickerInTechnologies(tech.name, index * 100);
       });
     }
-  }, [isFlickering]);
+  }, [isFlickering, flickerInTechnologies]);
 
   useEffect(() => {
     const savedState = localStorage.getItem(QUIZ_STATE_KEY);
@@ -114,21 +113,47 @@ export default function TechnologiesWindow() {
         setQuizScore(parsed.score);
         setCorrectlyAnsweredTechs(new Set(parsed.correctlyAnsweredTechs));
         setIncorrectlyAnsweredTechs(new Set(parsed.incorrectlyAnsweredTechs));
-        setVisibleTechs(new Set(parsed.visibleTechs));
         setHasAttemptedQuiz(parsed.hasFinishedQuiz || parsed.hasSkippedQuiz);
 
         if (parsed.hasFinishedQuiz || parsed.hasSkippedQuiz) {
           setShowQuizPrompt(false);
 
-          parsed.visibleTechs.forEach((techName, index) => {
-            flickerInTechnologies(techName, index * 100);
-          });
+          setTimeout(() => {
+            parsed.visibleTechs.forEach((techName, index) => {
+              flickerInTechnologies(techName, index * 100);
+            });
+          }, 50);
         }
       } catch (error) {
         console.error('Failed to load quiz state:', error);
       }
     }
-  }, []);
+  }, [flickerInTechnologies]);
+
+  useEffect(() => {
+    if (hasFinishedQuiz && !isQuizActive) {
+      const askedTechs = new Set(quizQuestions.map(q => q.technology));
+      const unansweredTechs = technologies
+        .filter(tech => !askedTechs.has(tech.name))
+        .map(tech => tech.name);
+
+      const stateToSave: QuizState = {
+        hasFinishedQuiz: true,
+        hasSkippedQuiz: false,
+        score: quizScore,
+        correctlyAnsweredTechs: Array.from(correctlyAnsweredTechs),
+        incorrectlyAnsweredTechs: Array.from(incorrectlyAnsweredTechs),
+        visibleTechs: Array.from(
+          new Set([
+            ...Array.from(correctlyAnsweredTechs),
+            ...Array.from(incorrectlyAnsweredTechs),
+            ...unansweredTechs,
+          ])
+        ),
+      };
+      localStorage.setItem(QUIZ_STATE_KEY, JSON.stringify(stateToSave));
+    }
+  }, [hasFinishedQuiz, isQuizActive, quizScore, correctlyAnsweredTechs, incorrectlyAnsweredTechs]);
 
   const handleAcceptQuiz = () => {
     setShowQuizPrompt(false);
@@ -136,6 +161,7 @@ export default function TechnologiesWindow() {
     setHasAttemptedQuiz(true);
     setVisibleTechs(new Set());
     setCorrectlyAnsweredTechs(new Set());
+    setIncorrectlyAnsweredTechs(new Set());
   };
 
   const handleRetryQuiz = () => {
@@ -197,24 +223,6 @@ export default function TechnologiesWindow() {
     unansweredTechs.forEach((tech, index) => {
       flickerInTechnologies(tech, 1000 + index * 100);
     });
-
-    setTimeout(() => {
-      const stateToSave: QuizState = {
-        hasFinishedQuiz: true,
-        hasSkippedQuiz: false,
-        score: quizScore,
-        correctlyAnsweredTechs: Array.from(correctlyAnsweredTechs),
-        incorrectlyAnsweredTechs: Array.from(incorrectlyAnsweredTechs),
-        visibleTechs: Array.from(
-          new Set([
-            ...Array.from(correctlyAnsweredTechs),
-            ...Array.from(incorrectlyAnsweredTechs),
-            ...unansweredTechs,
-          ])
-        ),
-      };
-      localStorage.setItem(QUIZ_STATE_KEY, JSON.stringify(stateToSave));
-    }, 3000);
   };
 
   return (

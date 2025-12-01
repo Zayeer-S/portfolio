@@ -41,11 +41,11 @@ export default function Quiz({ theme, quizQuestions, onComplete, onAnswerCorrect
 
   const question = quizQuestions[currentQuestion];
   return (
-    <div className={`p-4 rounded-lg border ${styles.window.content.border}`}>
-      <h3 className={`text-base font-semibold mb-3 ${styles.window.content.text}`}>
+    <div className={`p-2 rounded-lg border ${styles.window.content.border}`}>
+      <h3 className={`text-base font-semibold mb-2 ${styles.window.content.text}`}>
         {currentQuestion + 1}/{quizQuestions.length} {question.question}
       </h3>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid text-sm grid-cols-3 gap-2">
         {question.options.map((option, index) => {
           const isCorrect = index === question.correctAns;
           const isSelected = selectedAnswer === index;

@@ -242,6 +242,10 @@ export default function Window({
     initialPosition: initialDimensions.position,
     initialSize: initialDimensions.size,
     isMaximized,
+    minSize: {
+      width: minWidth ?? LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH,
+      height: minHeight ?? LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT,
+    },
     onFocus,
   });
 

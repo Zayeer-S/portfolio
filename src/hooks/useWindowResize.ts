@@ -9,7 +9,7 @@ interface UseWindowResizeProps {
   initialPosition: { x: number; y: number };
   initialSize: { width: number; height: number };
   isMaximized: boolean;
-  minSize?: { width: number; height: number };
+  minSize: { width: number; height: number };
   onFocus: () => void;
 }
 
@@ -17,8 +17,11 @@ export function useWindowResize({
   initialPosition,
   initialSize,
   isMaximized,
+  minSize,
   onFocus,
 }: UseWindowResizeProps) {
+  const minWidth = minSize.width;
+  const minHeight = minSize.height;
   const constrainToViewport = (x: number, y: number, width: number, height: number) => {
     const maxX = window.innerWidth - width;
     const maxY = window.innerHeight - height - LAYOUT_CONSTANTS.TASKBAR_HEIGHT;
@@ -147,22 +150,22 @@ export function useWindowResize({
 
         // Handle horizontal resizing
         if (resizeDirection.includes('e')) {
-          newWidth = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH, resizeStart.width + deltaX);
+          newWidth = Math.max(minWidth, resizeStart.width + deltaX);
         }
         if (resizeDirection.includes('w')) {
-          newWidth = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH, resizeStart.width - deltaX);
-          if (newWidth > LAYOUT_CONSTANTS.WINDOW_MIN_WIDTH) {
+          newWidth = Math.max(minWidth, resizeStart.width - deltaX);
+          if (newWidth > minWidth) {
             newX = resizeStart.posX + deltaX;
           }
         }
 
         // Handle vertical resizing
         if (resizeDirection.includes('s')) {
-          newHeight = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT, resizeStart.height + deltaY);
+          newHeight = Math.max(minHeight, resizeStart.height + deltaY);
         }
         if (resizeDirection.includes('n')) {
-          newHeight = Math.max(LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT, resizeStart.height - deltaY);
-          if (newHeight > LAYOUT_CONSTANTS.WINDOW_MIN_HEIGHT) {
+          newHeight = Math.max(minHeight, resizeStart.height - deltaY);
+          if (newHeight > minHeight) {
             newY = resizeStart.posY + deltaY;
           }
         }

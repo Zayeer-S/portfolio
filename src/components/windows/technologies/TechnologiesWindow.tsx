@@ -38,8 +38,6 @@ export default function TechnologiesWindow() {
   }, [isFlickering, flickerInMultipleTechnologies]);
 
   useEffect(() => {
-    if (isResetting) return;
-
     const parsed = loadQuizState();
     if (parsed) {
       try {

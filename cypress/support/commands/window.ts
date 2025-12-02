@@ -228,7 +228,7 @@ Cypress.Commands.add('assertWindowMinimized', (windowId: string) => {
     const isHidden =
       $window.hasClass('hidden') || styles.opacity === '0' || styles.visibility === 'hidden';
 
-    expect(isHidden).to.be.true;
+    void expect(isHidden).to.be.true;
   });
 
   getWindowElement(windowId).within(() => {

@@ -164,9 +164,9 @@ Cypress.Commands.add('assertTaskbarIconState', (windowId: string, isMinimized: b
     const hasMinimizedText = ariaLabel.includes('(minimized)');
 
     if (isMinimized) {
-      expect(hasMinimizedText).to.be.true;
+      void expect(hasMinimizedText).to.be.true;
     } else {
-      expect(hasMinimizedText).to.be.false;
+      void expect(hasMinimizedText).to.be.false;
     }
   });
 });
@@ -207,7 +207,7 @@ Cypress.Commands.add('assertStartMenuOpen', () => {
 
     expect(opacity).to.equal(1);
     expect(transform).to.not.include('translateY');
-    expect($menu.hasClass('pointer-events-none')).to.be.false;
+    void expect($menu.hasClass('pointer-events-none')).to.be.false;
   });
 });
 
@@ -217,7 +217,7 @@ Cypress.Commands.add('assertStartMenuClosed', () => {
     const hasPointerEvents = $menu.hasClass('pointer-events-none');
     const opacity = parseFloat(styles.opacity);
 
-    expect(hasPointerEvents || opacity === 0).to.be.true;
+    void expect(hasPointerEvents || opacity === 0).to.be.true;
   });
 });
 

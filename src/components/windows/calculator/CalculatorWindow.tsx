@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
 import CalculatorSidebar from './CalculatorSidebar';
 import ArithmeticCalculator from './modes/ArithmeticCalculator';
 import AlgebraicCalculator from './modes/AlgebraicCalculator';
@@ -17,8 +16,6 @@ export default function CalculatorWindow() {
   const [mode, setMode] = useState<CalculatorMode>('arithmetic');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [calculationCache, setCalculationCache] = useState<CacheEntry[]>([]);
-
-  const { theme } = useTheme();
 
   useEffect(() => {
     const warmUpTheApiBaby = async () => {

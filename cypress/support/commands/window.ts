@@ -183,7 +183,6 @@ Cypress.Commands.add('dragWindow', (windowId: string, x: number, y: number) => {
 
 Cypress.Commands.add('assertWindowMaximized', (windowId: string) => {
   getWindowElement(windowId).should($window => {
-    const styles = window.getComputedStyle($window[0]);
     const rect = $window[0].getBoundingClientRect();
 
     expect(rect.left).to.equal(0);

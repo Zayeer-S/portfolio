@@ -11,7 +11,7 @@ after(() => {});
 
 afterEach(() => {});
 
-Cypress.on('uncaught:exception', (err, runnable) => {
+Cypress.on('uncaught:exception', err => {
   if (err.message.includes('ResizeObserver')) {
     return false;
   }

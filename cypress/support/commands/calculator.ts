@@ -132,10 +132,6 @@ const getVariableDisplay = () => {
     });
 };
 
-const getVariableInput = () => {
-  return getCalculatorWindow().find('input[placeholder="var"]').parent();
-};
-
 Cypress.Commands.add('switchCalculatorMode', (mode: 'arithmetic' | 'algebraic' | 'boolean') => {
   cy.openCalculatorSidebar();
   getModeButton(mode).click({ force: true });

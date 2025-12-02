@@ -92,7 +92,9 @@ export default function Quiz({
       setSelectedAnswer(index);
       const isCorrect = index === quizQuestions[currentQuestion].correctAns;
 
-      onAnswerCorrect(quizQuestions[currentQuestion].technology, isCorrect);
+      setTimeout(() => {
+        onAnswerCorrect(quizQuestions[currentQuestion].technology, isCorrect);
+      }, 0);
 
       setTimeout(() => {
         if (currentQuestion < quizQuestions.length - 1) {

@@ -81,7 +81,7 @@ export default function Quiz({
     return () => {
       clearInterval(timer);
     };
-  }, [currentQuestion, isActive]);
+  }, [currentQuestion, isActive, onAnswerCorrect, onComplete, quizQuestions]);
 
   useEffect(() => {
     // Empty since cleanup happens in main effect

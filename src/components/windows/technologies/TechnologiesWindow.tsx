@@ -1,5 +1,5 @@
 import { useTheme } from '@/contexts/ThemeContext';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Quiz from './Quiz';
 import TechnologiesList from './TechnologiesList';
 import { technologies, quizQuestions } from './TechnologyData';
@@ -141,17 +141,20 @@ export default function TechnologiesWindow() {
     }, 1000);
   };
 
-  const handleAnswerCorrect = (technology: string, isCorrect: boolean) => {
-    if (isCorrect) {
-      setCorrectlyAnsweredTechs(prev => new Set(prev).add(technology));
-      setQuizScore(prev => prev + 1);
-    } else {
-      setIncorrectlyAnsweredTechs(prev => new Set(prev).add(technology));
-    }
-    flickerInTechnology(technology, 0);
-  };
+  const handleAnswerCorrect = useCallback(
+    (technology: string, isCorrect: boolean) => {
+      if (isCorrect) {
+        setCorrectlyAnsweredTechs(prev => new Set(prev).add(technology));
+        setQuizScore(prev => prev + 1);
+      } else {
+        setIncorrectlyAnsweredTechs(prev => new Set(prev).add(technology));
+      }
+      flickerInTechnology(technology, 0);
+    },
+    [flickerInTechnology]
+  );
 
-  const handleQuizComplete = () => {
+  const handleQuizComplete = useCallback(() => {
     setIsQuizActive(false);
     setShowQuizPrompt(false);
     setHasSkippedQuiz(false);
@@ -166,7 +169,7 @@ export default function TechnologiesWindow() {
     unansweredTechs.forEach((tech, index) => {
       flickerInTechnology(tech, 1000 + index * 100);
     });
-  };
+  }, [flickerInTechnology]);
 
   return (
     <main

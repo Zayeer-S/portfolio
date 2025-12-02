@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getThemeClasses } from '@/styles/themes';
-import CalculatorDisplay from './CalculatorDisplay';
 import CalculatorSidebar from './CalculatorSidebar';
 import ArithmeticCalculator from './modes/ArithmeticCalculator';
 import AlgebraicCalculator from './modes/AlgebraicCalculator';
@@ -21,7 +20,6 @@ export default function CalculatorWindow() {
   const [calculationCache, setCalculationCache] = useState<CacheEntry[]>([]);
 
   const { theme } = useTheme();
-  const styles = getThemeClasses(theme);
 
   useEffect(() => {
     const warmUpTheApiBaby = async () => {

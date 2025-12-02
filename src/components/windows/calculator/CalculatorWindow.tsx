@@ -110,7 +110,7 @@ export default function CalculatorWindow() {
 
   return (
     <div
-      className="h-full flex flex-col relative"
+      className="h-full flex flex-col relative overflow-hidden"
       style={{ minWidth: '280px', minHeight: '320px' }}
       role="application"
       aria-label="Calculator"

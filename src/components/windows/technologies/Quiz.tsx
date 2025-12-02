@@ -51,26 +51,11 @@ export default function Quiz({
 
     if (!isActive) return;
 
-    let hasTimedOut = false;
-
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         const newTime = prev - 1;
 
-        if (newTime <= 0 && !hasTimedOut) {
-          hasTimedOut = true;
-
-          onAnswerCorrect(quizQuestions[currentQuestion].technology, false);
-
-          setTimeout(() => {
-            if (currentQuestion < quizQuestions.length - 1) {
-              setCurrentQuestion(currentQuestion + 1);
-              setSelectedAnswer(null);
-            } else {
-              onComplete();
-            }
-          }, 1000);
-
+        if (newTime <= 0) {
           return 0;
         }
 
@@ -84,6 +69,23 @@ export default function Quiz({
   }, [currentQuestion, isActive, onAnswerCorrect, onComplete, quizQuestions]);
 
   useEffect(() => {
+    if (timeLeft === 0 && isActive) {
+      onAnswerCorrect(quizQuestions[currentQuestion].technology, false);
+
+      const timeout = setTimeout(() => {
+        if (currentQuestion < quizQuestions.length - 1) {
+          setCurrentQuestion(currentQuestion + 1);
+          setSelectedAnswer(null);
+        } else {
+          onComplete();
+        }
+      }, 1000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [timeLeft, isActive, currentQuestion, quizQuestions, onAnswerCorrect, onComplete]);
+
+  useEffect(() => {
     // Empty since cleanup happens in main effect
   }, [selectedAnswer]);
 
@@ -92,9 +94,7 @@ export default function Quiz({
       setSelectedAnswer(index);
       const isCorrect = index === quizQuestions[currentQuestion].correctAns;
 
-      setTimeout(() => {
-        onAnswerCorrect(quizQuestions[currentQuestion].technology, isCorrect);
-      }, 0);
+      onAnswerCorrect(quizQuestions[currentQuestion].technology, isCorrect);
 
       setTimeout(() => {
         if (currentQuestion < quizQuestions.length - 1) {
@@ -218,7 +218,7 @@ export default function Quiz({
           <div
             className={`flex items-center gap-1 text-base sm:text-lg font-bold ${timeLeft <= 3 ? 'text-red-500' : styles.window.content.text}`}
             aria-label={`Time remaining: ${timeLeft} seconds`}
-            style={{ minWidth: '2.8rem' }}
+            style={{ minWidth: '3.5rem' }}
           >
             <LuTimer className="w-4 h-4 sm:w-5 sm:h-5" />
             {timeLeft}

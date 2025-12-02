@@ -139,10 +139,8 @@ export default function Quiz({
   }
 
   if (hasFinished && !isActive) {
-    let message;
-    quizScore === quizQuestions.length
-      ? (message = 'Wow 100%? You stalking me 👀?')
-      : (message = 'Nice try!');
+    const message =
+      quizScore === quizQuestions.length ? 'Wow 100%? You stalking me 👀?' : 'Nice try!';
 
     return (
       <section

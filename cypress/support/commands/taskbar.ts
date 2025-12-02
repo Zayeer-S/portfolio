@@ -1,6 +1,3 @@
-import cypress from 'cypress';
-import { openAsBlob } from 'fs';
-
 declare global {
   namespace Cypress {
     interface Chainable {
@@ -83,7 +80,6 @@ const getTaskbarIcon = (windowId: string) => {
 
 const getStartMenu = () => {
   return cy.get('div').filter((_, el) => {
-    const styles = window.getComputedStyle(el);
     return (
       el.className.includes('fixed') &&
       el.className.includes('bottom-10') &&

@@ -216,7 +216,17 @@ export function useWindowResize({
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [isDragging, isResizing, dragStart, resizeStart, isMaximized, resizeDirection, size]);
+  }, [
+    isDragging,
+    isResizing,
+    dragStart,
+    resizeStart,
+    isMaximized,
+    resizeDirection,
+    size,
+    minWidth,
+    minHeight,
+  ]);
 
   useEffect(() => {
     const handleResize = () => {

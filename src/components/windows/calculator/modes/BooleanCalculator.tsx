@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { CalculatorModeProps } from '../shared/types';
 import CalculatorDisplay from '../CalculatorDisplay';
 import Button from '../shared/Button';

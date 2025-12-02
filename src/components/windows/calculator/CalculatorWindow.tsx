@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
-import { getThemeClasses } from '@/styles/themes';
 import CalculatorSidebar from './CalculatorSidebar';
 import ArithmeticCalculator from './modes/ArithmeticCalculator';
 import AlgebraicCalculator from './modes/AlgebraicCalculator';

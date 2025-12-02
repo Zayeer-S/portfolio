@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { LuTimer } from 'react-icons/lu';
 import { getThemeClasses } from '@/styles/themes';
 import { Theme } from '@/contexts/ThemeContext';

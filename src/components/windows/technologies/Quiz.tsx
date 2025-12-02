@@ -216,6 +216,7 @@ export default function Quiz({
           <div
             className={`flex items-center gap-1 text-base sm:text-lg font-bold ${timeLeft <= 3 ? 'text-red-500' : styles.window.content.text}`}
             aria-label={`Time remaining: ${timeLeft} seconds`}
+            style={{ minWidth: '2.8rem' }}
           >
             <LuTimer className="w-4 h-4 sm:w-5 sm:h-5" />
             {timeLeft}

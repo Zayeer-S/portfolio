@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from 'react';
-import CalculatorSidebar from './CalculatorSidebar';
 import ArithmeticCalculator from './modes/ArithmeticCalculator';
 import AlgebraicCalculator from './modes/AlgebraicCalculator';
 import BooleanCalculator from './modes/BooleanCalculator';
@@ -12,9 +11,12 @@ import {
 } from './shared/types';
 import { env } from '@/config/env';
 
-export default function CalculatorWindow() {
-  const [mode, setMode] = useState<CalculatorMode>('arithmetic');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+interface CalculatorWindowProps {
+  mode: CalculatorMode;
+  setMode: (mode: CalculatorMode) => void;
+}
+
+export default function CalculatorWindow({ mode, setMode }: CalculatorWindowProps) {
   const [calculationCache, setCalculationCache] = useState<CacheEntry[]>([]);
 
   useEffect(() => {
@@ -90,11 +92,6 @@ export default function CalculatorWindow() {
     [calculationCache]
   );
 
-  const handleModeChange = (newMode: CalculatorMode) => {
-    setMode(newMode);
-    setIsSidebarOpen(false);
-  };
-
   const renderCalculatorMode = () => {
     switch (mode) {
       case 'arithmetic':
@@ -110,19 +107,11 @@ export default function CalculatorWindow() {
 
   return (
     <div
-      className="h-full flex flex-col relative overflow-hidden"
+      className="h-full flex flex-col"
       style={{ minWidth: '280px', minHeight: '320px' }}
       role="application"
       aria-label="Calculator"
     >
-      <div className="-top-3 -left-3">
-        <CalculatorSidebar
-          isOpen={isSidebarOpen}
-          currentMode={mode}
-          onModeChange={handleModeChange}
-          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-        />
-      </div>
       <div className="flex-1 flex flex-col space-y-3">{renderCalculatorMode()}</div>
     </div>
   );

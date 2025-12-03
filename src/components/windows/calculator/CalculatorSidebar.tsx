@@ -17,21 +17,9 @@ interface ModeOption {
 }
 
 const modeOptions: ModeOption[] = [
-  {
-    id: 'arithmetic',
-    label: 'Arithmetic',
-    icon: '🔢',
-  },
-  {
-    id: 'algebraic',
-    label: 'Algebraic',
-    icon: '𝑥',
-  },
-  {
-    id: 'boolean',
-    label: 'Boolean',
-    icon: '⊕',
-  },
+  { id: 'arithmetic', label: 'Arithmetic', icon: '🔢' },
+  { id: 'algebraic', label: 'Algebraic', icon: '𝑥' },
+  { id: 'boolean', label: 'Boolean', icon: '⊕' },
 ];
 
 export default function CalculatorSidebar({
@@ -46,12 +34,12 @@ export default function CalculatorSidebar({
   return (
     <>
       {/* Hamburger button */}
-      <div className="absolute top-10 left-2 flex flex-row items-center gap-1">
+      <div className="absolute top-10 left-2 flex flex-row items-center gap-1 z-40">
         <button
           onClick={onToggle}
-          className={`${styles.calculator.sidebar.hamburger} p-2 z-20 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
-          title={isOpen ? 'Close menu' : 'Open menu'}
+          className={`${styles.calculator.sidebar.hamburger} p-2 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
           style={{ width: '36px', height: '32px' }}
+          title={isOpen ? 'Close menu' : 'Open menu'}
           aria-label={isOpen ? 'Close calculator mode menu' : 'Open calculator mode menu'}
           aria-expanded={isOpen}
         >
@@ -62,13 +50,13 @@ export default function CalculatorSidebar({
         >
           {modeOptions.find(option => option.id === currentMode)?.label}
         </span>
+
         <div className="relative group mb-[2px]">
           <HiInformationCircle
             className={`w-4 h-4 ${styles.calculator.display.textMuted} cursor-help`}
-            aria-label="Calculator information"
           />
           <div
-            className={`absolute left-0 top-6 w-64 p-3 ${styles.calculator.display.background} ${styles.calculator.display.border} border rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 text-xs z-30`}
+            className={`absolute left-0 top-6 w-64 p-3 ${styles.calculator.display.background} ${styles.calculator.display.border} border rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 text-xs z-50`}
           >
             <p className={`${styles.calculator.display.text}`}>
               This calculator is a microservice powered by my own custom built REST API (Evalr)
@@ -79,7 +67,7 @@ export default function CalculatorSidebar({
 
       {/*Outer*/}
       <div
-        className={`absolute top-0 left-0 h-full overflow-hidden z-10 transition-all duration-300 ease-out ${
+        className={`absolute left-0 top-18 bottom-0 overflow-hidden transition-all duration-300 ease-out z-30 ${
           isOpen ? 'w-48' : 'w-0'
         }`}
         role="navigation"
@@ -91,7 +79,7 @@ export default function CalculatorSidebar({
             isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
-          <div className="pt-22 px-3">
+          <div className="pt-6 px-3">
             <div
               className={`text-xs font-semibold ${styles.calculator.display.textMuted} mb-3 px-2`}
             >

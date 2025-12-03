@@ -46,7 +46,7 @@ export default function CalculatorSidebar({
   return (
     <>
       {/* Hamburger button */}
-      <div className="absolute -top-3 -left-3 flex flex-row items-center gap-1">
+      <div className="absolute top-10 left-2 flex flex-row items-center gap-1">
         <button
           onClick={onToggle}
           className={`${styles.calculator.sidebar.hamburger} p-2 z-20 rounded cursor-pointer transition-all duration-150 hover:scale-110 select-none flex items-center justify-center`}
@@ -79,7 +79,7 @@ export default function CalculatorSidebar({
 
       {/*Outer*/}
       <div
-        className={`absolute -top-4 -left-4 -bottom-4 overflow-hidden z-0 rounded-l-lg transition-all duration-300 ease-out ${
+        className={`absolute top-0 left-0 h-full overflow-hidden z-10 transition-all duration-300 ease-out ${
           isOpen ? 'w-48' : 'w-0'
         }`}
         role="navigation"
@@ -91,7 +91,7 @@ export default function CalculatorSidebar({
             isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
-          <div className="pt-12 px-3">
+          <div className="pt-22 px-3">
             <div
               className={`text-xs font-semibold ${styles.calculator.display.textMuted} mb-3 px-2`}
             >

@@ -13,6 +13,7 @@ interface WindowPropsWithTheme extends Omit<WindowProps, 'theme'> {
   theme?: Theme;
   minWidth?: number;
   minHeight?: number;
+  overlay?: React.ReactNode;
 }
 
 const getInitialDimensions = (windowId?: string) => {
@@ -106,6 +107,7 @@ export default function Window({
   theme,
   minWidth,
   minHeight,
+  overlay,
 }: WindowPropsWithTheme) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -441,6 +443,12 @@ export default function Window({
             </button>
           </div>
         </div>
+
+        {overlay && (
+          <div className="absolute top-0 left-0 z-20 pointer-events-none">
+            <div className="pointer-events-auto">{overlay}</div>
+          </div>
+        )}
 
         {/* Window Content */}
         <div

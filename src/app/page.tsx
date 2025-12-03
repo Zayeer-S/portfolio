@@ -11,12 +11,12 @@ import Taskbar from '@/components/desktop/taskbar/Taskbar';
 import TypewriterIntro from '@/components/desktop/TypewriterIntro';
 
 import SettingsWindow from '@/components/windows/SettingsWindow';
-import CalculatorWindow from '@/components/windows/calculator/CalculatorWindow';
 import NotepadWindow from '@/components/windows/NotepadWindow';
 import ProjectsWindow from '@/components/windows/ProjectsWindow';
 import TechnologiesWindow from '@/components/windows/technologies/TechnologiesWindow';
 import ContactWindow from '@/components/windows/ContactWindow';
 import CreditsWindow from '@/components/windows/CreditsWindow';
+import CalculatorWindowContainer from '@/components/windows/calculator/CalculatorWindowContainer';
 
 export default function Home() {
   const { theme } = useTheme();
@@ -153,9 +153,8 @@ export default function Home() {
         <SettingsWindow />
       </Window>
 
-      <Window
+      <CalculatorWindowContainer
         id="calculator"
-        title="Calculator"
         isOpen={windows.calculator.isOpen}
         isMinimized={windows.calculator.isMinimized}
         isMaximized={windows.calculator.isMaximized}
@@ -164,12 +163,8 @@ export default function Home() {
         onMaximize={() => maximizeWindow('calculator')}
         zIndex={getWindowZIndex('calculator')}
         onFocus={() => focusWindow('calculator')}
-        minWidth={320}
-        minHeight={495}
         theme={theme}
-      >
-        <CalculatorWindow />
-      </Window>
+      />
 
       <Window
         id="notepad"

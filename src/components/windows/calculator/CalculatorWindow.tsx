@@ -16,7 +16,7 @@ interface CalculatorWindowProps {
   setMode: (mode: CalculatorMode) => void;
 }
 
-export default function CalculatorWindow({ mode, setMode }: CalculatorWindowProps) {
+export default function CalculatorWindow({ mode }: CalculatorWindowProps) {
   const [calculationCache, setCalculationCache] = useState<CacheEntry[]>([]);
 
   useEffect(() => {

@@ -445,8 +445,8 @@ export default function Window({
         </div>
 
         {overlay && (
-          <div className="absolute top-0 left-0 z-20 pointer-events-none">
-            <div className="pointer-events-auto">{overlay}</div>
+          <div className="absolute inset-0 z-20 pointer-events-none">
+            <div className="w-full h-full pointer-events-auto">{overlay}</div>
           </div>
         )}
 
